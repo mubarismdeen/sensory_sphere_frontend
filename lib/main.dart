@@ -19,18 +19,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'ControlSphere',
+      title: 'SensorySphere',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         scaffoldBackgroundColor: themeColor,
-        textTheme: GoogleFonts.mulishTextTheme(
-          Theme.of(context).textTheme
-        ).apply(
-          bodyColor: Colors.black
+        textTheme: GoogleFonts.mulishTextTheme(Theme.of(context).textTheme)
+            .apply(bodyColor: Colors.black),
+        colorScheme: const ColorScheme.dark(
+          onPrimary: lightGrey,
+          primary: highlightedColor,
+          surface: highlightedColor,
         ),
-        colorScheme: ColorScheme.light(primary: themeColor)
       ),
-      home: LoginPage(),
+      home: const LoginPage(),
     );
   }
 }

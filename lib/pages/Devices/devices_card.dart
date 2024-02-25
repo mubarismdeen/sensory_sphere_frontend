@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import '../../constants/style.dart';
 import 'inlay_widget.dart';
 
-class DashboardCard extends StatefulWidget {
+class DevicesCard extends StatefulWidget {
   final String label;
   final Function onLocationButtonPressed;
   final double currentAmperes;
   final double pressurePsi;
   final double temperatureCelsius;
 
-  DashboardCard({
+  DevicesCard({
     required this.label,
     required this.onLocationButtonPressed,
     required this.currentAmperes,
@@ -19,10 +19,10 @@ class DashboardCard extends StatefulWidget {
   });
 
   @override
-  _DashboardCardState createState() => _DashboardCardState();
+  _DevicesCardState createState() => _DevicesCardState();
 }
 
-class _DashboardCardState extends State<DashboardCard> {
+class _DevicesCardState extends State<DevicesCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -55,7 +55,6 @@ class _DashboardCardState extends State<DashboardCard> {
                       overflow: TextOverflow.fade,
                     ),
                   ),
-                  // SizedBox(width: 30,),
                   Row(
                     children: [
                       IconButton(
@@ -69,15 +68,13 @@ class _DashboardCardState extends State<DashboardCard> {
                         onPressed: () {
                           // Handle second feature button press
                         },
-                        icon:
-                            Icon(Icons.play_arrow_rounded, color: shadowColor),
+                        icon: Icon(Icons.play_arrow_rounded, color: shadowColor),
                       ),
                       IconButton(
                         onPressed: () {
                           // Handle third feature button press
                         },
-                        icon:
-                            Icon(Icons.error_outline_sharp, color: shadowColor),
+                        icon: Icon(Icons.error_outline_sharp, color: shadowColor),
                       ),
                     ],
                   ),
@@ -97,22 +94,58 @@ class _DashboardCardState extends State<DashboardCard> {
                 ),
               ),
               SizedBox(height: 10),
-              InlayWidget(
-                currentAmperes: widget.currentAmperes,
-                pressurePsi: widget.pressurePsi,
-                temperatureCelsius: widget.temperatureCelsius,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      // Handle start button press
+                    },
+                    icon: Icon(Icons.play_arrow),
+                    label: Text('Start'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green[500],
+                      foregroundColor: light,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      // Handle reset button press
+                    },
+                    icon: Icon(Icons.refresh),
+                    label: Text('Reset'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue[400],
+                      foregroundColor: light,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      // Handle stop button press
+                    },
+                    icon: Icon(Icons.stop),
+                    label: Text('Stop'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red[400],
+                      foregroundColor: light,
+                    ),
+                  ),
+                ],
               ),
               SizedBox(height: 20),
               Center(
                 child: ElevatedButton(
                   style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                          highlightedColor.withOpacity(0.5))),
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                      highlightedColor.withOpacity(0.5),
+                    ),
+                  ),
                   onPressed: () {
                     // Handle view details button press
                   },
-                  child:
-                      Text('View Details', style: TextStyle(color: lightGrey)),
+                  child: Text('View Details', style: TextStyle(color: lightGrey)),
                 ),
               ),
             ],

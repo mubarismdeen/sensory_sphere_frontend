@@ -1,3 +1,4 @@
+import 'package:admin/constants/constants.dart';
 import 'package:admin/routes/routes.dart';
 import 'package:admin/widget/custom_text.dart';
 import 'package:admin/widget/side_menu_item.dart';
@@ -35,44 +36,57 @@ class SideMenu extends StatelessWidget {
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const SizedBox(
-                  height: 40,
-                ),
-                Row(
-                  children: [
-                    SizedBox(width: _width / 48),
-                    Padding(
-                      padding: EdgeInsets.only(right: 12),
-                      child: Hero(
-                        tag: 'icon',
-                        child: Container(
-                          height: 35,
-                          padding: EdgeInsets.only(left: 10, top: 5),
-                          child: const ExcludeSemantics(
-                            child: FadeInImagePlaceholder(
-                              image: AssetImage('images/app_icon.png'),
-                              placeholder: SizedBox.shrink(),
+                // const SizedBox(
+                //   height: 40,
+                // ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: highlightedColor.withOpacity(0.3),
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      SizedBox(width: _width / 48),
+                      Padding(
+                        padding: EdgeInsets.only(right: 12),
+                        child: Hero(
+                          tag: 'icon',
+                          child: Container(
+                            height: 35,
+                            padding: EdgeInsets.only(left: 10, top: 5),
+                            child: ExcludeSemantics(
+                              child: ColorFiltered(
+                                colorFilter: const ColorFilter.mode(
+                                  mainTitleColor, // Desired color
+                                  BlendMode.srcIn,
+                                ),
+                                child: Image.asset('images/app_icon.png'),
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    const Flexible(
-                      child: Text(
-                        "Control Sphere",
-                        style: TextStyle(
-                          color: mainTitleColor,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'LobsterFont',
+                      const Flexible(
+                        child: Text(
+                          appTitle,
+                          style: TextStyle(
+                            color: mainTitleColor,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'LobsterFont',
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
-          SizedBox(width: _width / 48, height: 10,),
+          SizedBox(
+            width: _width / 48,
+            height: 10,
+          ),
           // Divider(
           //   color: lightGrey.withOpacity(.1),
           // ),

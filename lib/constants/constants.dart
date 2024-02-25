@@ -34,3 +34,5 @@ extension ScreenExtension on Screen {
 
 const String successfulResponse = "true";
 const String errorResponse = "error";
+
+const String appTitle = "Sensory Sphere";

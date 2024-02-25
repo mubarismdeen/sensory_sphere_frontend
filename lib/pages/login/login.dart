@@ -1,3 +1,4 @@
+import 'package:admin/constants/constants.dart';
 import 'package:admin/constants/style.dart';
 import 'package:admin/globalState.dart';
 import 'package:admin/models/userScreens.dart';
@@ -177,29 +178,43 @@ class _AppLogo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 70),
-      child: Column(
-        children: const [
-          Hero(
-            tag: 'icon',
-            child: SizedBox(
-              height: 160,
-              child: ExcludeSemantics(
-                child: FadeInImagePlaceholder(
-                  image: AssetImage('images/app_icon.png'),
-                  placeholder: SizedBox.shrink(),
-                ),
-              ),
-            ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+            color: highlightedColor.withOpacity(0.3),
+            borderRadius: BorderRadius.circular(10),
           ),
-          SizedBox(height: 30),
-          Center(
-            child: Text(
-              "Control Sphere",
-              style: TextStyle(
-                  fontWeight: FontWeight.w900,
-                  fontSize: 30,
-                  fontFamily: "LobsterFont",
-                  color: mainTitleColor),
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              children: [
+                Hero(
+                  tag: 'icon',
+                  child: SizedBox(
+                    height: 160,
+                    child: ExcludeSemantics(
+                      child: ColorFiltered(
+                        colorFilter: const ColorFilter.mode(
+                          mainTitleColor, // Desired color
+                          BlendMode.srcIn,
+                        ),
+                        child: Image.asset('images/app_icon.png'),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  appTitle,
+                  style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 30,
+                      fontFamily: "LobsterFont",
+                      color: mainTitleColor),
+                ),
+              ],
             ),
           ),
         ],
