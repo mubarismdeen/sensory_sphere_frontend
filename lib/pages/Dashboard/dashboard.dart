@@ -1,12 +1,5 @@
-import 'package:admin/constants/style.dart';
-import 'package:admin/widget/custom_text.dart';
 import 'package:admin/pages/Dashboard/dashboard_card.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-
-import '../../constants/controllers.dart';
-import '../../helpers/responsiveness.dart';
 
 class Dashboard extends StatelessWidget {
   Dashboard({Key? key}) : super(key: key);
@@ -21,43 +14,50 @@ class Dashboard extends StatelessWidget {
         return SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(height: 60,),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: SizedBox(
-                    height: 500,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        DashboardCard(
-                            label: "Al Qudra Lake",
-                            currentAmperes: 10,
-                            pressurePsi: 15,
-                            temperatureCelsius: 30,
-                            onLocationButtonPressed: () {}),
-                        DashboardCard(
-                            label: "Union Property 1",
-                            currentAmperes: 5,
-                            pressurePsi: 8,
-                            temperatureCelsius: 40,
-                            onLocationButtonPressed: () {}),
-                        DashboardCard(
-                            label: "Union Property 2",
-                            currentAmperes: 15,
-                            pressurePsi: 18,
-                            temperatureCelsius: 42,
-                            onLocationButtonPressed: () {}),
-                        DashboardCard(
-                            label: "Union Property 3",
-                            currentAmperes: 9,
-                            pressurePsi: 20,
-                            temperatureCelsius: 35,
-                            onLocationButtonPressed: () {}),
-                      ],
-                    ),
-                  ),
+              SizedBox(
+                height: 60,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Wrap(
+                  children: [
+                    DashboardCard(
+                        label: "Al Qudra Lake",
+                        onLocationButtonPressed: () {},
+                        suctionPressure: 10,
+                        dischargePressure: 15,
+                        oxygenAPressure: 12,
+                        oxygenBPressure: 13,
+                        ambientTemperature: 25,
+                        totalCurrent: 10),
+                    DashboardCard(
+                        label: "Union Property 1",
+                        onLocationButtonPressed: () {},
+                        suctionPressure: 12,
+                        dischargePressure: 18,
+                        oxygenAPressure: 10,
+                        oxygenBPressure: 11,
+                        ambientTemperature: 35,
+                        totalCurrent: 13),
+                    DashboardCard(
+                        label: "Union Property 2",
+                        onLocationButtonPressed: () {},
+                        suctionPressure: 0,
+                        dischargePressure: 5,
+                        oxygenAPressure: 15,
+                        oxygenBPressure: 13,
+                        ambientTemperature: 45,
+                        totalCurrent: 2),
+                    DashboardCard(
+                        label: "Union Property 3",
+                        onLocationButtonPressed: () {},
+                        suctionPressure: 15,
+                        dischargePressure: 20,
+                        oxygenAPressure: 8,
+                        oxygenBPressure: 8,
+                        ambientTemperature: 42,
+                        totalCurrent: 16),
+                  ],
                 ),
               ),
             ],

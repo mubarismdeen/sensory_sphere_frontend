@@ -84,7 +84,7 @@ class _MainViewState extends State<_MainView> {
     List<Widget> listViewChildren;
     bool logStatus1 = false;
 
-    if (isDesktop) {
+    // if (isDesktop) {
       listViewChildren = [
         const _AppLogo(),
         _UsernameInput(
@@ -104,7 +104,7 @@ class _MainViewState extends State<_MainView> {
               showLoading = true;
             });
 
-            List<UserScreens> screensForUser = await authorizeUser(
+            List<UserScreens> screensForUser = await authorizeUserLocally(
               widget.usernameController!.text,
               widget.passwordController!.text,
             );
@@ -129,23 +129,23 @@ class _MainViewState extends State<_MainView> {
           status: showError,
         ),
       ];
-    } else {
-      listViewChildren = [
-        const _AppLogo(),
-        _UsernameInput(
-          usernameController: widget.usernameController,
-        ),
-        const SizedBox(height: 12),
-        _PasswordInput(
-          passwordController: widget.passwordController,
-        ),
-        _ThumbButton(
-          onTap: () {
-            _login(context);
-          },
-        ),
-      ];
-    }
+    // } else {
+    //   listViewChildren = [
+    //     const _AppLogo(),
+    //     _UsernameInput(
+    //       usernameController: widget.usernameController,
+    //     ),
+    //     const SizedBox(height: 12),
+    //     _PasswordInput(
+    //       passwordController: widget.passwordController,
+    //     ),
+    //     _ThumbButton(
+    //       onTap: () {
+    //         _login(context);
+    //       },
+    //     ),
+    //   ];
+    // }
 
     return Column(
       children: [

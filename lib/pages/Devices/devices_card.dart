@@ -27,6 +27,7 @@ class _DevicesCardState extends State<DevicesCard> {
   Widget build(BuildContext context) {
     return Container(
       width: 300,
+      height: 450,
       child: Card(
         color: cardColor,
         elevation: 5.0,

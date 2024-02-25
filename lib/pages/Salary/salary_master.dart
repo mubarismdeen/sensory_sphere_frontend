@@ -36,134 +36,135 @@ class _SalaryMasterState extends State<SalaryMaster> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(children: [
-        Obx(() => Row(
-              children: [
-                Container(
-                  margin: EdgeInsets.only(
-                      top: ResponsiveWidget.isSmallScreen(context) ? 56 : 6,
-                      left: 10),
-                  child: CustomText(
-                    text: menuController.activeItem.value,
-                    size: 24,
-                    weight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                )
-              ],
-            )),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Container(
-              margin: const EdgeInsets.only(right: 35.0, top: 35.0),
-              child: _uploadButton(),
-            ),
-          ],
-        ),
-        // EmployeeSalaryMaster(),
-        FutureBuilder<dynamic>(
-            future: getTableData(),
-            builder: (context, AsyncSnapshot<dynamic> _data) {
-              return ConstrainedBox(
-                constraints: const BoxConstraints(minHeight: 600),
-                child: getCustomCard(
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: SingleChildScrollView(
-                          child: DataTable(
-                            showCheckboxColumn: false,
-                            columns: const <DataColumn>[
-                              DataColumn(
-                                label: Expanded(
-                                  child: Text(
-                                    'Employee\nID',
-                                    style: tableHeaderStyle,
-                                  ),
-                                ),
-                              ),
-                              DataColumn(
-                                label: Expanded(
-                                  child: Text(
-                                    'Employee\nName',
-                                    style: tableHeaderStyle,
-                                  ),
-                                ),
-                              ),
-                              DataColumn(
-                                label: Expanded(
-                                  child: Text(
-                                    'Salary',
-                                    style: tableHeaderStyle,
-                                  ),
-                                ),
-                              ),
-                              DataColumn(
-                                label: Expanded(
-                                  child: Text(
-                                    'Normal\nOvertime',
-                                    style: tableHeaderStyle,
-                                  ),
-                                ),
-                              ),
-                              DataColumn(
-                                label: Expanded(
-                                  child: Text(
-                                    'Special\nOvertime',
-                                    style: tableHeaderStyle,
-                                  ),
-                                ),
-                              ),
-                              DataColumn(
-                                label: Expanded(
-                                  child: Text(
-                                    'overseas',
-                                    style: tableHeaderStyle,
-                                  ),
-                                ),
-                              ),
-                              DataColumn(
-                                label: Expanded(
-                                  child: Text(
-                                    'anchorage',
-                                    style: tableHeaderStyle,
-                                  ),
-                                ),
-                              ),
-                            ],
-                            rows: _salaryPay
-                                .map((salary) => DataRow(cells: [
-                                      DataCell(Text(salary.empCode)),
-                                      DataCell(Text(salary.name)),
-                                      DataCell(Text(salary.salary.toString())),
-                                      DataCell(Text(salary.nOtr.toString())),
-                                      DataCell(Text(salary.sOtr.toString())),
-                                      DataCell(
-                                          Text(salary.overseas.toString())),
-                                      DataCell(
-                                          Text(salary.anchorage.toString())),
-                                    ], onSelectChanged: (selected) {
-                              if (selected != null && selected) {
-                                _openDialog(salary);
-                              }
-                            }))
-                                .toList(),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }),
-      ]),
+      child: SizedBox(),
+      // Column(children: [
+      //   Obx(() => Row(
+      //         children: [
+      //           Container(
+      //             margin: EdgeInsets.only(
+      //                 top: ResponsiveWidget.isSmallScreen(context) ? 56 : 6,
+      //                 left: 10),
+      //             child: CustomText(
+      //               text: menuController.activeItem.value,
+      //               size: 24,
+      //               weight: FontWeight.bold,
+      //               color: Colors.black,
+      //             ),
+      //           )
+      //         ],
+      //       )),
+      //   Row(
+      //     mainAxisAlignment: MainAxisAlignment.end,
+      //     children: [
+      //       Container(
+      //         margin: const EdgeInsets.only(right: 35.0, top: 35.0),
+      //         child: _uploadButton(),
+      //       ),
+      //     ],
+      //   ),
+      //   // EmployeeSalaryMaster(),
+      //   FutureBuilder<dynamic>(
+      //       future: getTableData(),
+      //       builder: (context, AsyncSnapshot<dynamic> _data) {
+      //         return ConstrainedBox(
+      //           constraints: const BoxConstraints(minHeight: 600),
+      //           child: getCustomCard(
+      //             Column(
+      //               mainAxisAlignment: MainAxisAlignment.start,
+      //               crossAxisAlignment: CrossAxisAlignment.start,
+      //               children: [
+      //                 const SizedBox(
+      //                   height: 10,
+      //                 ),
+      //                 SingleChildScrollView(
+      //                   scrollDirection: Axis.horizontal,
+      //                   child: SingleChildScrollView(
+      //                     child: DataTable(
+      //                       showCheckboxColumn: false,
+      //                       columns: const <DataColumn>[
+      //                         DataColumn(
+      //                           label: Expanded(
+      //                             child: Text(
+      //                               'Employee\nID',
+      //                               style: tableHeaderStyle,
+      //                             ),
+      //                           ),
+      //                         ),
+      //                         DataColumn(
+      //                           label: Expanded(
+      //                             child: Text(
+      //                               'Employee\nName',
+      //                               style: tableHeaderStyle,
+      //                             ),
+      //                           ),
+      //                         ),
+      //                         DataColumn(
+      //                           label: Expanded(
+      //                             child: Text(
+      //                               'Salary',
+      //                               style: tableHeaderStyle,
+      //                             ),
+      //                           ),
+      //                         ),
+      //                         DataColumn(
+      //                           label: Expanded(
+      //                             child: Text(
+      //                               'Normal\nOvertime',
+      //                               style: tableHeaderStyle,
+      //                             ),
+      //                           ),
+      //                         ),
+      //                         DataColumn(
+      //                           label: Expanded(
+      //                             child: Text(
+      //                               'Special\nOvertime',
+      //                               style: tableHeaderStyle,
+      //                             ),
+      //                           ),
+      //                         ),
+      //                         DataColumn(
+      //                           label: Expanded(
+      //                             child: Text(
+      //                               'overseas',
+      //                               style: tableHeaderStyle,
+      //                             ),
+      //                           ),
+      //                         ),
+      //                         DataColumn(
+      //                           label: Expanded(
+      //                             child: Text(
+      //                               'anchorage',
+      //                               style: tableHeaderStyle,
+      //                             ),
+      //                           ),
+      //                         ),
+      //                       ],
+      //                       rows: _salaryPay
+      //                           .map((salary) => DataRow(cells: [
+      //                                 DataCell(Text(salary.empCode)),
+      //                                 DataCell(Text(salary.name)),
+      //                                 DataCell(Text(salary.salary.toString())),
+      //                                 DataCell(Text(salary.nOtr.toString())),
+      //                                 DataCell(Text(salary.sOtr.toString())),
+      //                                 DataCell(
+      //                                     Text(salary.overseas.toString())),
+      //                                 DataCell(
+      //                                     Text(salary.anchorage.toString())),
+      //                               ], onSelectChanged: (selected) {
+      //                         if (selected != null && selected) {
+      //                           _openDialog(salary);
+      //                         }
+      //                       }))
+      //                           .toList(),
+      //                     ),
+      //                   ),
+      //                 ),
+      //               ],
+      //             ),
+      //           ),
+      //         );
+      //       }),
+      // ]),
     );
   }
 

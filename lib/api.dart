@@ -72,6 +72,24 @@ Future<List<UserScreens>> authorizeUser(String username, String password) async 
   return list;
 }
 
+Future<List<UserScreens>> authorizeUserLocally(String username, String password) async {
+  List<UserScreens> list = [];
+  if (username == "mubaris" && password=="123") {
+    UserScreens screens = UserScreens(creatBy: '');
+    screens.dashboard = true;
+    screens.employees = true;
+    screens.attendance = true;
+    screens.salaryMaster = true;
+    screens.salaryPayout = true;
+    screens.leaveSalary = true;
+    screens.clients = true;
+    screens.gratuity = true;
+    list.add(screens);
+    return list;
+  }
+  throw Exception('Failed');
+}
+
 Future<List<UserDetails>> getUserDetails (String empCode) async {
   String urlWithParams = "http://$ip/Hrms/getUserDetails?empCode=$empCode";
   List<UserDetails> list = (await httpConnect(urlWithParams, HttpMethod.GET) as List)

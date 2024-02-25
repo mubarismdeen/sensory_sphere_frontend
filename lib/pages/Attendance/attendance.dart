@@ -48,54 +48,55 @@ class _AttendanceState extends State<Attendance> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(children: [
-        Obx(() => Row(
-              children: [
-                Container(
-                  margin: EdgeInsets.only(
-                      top: ResponsiveWidget.isSmallScreen(context) ? 56 : 6,
-                      left: 10),
-                  child: CustomText(
-                    text: menuController.activeItem.value,
-                    size: 24,
-                    weight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                )
-              ],
-            )),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              margin: const EdgeInsets.only(left: 25.0, top: 35.0),
-              child: MonthPicker(_pickedDate, onDateChange),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                // Container(
-                //   margin: const EdgeInsets.only(right: 35.0, top: 35.0),
-                //   child: _viewButton(),
-                // ),
-                Container(
-                  margin: const EdgeInsets.only(right: 35.0, top: 35.0),
-                  child: _uploadButton(),
-                ),
-              ],
-            ),
-          ],
-        ),
-        const SizedBox(height: 20),
-        // EmployeeAttendance(pickedDate),
-        FutureBuilder<dynamic>(
-            future: getAttendanceData(),
-            builder: (context, AsyncSnapshot<dynamic> _data) {
-              return attendances.isEmpty && !_enterAttendance
-                  ? _attendanceNotFoundContainer()
-                  : _attendanceTable();
-            }),
-      ]),
+      child: SizedBox(),
+      // Column(children: [
+      //   Obx(() => Row(
+      //         children: [
+      //           Container(
+      //             margin: EdgeInsets.only(
+      //                 top: ResponsiveWidget.isSmallScreen(context) ? 56 : 6,
+      //                 left: 10),
+      //             child: CustomText(
+      //               text: menuController.activeItem.value,
+      //               size: 24,
+      //               weight: FontWeight.bold,
+      //               color: Colors.black,
+      //             ),
+      //           )
+      //         ],
+      //       )),
+      //   Row(
+      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //     children: [
+      //       Container(
+      //         margin: const EdgeInsets.only(left: 25.0, top: 35.0),
+      //         child: MonthPicker(_pickedDate, onDateChange),
+      //       ),
+      //       Row(
+      //         mainAxisAlignment: MainAxisAlignment.end,
+      //         children: [
+      //           // Container(
+      //           //   margin: const EdgeInsets.only(right: 35.0, top: 35.0),
+      //           //   child: _viewButton(),
+      //           // ),
+      //           Container(
+      //             margin: const EdgeInsets.only(right: 35.0, top: 35.0),
+      //             child: _uploadButton(),
+      //           ),
+      //         ],
+      //       ),
+      //     ],
+      //   ),
+      //   const SizedBox(height: 20),
+      //   // EmployeeAttendance(pickedDate),
+      //   FutureBuilder<dynamic>(
+      //       future: getAttendanceData(),
+      //       builder: (context, AsyncSnapshot<dynamic> _data) {
+      //         return attendances.isEmpty && !_enterAttendance
+      //             ? _attendanceNotFoundContainer()
+      //             : _attendanceTable();
+      //       }),
+      // ]),
     );
   }
 

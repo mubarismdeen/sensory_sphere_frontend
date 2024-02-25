@@ -5,14 +5,13 @@ import 'package:admin/widget/settings_popup.dart';
 import 'package:flutter/material.dart';
 
 import '../globalState.dart';
-import '../helpers/image_placeholder.dart';
 import 'custom_alert_dialog.dart';
 import 'custom_text.dart';
 
 AppBar topNavigationBar(BuildContext context, GlobalKey<ScaffoldState> key) =>
     AppBar(
-      backgroundColor: themeColor,
-      shadowColor: shadowColor,
+      backgroundColor: appBarColor,
+      shadowColor: dark,
       elevation: 6,
       leading: !ResponsiveWidget.isSmallScreen(context)
           ? Hero(
@@ -39,17 +38,20 @@ AppBar topNavigationBar(BuildContext context, GlobalKey<ScaffoldState> key) =>
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          const Padding(
-            padding: EdgeInsets.only(top: 10),
-            child: Text(
-              appTitle,
-              style: TextStyle(
-              color: mainTitleColor,
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'LobsterFont'),
+          if (!ResponsiveWidget.isSmallScreen(context))
+            const Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: Flexible(
+                child: Text(
+                  appTitle,
+                  style: TextStyle(
+                      color: mainTitleColor,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'LobsterFont'),
+                ),
+              ),
             ),
-          ),
           Expanded(child: Container()),
           IconButton(
             icon: Icon(

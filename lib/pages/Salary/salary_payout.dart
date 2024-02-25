@@ -21,25 +21,26 @@ class _SalaryPayoutState extends State<SalaryPayout> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(children: [
-        Obx(() => Row(
-          children: [
-            Container(
-              margin: EdgeInsets.only(
-                  top: ResponsiveWidget.isSmallScreen(context) ? 56 : 6,
-                  left: 10),
-              child: CustomText(
-                text: menuController.activeItem.value,
-                size: 24,
-                weight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            )
-          ],
-        )),
-        const SizedBox(height: 20),
-        EmployeeSalary(),
-      ]),
+      child: SizedBox(),
+      // Column(children: [
+      //   Obx(() => Row(
+      //     children: [
+      //       Container(
+      //         margin: EdgeInsets.only(
+      //             top: ResponsiveWidget.isSmallScreen(context) ? 56 : 6,
+      //             left: 10),
+      //         child: CustomText(
+      //           text: menuController.activeItem.value,
+      //           size: 24,
+      //           weight: FontWeight.bold,
+      //           color: Colors.black,
+      //         ),
+      //       )
+      //     ],
+      //   )),
+      //   const SizedBox(height: 20),
+      //   EmployeeSalary(),
+      // ]),
     );
   }
 
