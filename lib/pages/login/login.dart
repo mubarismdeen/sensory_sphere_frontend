@@ -8,7 +8,6 @@ import 'package:get/get.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../../api.dart';
-import '../../helpers/image_placeholder.dart';
 import '../../layout.dart';
 
 class LoginPage extends StatefulWidget {
@@ -103,7 +102,6 @@ class _MainViewState extends State<_MainView> {
             setState(() {
               showLoading = true;
             });
-
             List<UserScreens> screensForUser = await authorizeUserLocally(
               widget.usernameController!.text,
               widget.passwordController!.text,

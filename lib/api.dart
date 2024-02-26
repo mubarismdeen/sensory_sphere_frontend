@@ -74,7 +74,7 @@ Future<List<UserScreens>> authorizeUser(String username, String password) async 
 
 Future<List<UserScreens>> authorizeUserLocally(String username, String password) async {
   List<UserScreens> list = [];
-  if (username == "mubaris" && password=="123") {
+  if (username == "admin" && password=="123") {
     UserScreens screens = UserScreens(creatBy: '');
     screens.dashboard = true;
     screens.employees = true;
@@ -85,9 +85,8 @@ Future<List<UserScreens>> authorizeUserLocally(String username, String password)
     screens.clients = true;
     screens.gratuity = true;
     list.add(screens);
-    return list;
   }
-  throw Exception('Failed');
+  return list;
 }
 
 Future<List<UserDetails>> getUserDetails (String empCode) async {
