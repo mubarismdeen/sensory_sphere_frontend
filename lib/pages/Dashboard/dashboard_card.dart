@@ -31,9 +31,8 @@ class DashboardCard extends StatefulWidget {
 class _DashboardCardState extends State<DashboardCard> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 350,
-      // height: 450,
+    return SizedBox(
+      width: 400,
       child: Card(
         color: cardColor,
         elevation: 5.0,
@@ -119,30 +118,33 @@ class _DashboardCardState extends State<DashboardCard> {
                     onPressed: () {
                       // Handle start button press
                     },
-                    icon: Icon(Icons.play_arrow),
-                    label: Text('Start'),
+                    icon: const Icon(Icons.play_arrow),
+                    label: const Text('Start'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green[500]?.withOpacity(0.85),
                       foregroundColor: light,
                     ),
                   ),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      // Handle reset button press
-                    },
-                    icon: Icon(Icons.refresh),
-                    label: Text('Reset'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue[400]?.withOpacity(0.85),
-                      foregroundColor: light,
+                  Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        // Handle reset button press
+                      },
+                      icon: const Icon(Icons.refresh),
+                      label: const Text('Reset'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue[400]?.withOpacity(0.85),
+                        foregroundColor: light,
+                      ),
                     ),
                   ),
                   ElevatedButton.icon(
                     onPressed: () {
                       // Handle stop button press
                     },
-                    icon: Icon(Icons.stop),
-                    label: Text('Stop'),
+                    icon: const Icon(Icons.stop),
+                    label: const Text('Stop'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red[400]?.withOpacity(0.85),
                       foregroundColor: light,
