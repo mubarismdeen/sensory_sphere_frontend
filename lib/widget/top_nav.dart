@@ -5,7 +5,6 @@ import 'package:admin/widget/settings_popup.dart';
 import 'package:flutter/material.dart';
 
 import '../globalState.dart';
-import '../helpers/image_placeholder.dart';
 import 'custom_alert_dialog.dart';
 import 'custom_text.dart';
 
@@ -20,10 +19,13 @@ AppBar topNavigationBar(BuildContext context, GlobalKey<ScaffoldState> key) =>
               child: Container(
                 height: 35,
                 padding: const EdgeInsets.only(left: 10, top: 5),
-                child: const ExcludeSemantics(
-                  child: FadeInImagePlaceholder(
-                    image: AssetImage('images/app_icon.png'),
-                    placeholder: SizedBox.shrink(),
+                child: ExcludeSemantics(
+                  child: ColorFiltered(
+                    colorFilter: const ColorFilter.mode(
+                      mainTitleColor, // Desired color
+                      BlendMode.srcIn,
+                    ),
+                    child: Image.asset('images/app_icon.png'),
                   ),
                 ),
               ),
