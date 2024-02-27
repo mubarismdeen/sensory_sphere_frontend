@@ -34,30 +34,34 @@ class _SettingsPopupState extends State<SettingsPopup> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 150,
+      height: 120,
       width: 400,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text("Database Backup : ",
-                  style: TextStyle(fontWeight: FontWeight.w600)),
-              if (message.isEmpty)
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: themeColor,
-                  ),
-                  onPressed: _createBackup,
-                  child: const Padding(
-                    padding: EdgeInsets.all(12.0),
-                    child: Text('Create Backup'),
+          const SizedBox(height: 15),
+          const Text("Database Backup : ",
+              style: TextStyle(fontWeight: FontWeight.w600, color: lightGrey)),
+          if (message.isEmpty)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: elevatedButtonColor,
+                    ),
+                    onPressed: _createBackup,
+                    child: const Padding(
+                      padding: EdgeInsets.all(12.0),
+                      child: Text('Create Backup'),
+                    ),
                   ),
                 ),
-            ],
-          ),
+              ],
+            ),
           const SizedBox(height: 15),
           if (message.isNotEmpty)
             Padding(

@@ -1,12 +1,11 @@
 import 'package:admin/constants/style.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class CustomAlertDialog extends StatelessWidget {
   final String title;
   final Widget child;
-  TextStyle? titleStyle;
-  List<Widget>? dialogActions = [];
+  final TextStyle? titleStyle;
+  final List<Widget>? dialogActions;
 
   CustomAlertDialog({
     required this.title,
@@ -20,27 +19,47 @@ class CustomAlertDialog extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 20),
       child: AlertDialog(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(title, style: titleStyle,),
-            const SizedBox(
-              width: 35,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        titlePadding: EdgeInsets.zero,
+        shadowColor: elevatedButtonColor,
+        scrollable: true,
+        elevation: 15,
+        title: Container(
+          decoration: const BoxDecoration(
+            color: appBarColor,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(10),
+              topRight: Radius.circular(10),
             ),
-            TextButton(
-              style: const ButtonStyle(alignment: Alignment.topRight),
-              onPressed: () {
-                navigator?.pop(context);
-              },
-              child: const Icon(
-                Icons.clear,
-                color: themeColor,
+            boxShadow: [
+              BoxShadow(
+                color: themeColor, // Color of the shadow
+                spreadRadius: 2, // Spread radius
+                blurRadius: 5, // Blur radius
               ),
-            ),
-          ],
+            ],
+          ),
+          padding: const EdgeInsets.fromLTRB(12, 10, 0, 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                title,
+                style: titleStyle,
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Icon(
+                  Icons.clear,
+                  color: lightGrey,
+                ),
+              ),
+            ],
+          ),
         ),
         content: child,
-        insetPadding: const EdgeInsets.symmetric(horizontal: 100),
         actions: dialogActions,
       ),
     );

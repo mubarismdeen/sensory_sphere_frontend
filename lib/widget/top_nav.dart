@@ -124,7 +124,7 @@ void _openSettings(BuildContext context) {
     builder: (BuildContext context) {
       return CustomAlertDialog(
         title: 'Settings',
-        titleStyle: const TextStyle(fontWeight: FontWeight.bold),
+        titleStyle: const TextStyle(fontWeight: FontWeight.bold, color: lightGrey),
         child: const SettingsPopup(),
       );
     },
