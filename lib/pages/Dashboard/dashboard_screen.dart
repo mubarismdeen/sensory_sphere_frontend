@@ -33,6 +33,7 @@ class DashboardScreen extends StatelessWidget {
                       oxygenBPressure: 13,
                       ambientTemperature: 25,
                       totalCurrent: 10,
+                      isRunning: true,
                     ),
                     DashboardCard(
                       label: "Union Property 1",
@@ -43,6 +44,7 @@ class DashboardScreen extends StatelessWidget {
                       oxygenBPressure: 11,
                       ambientTemperature: 35,
                       totalCurrent: 13,
+                      isRunning: false,
                     ),
                     DashboardCard(
                       label: "Union Property 2",
@@ -53,6 +55,7 @@ class DashboardScreen extends StatelessWidget {
                       oxygenBPressure: 13,
                       ambientTemperature: 45,
                       totalCurrent: 2,
+                      isRunning: false,
                     ),
                     DashboardCard(
                       label: "Union Property 3",
@@ -63,6 +66,7 @@ class DashboardScreen extends StatelessWidget {
                       oxygenBPressure: 8,
                       ambientTemperature: 42,
                       totalCurrent: 16,
+                      isRunning: true,
                     ),
                   ],
                 ),

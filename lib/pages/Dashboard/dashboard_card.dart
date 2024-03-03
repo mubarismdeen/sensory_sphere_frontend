@@ -12,6 +12,7 @@ class DashboardCard extends StatefulWidget {
   final double oxygenBPressure;
   final double ambientTemperature;
   final double totalCurrent;
+  final bool isRunning;
 
   DashboardCard({
     required this.label,
@@ -22,6 +23,7 @@ class DashboardCard extends StatefulWidget {
     required this.oxygenBPressure,
     required this.ambientTemperature,
     required this.totalCurrent,
+    required this.isRunning,
   });
 
   @override
@@ -29,6 +31,14 @@ class DashboardCard extends StatefulWidget {
 }
 
 class _DashboardCardState extends State<DashboardCard> {
+
+  late bool _isRunning;
+
+  @override
+  void initState() {
+    super.initState();
+    _isRunning = widget.isRunning;
+  }
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -65,25 +75,32 @@ class _DashboardCardState extends State<DashboardCard> {
                   Row(
                     children: [
                       IconButton(
+                        onPressed: () {
+                          // Handle second feature button press
+                        },
+                        icon: Icon(
+                          Icons.play_arrow_rounded,
+                          color: _isRunning ? green : shadowColor,
+                        ),
+                      ),
+                      IconButton(
                         padding: const EdgeInsets.all(2),
                         onPressed: () {
                           // Handle first feature button press
                         },
-                        icon: const Icon(Icons.alarm_sharp, color: shadowColor),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          // Handle second feature button press
-                        },
-                        icon:
-                            const Icon(Icons.play_arrow_rounded, color: shadowColor),
+                        icon: const Icon(
+                          Icons.alarm_sharp,
+                          color: shadowColor,
+                        ),
                       ),
                       IconButton(
                         onPressed: () {
                           // Handle third feature button press
                         },
-                        icon:
-                            const Icon(Icons.error_outline_sharp, color: shadowColor),
+                        icon: const Icon(
+                          Icons.error_outline_sharp,
+                          color: shadowColor,
+                        ),
                       ),
                     ],
                   ),
@@ -112,41 +129,44 @@ class _DashboardCardState extends State<DashboardCard> {
                   totalCurrent: widget.totalCurrent),
               const SizedBox(height: 20),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
+                  !_isRunning
+                      ? ElevatedButton.icon(
+                          onPressed: () {
+                            setState(() {
+                              _isRunning = true;
+                            });
+                          },
+                          icon: const Icon(Icons.play_arrow),
+                          label: const Text('Start'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                Colors.green[500]?.withOpacity(0.85),
+                            foregroundColor: light,
+                          ),
+                        )
+                      : ElevatedButton.icon(
+                          onPressed: () {
+                            setState(() {
+                              _isRunning = false;
+                            });
+                          },
+                          icon: const Icon(Icons.stop),
+                          label: const Text('Stop'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red[400]?.withOpacity(0.85),
+                            foregroundColor: light,
+                          ),
+                        ),
                   ElevatedButton.icon(
                     onPressed: () {
-                      // Handle start button press
+                      // Handle reset button press
                     },
-                    icon: const Icon(Icons.play_arrow),
-                    label: const Text('Start'),
+                    icon: const Icon(Icons.refresh),
+                    label: const Text('Reset'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green[500]?.withOpacity(0.85),
-                      foregroundColor: light,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        // Handle reset button press
-                      },
-                      icon: const Icon(Icons.refresh),
-                      label: const Text('Reset'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue[400]?.withOpacity(0.85),
-                        foregroundColor: light,
-                      ),
-                    ),
-                  ),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      // Handle stop button press
-                    },
-                    icon: const Icon(Icons.stop),
-                    label: const Text('Stop'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red[400]?.withOpacity(0.85),
+                      backgroundColor: Colors.blue[400]?.withOpacity(0.85),
                       foregroundColor: light,
                     ),
                   ),

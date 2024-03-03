@@ -12,6 +12,7 @@ const Color cardColor = Color(0xFF37474F);
 const Color inputFieldOutlineColor = Color.fromRGBO(107, 48, 255, 1);
 const Color errorColor = Colors.red;
 const Color locationButtonColor = Colors.green;
+const Color green = Colors.lightGreenAccent;
 const Color elevatedButtonColor = Color.fromRGBO(107, 48, 255, 0.3);
 const Color appBarColor = Color.fromRGBO(59, 38, 115, 1);
 
