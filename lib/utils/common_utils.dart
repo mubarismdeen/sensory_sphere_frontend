@@ -28,35 +28,47 @@ bool getViewPrivilege(UserPrivileges privileges) {
 
 List<Widget> getActionButtonsWithoutPrivilege(
     {required BuildContext context,
-      required void Function() onSubmit,
-      bool hasDeleteOption = false,
-      void Function()? onDelete}) {
+    required void Function() onSubmit,
+    bool hasData = false,
+    void Function()? onDelete}) {
   List<Widget> widgetList = [
     ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: themeColor,
+        backgroundColor: highlightedColor,
       ),
       onPressed: onSubmit,
-      child: const Text('Submit'),
-    ),
-    ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: themeColor,
+      child: Text(
+        hasData ? 'Save':'Submit',
+        style: TextStyle(color: lightGrey, fontWeight: FontWeight.bold),
       ),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-      child: const Text('Cancel'),
     ),
-  ];
-  if (hasDeleteOption) {
-    widgetList.add(
-      ElevatedButton(
+    Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: themeColor,
         ),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        child: const Text(
+          'Cancel',
+          style: TextStyle(color: lightGrey, fontWeight: FontWeight.bold),
+        ),
+      ),
+    ),
+  ];
+  if (hasData) {
+    widgetList.add(
+      ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: errorColor,
+        ),
         onPressed: onDelete,
-        child: const Text('Delete'),
+        child: const Text(
+          'Delete',
+          style: TextStyle(color: lightGrey, fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }
@@ -73,10 +85,13 @@ List<Widget> getActionButtonsWithPrivilege(
     if (privileges.editPrivilege)
       ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: themeColor,
+          backgroundColor: highlightedColor,
         ),
         onPressed: onSubmit,
-        child: const Text('Submit'),
+        child: const Text(
+          'Submit',
+          style: TextStyle(color: lightGrey, fontWeight: FontWeight.bold),
+        ),
       ),
     ElevatedButton(
       style: ElevatedButton.styleFrom(
@@ -85,17 +100,23 @@ List<Widget> getActionButtonsWithPrivilege(
       onPressed: () {
         Navigator.of(context).pop();
       },
-      child: const Text('Cancel'),
+      child: const Text(
+        'Cancel',
+        style: TextStyle(color: lightGrey, fontWeight: FontWeight.bold),
+      ),
     ),
   ];
   if (hasData && privileges.deletePrivilege) {
     widgetList.add(
       ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: themeColor,
+          backgroundColor: errorColor,
         ),
         onPressed: onDelete,
-        child: const Text('Delete'),
+        child: const Text(
+          'Delete',
+          style: TextStyle(color: lightGrey, fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }
@@ -158,4 +179,3 @@ void showSaveFailedMessage(BuildContext context,
     );
   }
 }
-

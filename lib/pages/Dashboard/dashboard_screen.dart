@@ -1,8 +1,8 @@
 import 'package:admin/pages/Dashboard/dashboard_card.dart';
 import 'package:flutter/material.dart';
 
-class Dashboard extends StatelessWidget {
-  Dashboard({Key? key}) : super(key: key);
+class DashboardScreen extends StatelessWidget {
+  DashboardScreen({Key? key}) : super(key: key);
 
   initPageData() async {}
 

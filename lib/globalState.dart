@@ -31,13 +31,13 @@ class GlobalState {
       employeeScreenPrivilege = true;
       sideMenuItems.add(DevicesRoute);
       }
-    if(screensForUser.salaryMaster) {
-      salaryMasterScreenPrivilege = true;
-      sideMenuItems.add(MaintenanceRoute);
-    }
     if(screensForUser.salaryPayout) {
       salaryPayoutScreenPrivilege = true;
       sideMenuItems.add(AlarmsRoute);
+    }
+    if(screensForUser.salaryMaster) {
+      salaryMasterScreenPrivilege = true;
+      sideMenuItems.add(MaintenanceRoute);
     }
     if(screensForUser.leaveSalary) {
       leaveSalaryScreenPrivilege = true;

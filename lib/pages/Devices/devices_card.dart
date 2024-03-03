@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../constants/style.dart';
-import 'inlay_widget.dart';
 
 class DevicesCard extends StatefulWidget {
   final String label;

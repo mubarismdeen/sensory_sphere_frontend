@@ -1,6 +1,5 @@
 import 'package:admin/constants/constants.dart';
 import 'package:admin/routes/routes.dart';
-import 'package:admin/widget/custom_text.dart';
 import 'package:admin/widget/side_menu_item.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,7 +7,6 @@ import 'package:get/get.dart';
 import '../constants/controllers.dart';
 import '../constants/style.dart';
 import '../globalState.dart';
-import '../helpers/image_placeholder.dart';
 import '../helpers/responsiveness.dart';
 import '../pages/login/login.dart';
 

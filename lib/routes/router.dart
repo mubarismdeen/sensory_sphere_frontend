@@ -1,15 +1,15 @@
 
+import 'package:admin/pages/Alarms/alarms_screen.dart';
 import 'package:admin/pages/Clients/clients_screen.dart';
 import 'package:admin/pages/Salary/leave_salary.dart';
-import 'package:admin/pages/Salary/salary_payout.dart';
 import 'package:admin/routes/routes.dart';
 import 'package:flutter/material.dart';
 
 import '../pages/Attendance/attendance.dart';
-import '../pages/Devices/devices.dart';
+import '../pages/Devices/devices_screen.dart';
 import '../pages/Gratuity/gratuity_screen.dart';
 import '../pages/Salary/salary_master.dart';
-import '../pages/Dashboard/dashboard.dart';
+import '../pages/Dashboard/dashboard_screen.dart';
 
 
 
@@ -20,9 +20,9 @@ Route<dynamic> generateRoute(RouteSettings settings){
     case SupportRoute:
       return _getPageRoute(const Attendance());
     case DashboardRoute:
-      return _getPageRoute(Dashboard());
+      return _getPageRoute(DashboardScreen());
     case AlarmsRoute:
-      return _getPageRoute(const SalaryPayout());
+      return _getPageRoute(const AlarmsScreen());
     case MaintenanceRoute:
       return _getPageRoute(const SalaryMaster());
     case CompanyRoute:
@@ -40,7 +40,7 @@ PageRoute _getPageRoute(Widget child){
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => child,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, -1.0);
+      var begin = const Offset(0.0, -1.0);
       var end = Offset.zero;
       var curve = Curves.ease;
 

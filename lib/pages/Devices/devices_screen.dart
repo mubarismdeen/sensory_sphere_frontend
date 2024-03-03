@@ -1,15 +1,5 @@
-import 'package:admin/api.dart';
-import 'package:admin/constants/style.dart';
-import 'package:admin/globalState.dart';
-import 'package:admin/models/userDetails.dart';
-import 'package:admin/models/userPrivileges.dart';
-import 'package:admin/models/userScreens.dart';
-import 'package:admin/pages/Devices/employee_accesses_dialog.dart';
-import 'package:admin/widget/custom_alert_dialog.dart';
-import 'package:admin/widget/employee_details_form.dart';
 import 'package:flutter/material.dart';
 
-import '../../models/employeeDetails.dart';
 import 'devices_card.dart';
 
 class DevicesScreen extends StatefulWidget {
@@ -32,6 +22,7 @@ class _DevicesScreenState extends State<DevicesScreen> {
     setState(() {
       getTableData();
     });
+
   }
 
   @override
@@ -88,51 +79,51 @@ class _DevicesScreenState extends State<DevicesScreen> {
         });
   }
 
-  void _openUploadDialog(EmployeeDetails? tableRow) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return CustomAlertDialog(
-          title: 'Add New Employee',
-          child: EmployeeDetailsForm(closeDialog, tableRow, context),
-        );
-      },
-    );
-  }
+  // void _openUploadDialog(EmployeeDetails? tableRow) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return CustomAlertDialog(
+  //         title: 'Add New Employee',
+  //         child: EmployeeDetailsForm(closeDialog, tableRow, context),
+  //       );
+  //     },
+  //   );
+  // }
 
-  Widget _uploadButton() {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.all(16.0),
-        backgroundColor: elevatedButtonColor,
-      ),
-      onPressed: () => _openUploadDialog(null),
-      child: const Text('Add Employee',
-          style: TextStyle(fontWeight: FontWeight.bold)),
-    );
-  }
+  // Widget _uploadButton() {
+  //   return ElevatedButton(
+  //     style: ElevatedButton.styleFrom(
+  //       padding: const EdgeInsets.all(16.0),
+  //       backgroundColor: elevatedButtonColor,
+  //     ),
+  //     onPressed: () => _openUploadDialog(null),
+  //     child: const Text('Add Employee',
+  //         style: TextStyle(fontWeight: FontWeight.bold)),
+  //   );
+  // }
 
-  void _openPrivilegesDialog(EmployeeDetails employee) async {
-    String empCode = employee.empCode;
-    var screensData = await getScreensForEmployee(empCode);
-    var userData = await getUserDetails(empCode);
-    UserScreens empScreens = screensData.isNotEmpty
-        ? screensData.first
-        : UserScreens(creatBy: GlobalState.userEmpCode);
-    UserDetails? userDetails = userData.isNotEmpty ? userData.first : null;
-    List<UserPrivileges> privilegesList =
-        await getAllPrivilegesForUser(empCode);
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return EmployeeAccessesDialog(
-          userDetails: userDetails,
-          userScreens: empScreens,
-          userPrivilegesList: privilegesList,
-          employeeName: employee.name,
-          employeeCode: empCode,
-        );
-      },
-    );
-  }
+  // void _openPrivilegesDialog(EmployeeDetails employee) async {
+  //   String empCode = employee.empCode;
+  //   var screensData = await getScreensForEmployee(empCode);
+  //   var userData = await getUserDetails(empCode);
+  //   UserScreens empScreens = screensData.isNotEmpty
+  //       ? screensData.first
+  //       : UserScreens(creatBy: GlobalState.userEmpCode);
+  //   UserDetails? userDetails = userData.isNotEmpty ? userData.first : null;
+  //   List<UserPrivileges> privilegesList =
+  //       await getAllPrivilegesForUser(empCode);
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return EmployeeAccessesDialog(
+  //         userDetails: userDetails,
+  //         userScreens: empScreens,
+  //         userPrivilegesList: privilegesList,
+  //         employeeName: employee.name,
+  //         employeeCode: empCode,
+  //       );
+  //     },
+  //   );
+  // }
 }

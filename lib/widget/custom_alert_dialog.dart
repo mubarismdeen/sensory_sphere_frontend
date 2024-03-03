@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 class CustomAlertDialog extends StatelessWidget {
   final String title;
   final Widget child;
-  final TextStyle? titleStyle;
+  final TextStyle titleStyle;
   final List<Widget>? dialogActions;
 
   CustomAlertDialog({
     required this.title,
     required this.child,
     this.dialogActions,
-    this.titleStyle,
+    this.titleStyle = const TextStyle(fontWeight: FontWeight.bold, color: lightGrey),
   });
 
   @override
@@ -22,7 +22,7 @@ class CustomAlertDialog extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         titlePadding: EdgeInsets.zero,
         shadowColor: elevatedButtonColor,
-        scrollable: true,
+        // scrollable: true,
         elevation: 15,
         title: Container(
           decoration: const BoxDecoration(
@@ -59,7 +59,7 @@ class CustomAlertDialog extends StatelessWidget {
             ],
           ),
         ),
-        content: child,
+        content: SingleChildScrollView(child: child),
         actions: dialogActions,
       ),
     );

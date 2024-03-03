@@ -24,13 +24,13 @@ class EmployeeDetailsForm extends StatefulWidget {
 class _EmployeeDetailsFormState extends State<EmployeeDetailsForm> {
   final _formKey = GlobalKey<FormState>();
 
-  var _empCode = TextEditingController();
-  var _name = TextEditingController();
-  var _mobile1 = TextEditingController();
-  var _mobile2 = TextEditingController();
-  var _dob = TextEditingController();
-  var _resignDate = TextEditingController();
-  var _joiningDate = TextEditingController();
+  final _empCode = TextEditingController();
+  final _name = TextEditingController();
+  final _mobile1 = TextEditingController();
+  final _mobile2 = TextEditingController();
+  final _dob = TextEditingController();
+  final _resignDate = TextEditingController();
+  final _joiningDate = TextEditingController();
   late Map<String, dynamic> _selectedDepartment;
   late Map<String, dynamic> _selectedNationality;
   late Map<String, dynamic> _selectedStatus;
@@ -74,7 +74,7 @@ class _EmployeeDetailsFormState extends State<EmployeeDetailsForm> {
         statuses.firstWhere((status) => status['description'] == _status);
   }
 
-  SaveEmployeeDetails _employeeDetails = SaveEmployeeDetails(
+  final SaveEmployeeDetails _employeeDetails = SaveEmployeeDetails(
       id: 0,
       empCode: '',
       name: '',
@@ -381,7 +381,7 @@ class _EmployeeDetailsFormState extends State<EmployeeDetailsForm> {
                       ...getActionButtonsWithoutPrivilege(
                         context: context,
                         onSubmit: _onSubmit,
-                        hasDeleteOption: widget.tableRow != null,
+                        hasData: widget.tableRow != null,
                         onDelete: _onDelete,
                       ),
                     ],

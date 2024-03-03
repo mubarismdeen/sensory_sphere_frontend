@@ -1,7 +1,9 @@
 import 'package:admin/constants/constants.dart';
+import 'package:admin/constants/controllers.dart';
 import 'package:admin/constants/style.dart';
 import 'package:admin/globalState.dart';
 import 'package:admin/models/userScreens.dart';
+import 'package:admin/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -109,6 +111,7 @@ class _MainViewState extends State<_MainView> {
             if (screensForUser.isNotEmpty) {
               logStatus1 = true;
               GlobalState.setScreensForUser(widget.usernameController!.text, screensForUser.first);
+              menuController.activeItem.value = DashboardRoute;
             }
 
             if (logStatus1) {
