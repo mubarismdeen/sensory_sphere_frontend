@@ -14,9 +14,6 @@ class DashboardScreen extends StatelessWidget {
         return SingleChildScrollView(
           child: Column(
             children: [
-              const SizedBox(
-                height: 60,
-              ),
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Wrap(

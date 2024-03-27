@@ -1,4 +1,3 @@
-import 'package:admin/constants/style.dart';
 import 'package:admin/models/alarm_details.dart';
 import 'package:admin/widget/custom_alert_dialog.dart';
 import 'package:admin/widget/custom_data_table.dart';
@@ -44,7 +43,6 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          const SizedBox(height: 50),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -53,7 +51,8 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
                 child: ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
-                      appBarColor,
+                      // appBarColor,
+                        Colors.blue[400]!.withOpacity(0.85)
                     ),
                     elevation: MaterialStateProperty.all<double>(4.0),
                     // shadowColor: MaterialStateProperty.all<Color>(shadowColor),
@@ -64,7 +63,7 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
                     child: Text(
                       'Add Alarm',
                       style: TextStyle(
-                        color: lightGrey,
+                        color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

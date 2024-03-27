@@ -1,6 +1,5 @@
+import 'package:admin/pages/Devices/system_card.dart';
 import 'package:flutter/material.dart';
-
-import 'devices_card.dart';
 
 class DevicesScreen extends StatefulWidget {
   const DevicesScreen({Key? key}) : super(key: key);
@@ -10,11 +9,6 @@ class DevicesScreen extends StatefulWidget {
 }
 
 class _DevicesScreenState extends State<DevicesScreen> {
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _employeeDetails = [];
-  // }
 
   getTableData() async {}
 
@@ -22,7 +16,6 @@ class _DevicesScreenState extends State<DevicesScreen> {
     setState(() {
       getTableData();
     });
-
   }
 
   @override
@@ -32,46 +25,19 @@ class _DevicesScreenState extends State<DevicesScreen> {
         builder: (context, AsyncSnapshot<dynamic> _data) {
           return SingleChildScrollView(
             child: Column(children: [
-              const SizedBox(height: 50),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.end,
-              //   children: [
-              //     Container(
-              //       margin: const EdgeInsets.only(right: 35.0, top: 35.0),
-              //       child: _uploadButton(),
-              //     ),
-              //   ],
-              // ),
-              // EmployeeDetailsWidget(_employeeDetails),
+              // const SizedBox(height: 50),
               Padding(
                 padding: const EdgeInsets.all(20.0),
-                child: Wrap(
-                  children: [
-                    DevicesCard(
-                        label: "Al Qudra Lake",
-                        currentAmperes: 10,
-                        pressurePsi: 15,
-                        temperatureCelsius: 30,
-                        onLocationButtonPressed: () {}),
-                    DevicesCard(
-                        label: "Union Property 1",
-                        currentAmperes: 5,
-                        pressurePsi: 8,
-                        temperatureCelsius: 40,
-                        onLocationButtonPressed: () {}),
-                    DevicesCard(
-                        label: "Union Property 2",
-                        currentAmperes: 15,
-                        pressurePsi: 18,
-                        temperatureCelsius: 42,
-                        onLocationButtonPressed: () {}),
-                    DevicesCard(
-                        label: "Union Property 3",
-                        currentAmperes: 9,
-                        pressurePsi: 20,
-                        temperatureCelsius: 35,
-                        onLocationButtonPressed: () {}),
-                  ],
+                child: SystemCard(
+                  label: "Al Qudra Lake",
+                  onLocationButtonPressed: () {},
+                  suctionPressure: 10,
+                  dischargePressure: 15,
+                  oxygenAPressure: 15,
+                  oxygenBPressure: 13,
+                  ambientTemperature: 25,
+                  totalCurrent: 10,
+                  isRunning: true,
                 ),
               ),
             ]),
