@@ -31,7 +31,7 @@ class SystemCard extends StatefulWidget {
 }
 
 class _SystemCardState extends State<SystemCard> {
-  
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(

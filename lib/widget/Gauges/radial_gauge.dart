@@ -8,13 +8,13 @@ class RadialGauge extends StatelessWidget {
   final Color titleColor;
   final double size;
 
-  const RadialGauge(
-      {required this.value,
-      required this.title,
-      required this.size,
-      required this.valueColor,
-      required this.titleColor,
-      });
+  const RadialGauge({
+    required this.value,
+    required this.title,
+    required this.size,
+    required this.valueColor,
+    required this.titleColor,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,35 +32,42 @@ class RadialGauge extends StatelessWidget {
               GaugeRange(startValue: 50, endValue: 100, color: Colors.orange),
               GaugeRange(startValue: 100, endValue: 150, color: Colors.red)
             ],
-            pointers: <GaugePointer>[NeedlePointer(value: value)],
+            pointers: <GaugePointer>[
+              NeedlePointer(
+                  value: value,
+                  enableAnimation: true,
+                  animationType: AnimationType.ease,
+                  animationDuration: 1000,
+              ),
+            ],
             annotations: <GaugeAnnotation>[
               GaugeAnnotation(
-                  verticalAlignment: GaugeAlignment.near,
-                  widget: Column(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(top: 8),
-                        child: Text(
-                          "$value BAR",
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: valueColor,
-                          ),
-                        ),
-                      ),
-                      Text(
-                        title,
+                verticalAlignment: GaugeAlignment.near,
+                widget: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 8),
+                      child: Text(
+                        "$value BAR",
                         style: TextStyle(
-                          fontSize: 15,
+                          fontSize: 12,
                           fontWeight: FontWeight.bold,
-                          color: titleColor,
+                          color: valueColor,
                         ),
                       ),
-                    ],
-                  ),
-                  angle: 90,
-                  positionFactor: 0.5,
+                    ),
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: titleColor,
+                      ),
+                    ),
+                  ],
+                ),
+                angle: 90,
+                positionFactor: 0.5,
               ),
             ],
           ),

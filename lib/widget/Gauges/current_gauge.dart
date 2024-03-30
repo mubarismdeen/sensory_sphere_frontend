@@ -14,6 +14,9 @@ class CurrentGauge extends StatelessWidget {
       width: 180,
       height: 180,
       child: SfRadialGauge(
+
+        // enableLoadingAnimation: true,
+        // animationDuration: 2000,
         axes: <RadialAxis>[
           RadialAxis(
             canScaleToFit: true,
@@ -27,6 +30,9 @@ class CurrentGauge extends StatelessWidget {
             ),
             pointers: <GaugePointer>[
               NeedlePointer(
+                enableAnimation: true,
+                animationType: AnimationType.ease,
+                animationDuration: 1000,
                 value: value,
                 needleColor: Colors.orange,
                 needleLength: 0.8,
@@ -51,7 +57,7 @@ class CurrentGauge extends StatelessWidget {
                         style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.orange),
                       ),
                     ),
-                    Text(
+                    const Text(
                       "Total Current",
                       style: TextStyle(
                         fontSize: 15,

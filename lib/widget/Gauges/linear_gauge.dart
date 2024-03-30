@@ -17,14 +17,16 @@ class LinearGauge extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
                 height: height,
-                padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                padding: const EdgeInsets.fromLTRB(20,5,25,5),
                 child: SfLinearGauge(
+                  isMirrored: true,
+                  axisTrackStyle: const LinearAxisTrackStyle(color: Colors.black, thickness: 2),
                   orientation: LinearGaugeOrientation.vertical,
                   minimum: pointerValue - 20,
                   maximum: pointerValue + 20,

@@ -37,7 +37,7 @@ class _SystemInlayState extends State<SystemInlay> with TickerProviderStateMixin
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 200), // Shorter duration for faster vibration
+      duration: Duration(milliseconds: 100), // Shorter duration for faster vibration
     );
     _animation = Tween(begin: -3.0, end: 3.0).animate(
       CurvedAnimation(
@@ -124,7 +124,7 @@ class _SystemInlayState extends State<SystemInlay> with TickerProviderStateMixin
     );
   }
 
-  Widget _getButton() {
+  Widget _getMotorButton() {
     return !_isRunning
         ? ElevatedButton.icon(
             onPressed: () {
@@ -165,7 +165,7 @@ class _SystemInlayState extends State<SystemInlay> with TickerProviderStateMixin
             top: 1,
             child: ColorFiltered(
               colorFilter: ColorFilter.mode(
-                _isRunning ? Colors.green : Colors.red, // Desired color
+                _isRunning ? Colors.green : Colors.red.withOpacity(0.7), // Desired color
                 BlendMode.srcIn,
               ),
               child: Transform.translate(
@@ -176,11 +176,11 @@ class _SystemInlayState extends State<SystemInlay> with TickerProviderStateMixin
           ),
           Positioned(
             top: 0,
-            child: Container(
+            child: SizedBox(
                 height: 200,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 8.0),
-                  child: Center(child: _getButton()),
+                  child: Center(child: _getMotorButton()),
                 )),
           ),
         ],

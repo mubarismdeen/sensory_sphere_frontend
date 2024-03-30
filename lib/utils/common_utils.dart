@@ -34,12 +34,12 @@ List<Widget> getActionButtonsWithoutPrivilege(
   List<Widget> widgetList = [
     ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: highlightedColor,
+        backgroundColor: Colors.blue.shade400.withOpacity(0.85),
       ),
       onPressed: onSubmit,
       child: Text(
         hasData ? 'Save':'Submit',
-        style: TextStyle(color: lightGrey, fontWeight: FontWeight.bold),
+        style: const TextStyle(color: light, fontWeight: FontWeight.bold),
       ),
     ),
     Padding(
@@ -67,7 +67,7 @@ List<Widget> getActionButtonsWithoutPrivilege(
         onPressed: onDelete,
         child: const Text(
           'Delete',
-          style: TextStyle(color: lightGrey, fontWeight: FontWeight.bold),
+          style: TextStyle(color: light, fontWeight: FontWeight.bold),
         ),
       ),
     );

@@ -26,19 +26,16 @@ class _DevicesScreenState extends State<DevicesScreen> {
           return SingleChildScrollView(
             child: Column(children: [
               // const SizedBox(height: 50),
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: SystemCard(
-                  label: "Al Qudra Lake",
-                  onLocationButtonPressed: () {},
-                  suctionPressure: 10,
-                  dischargePressure: 15,
-                  oxygenAPressure: 15,
-                  oxygenBPressure: 13,
-                  ambientTemperature: 25,
-                  totalCurrent: 10,
-                  isRunning: true,
-                ),
+              SystemCard(
+                label: "Al Qudra Lake",
+                onLocationButtonPressed: () {},
+                suctionPressure: 10,
+                dischargePressure: 15,
+                oxygenAPressure: 15,
+                oxygenBPressure: 13,
+                ambientTemperature: 25,
+                totalCurrent: 10,
+                isRunning: true,
               ),
             ]),
           );

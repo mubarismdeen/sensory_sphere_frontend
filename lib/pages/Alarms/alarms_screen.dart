@@ -47,12 +47,12 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Container(
-                margin: const EdgeInsets.only(right: 35.0, top: 35.0),
+                margin: const EdgeInsets.only(right: 30.0, top: 20.0),
                 child: ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
                       // appBarColor,
-                        Colors.blue[400]!.withOpacity(0.85)
+                        Colors.blue.shade400.withOpacity(0.85)
                     ),
                     elevation: MaterialStateProperty.all<double>(4.0),
                     // shadowColor: MaterialStateProperty.all<Color>(shadowColor),
