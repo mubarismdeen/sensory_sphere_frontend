@@ -277,7 +277,7 @@ class InputBox extends StatelessWidget {
         controller: controller,
         decoration: InputDecoration(
           labelText: displayText,
-          labelStyle: const TextStyle(color: inputFieldOutlineColor),
+          labelStyle: const TextStyle(color: inputFieldOutlineColor, fontWeight: FontWeight.bold),
           focusColor: Colors.white,
           enabledBorder: inputBoxStyle,
           focusedBorder: inputBoxStyle,

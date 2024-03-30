@@ -31,14 +31,7 @@ class SystemCard extends StatefulWidget {
 }
 
 class _SystemCardState extends State<SystemCard> {
-
-  late bool _isRunning;
-
-  @override
-  void initState() {
-    super.initState();
-    _isRunning = widget.isRunning;
-  }
+  
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -71,39 +64,6 @@ class _SystemCardState extends State<SystemCard> {
                       overflow: TextOverflow.fade,
                     ),
                   ),
-                  // SizedBox(width: 30,),
-                  Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          // Handle second feature button press
-                        },
-                        icon: Icon(
-                          Icons.play_arrow_rounded,
-                          color: _isRunning ? green : shadowColor,
-                        ),
-                      ),
-                      IconButton(
-                        padding: const EdgeInsets.all(2),
-                        onPressed: () {
-                          // Handle first feature button press
-                        },
-                        icon: const Icon(
-                          Icons.alarm_sharp,
-                          color: shadowColor,
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          // Handle third feature button press
-                        },
-                        icon: const Icon(
-                          Icons.error_outline_sharp,
-                          color: shadowColor,
-                        ),
-                      ),
-                    ],
-                  ),
                 ],
               ),
               const SizedBox(height: 10),
@@ -115,62 +75,6 @@ class _SystemCardState extends State<SystemCard> {
                   ambientTemperature: widget.ambientTemperature,
                   totalCurrent: widget.totalCurrent),
               const SizedBox(height: 20),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //   children: [
-              //     !_isRunning
-              //         ? ElevatedButton.icon(
-              //       onPressed: () {
-              //         setState(() {
-              //           _isRunning = true;
-              //         });
-              //       },
-              //       icon: const Icon(Icons.play_arrow),
-              //       label: const Text('Start'),
-              //       style: ElevatedButton.styleFrom(
-              //         backgroundColor:
-              //         Colors.green[500]?.withOpacity(0.85),
-              //         foregroundColor: light,
-              //       ),
-              //     )
-              //         : ElevatedButton.icon(
-              //       onPressed: () {
-              //         setState(() {
-              //           _isRunning = false;
-              //         });
-              //       },
-              //       icon: const Icon(Icons.stop),
-              //       label: const Text('Stop'),
-              //       style: ElevatedButton.styleFrom(
-              //         backgroundColor: Colors.red[400]?.withOpacity(0.85),
-              //         foregroundColor: light,
-              //       ),
-              //     ),
-              //     ElevatedButton.icon(
-              //       onPressed: () {
-              //         // Handle reset button press
-              //       },
-              //       icon: const Icon(Icons.refresh),
-              //       label: const Text('Reset'),
-              //       style: ElevatedButton.styleFrom(
-              //         backgroundColor: Colors.blue[400]?.withOpacity(0.85),
-              //         foregroundColor: light,
-              //       ),
-              //     ),
-              //   ],
-              // ),
-              // Center(
-              //   child: ElevatedButton(
-              //     style: ButtonStyle(
-              //         backgroundColor: MaterialStateProperty.all<Color>(
-              //             highlightedColor.withOpacity(0.5))),
-              //     onPressed: () {
-              //       // Handle view details button press
-              //     },
-              //     child:
-              //         const Text('View Details', style: TextStyle(color: lightGrey)),
-              //   ),
-              // ),
             ],
           ),
         ),

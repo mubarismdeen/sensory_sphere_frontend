@@ -6,12 +6,12 @@ class RadialGauge extends StatelessWidget {
   final Color valueColor;
   final String title;
   final Color titleColor;
-  final double width;
+  final double size;
 
   const RadialGauge(
       {required this.value,
       required this.title,
-      required this.width,
+      required this.size,
       required this.valueColor,
       required this.titleColor,
       });
@@ -19,14 +19,14 @@ class RadialGauge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: width,
-      height: width,
+      width: size,
+      height: size,
       child: SfRadialGauge(
         axes: <RadialAxis>[
           RadialAxis(
             interval: 20,
             minimum: 0,
-            maximum: 150,
+            maximum: 110,
             ranges: <GaugeRange>[
               GaugeRange(startValue: 0, endValue: 50, color: Colors.green),
               GaugeRange(startValue: 50, endValue: 100, color: Colors.orange),
@@ -38,12 +38,15 @@ class RadialGauge extends StatelessWidget {
                   verticalAlignment: GaugeAlignment.near,
                   widget: Column(
                     children: [
-                      Text(
-                        "$value BAR",
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: valueColor,
+                      Padding(
+                        padding: EdgeInsets.only(top: 8),
+                        child: Text(
+                          "$value BAR",
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: valueColor,
+                          ),
                         ),
                       ),
                       Text(

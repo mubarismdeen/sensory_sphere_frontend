@@ -6,15 +6,59 @@ class LinearGauge extends StatelessWidget {
   final double height;
   final String title;
   final Color titleColor;
-  const LinearGauge({required this.pointerValue, required this.height, required this.title, required this.titleColor});
+  const LinearGauge(
+      {required this.pointerValue,
+      required this.height,
+      required this.title,
+      required this.titleColor});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                height: height,
+                padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                child: SfLinearGauge(
+                  orientation: LinearGaugeOrientation.vertical,
+                  minimum: pointerValue - 20,
+                  maximum: pointerValue + 20,
+                  markerPointers: [
+                    LinearWidgetPointer(
+                        value: pointerValue,
+                        child: Container(
+                          height: 12,
+                          width: 12,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              color: Colors.red),
+                        )),
+                    // LinearShapePointer(value: pointerValue, position: LinearElementPosition.cross, color: light,),
+                  ],
+                  // ranges: [LinearGaugeRange(startValue: -100, endValue: 0, color: Colors.blue,)],
+                  barPointers: [
+                    LinearBarPointer(
+                      value: pointerValue,
+                      color: Colors.red,
+                    )
+                  ],
+                ),
+              ),
+              Text(
+                "$pointerValue °C",
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red,
+                ),
+              ),
+            ],
+          ),
           Text(
             title,
             style: TextStyle(
@@ -22,22 +66,7 @@ class LinearGauge extends StatelessWidget {
               fontWeight: FontWeight.bold,
               color: titleColor,
             ),
-          ),
-          SizedBox(
-            height: height,
-            child: SfLinearGauge(
-              orientation: LinearGaugeOrientation.vertical,
-              minimum: pointerValue - 20,
-              maximum: pointerValue + 20,
-              markerPointers: [
-                LinearWidgetPointer(value: pointerValue, child: Container(height: 12, width: 12, decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.red),)),
-                // LinearShapePointer(value: pointerValue, position: LinearElementPosition.cross, color: light,),
-              ],
-              // ranges: [LinearGaugeRange(startValue: -100, endValue: 0, color: Colors.blue,)],
-              barPointers: [LinearBarPointer(value: pointerValue, color: Colors.red,)],
-            ),
-          ),
-
+          )
         ],
       ),
     );
