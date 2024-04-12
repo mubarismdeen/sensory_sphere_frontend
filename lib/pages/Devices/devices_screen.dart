@@ -1,5 +1,11 @@
+import 'dart:async';
+
 import 'package:admin/pages/Devices/system_card.dart';
+import 'package:admin/utils/common_utils.dart';
 import 'package:flutter/material.dart';
+
+import '../../api.dart';
+import '../../models/sensor_data.dart';
 
 class DevicesScreen extends StatefulWidget {
   const DevicesScreen({Key? key}) : super(key: key);
@@ -9,38 +15,76 @@ class DevicesScreen extends StatefulWidget {
 }
 
 class _DevicesScreenState extends State<DevicesScreen> {
+  late SensorData _sensorData;
+  late Timer _timer;
 
-  getTableData() async {}
-
-  closeDialog() {
-    setState(() {
-      getTableData();
+  @override
+  void initState() {
+    super.initState();
+    _sensorData = SensorData(
+      id: 0,
+      timestamp: DateTime.now(),
+      suctionPressure: 0.0,
+      dischargePressure: 0.0,
+      oxygenAPressure: 0.0,
+      oxygenBPressure: 0.0,
+      ambientTemperature: 0.0,
+      totalCurrent: 0.0,
+    );
+    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      getTableData(context);
     });
+    getTableData(context); // Fetch data once when the screen is initialized
   }
 
   @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<dynamic>(
-        future: getTableData(),
-        builder: (context, AsyncSnapshot<dynamic> _data) {
-          return SingleChildScrollView(
-            child: Column(children: [
-              // const SizedBox(height: 50),
-              SystemCard(
-                label: "Al Qudra Lake",
-                onLocationButtonPressed: () {},
-                suctionPressure: 10,
-                dischargePressure: 15,
-                oxygenAPressure: 15,
-                oxygenBPressure: 13,
-                ambientTemperature: 25,
-                totalCurrent: 10,
-                isRunning: true,
-              ),
-            ]),
-          );
-        });
+  void dispose() {
+    _timer.cancel(); // Cancel the timer to prevent memory leaks
+    super.dispose();
   }
+
+  Future<void> getTableData(BuildContext context) async {
+    try {
+      List<SensorData> data = await getLastSensorData();
+      if (data.isNotEmpty) {
+        setState(() {
+          _sensorData = data.first;
+        });
+      } else {
+        throw Error();
+      }
+    } catch (error) {
+      showSaveFailedMessage(context, "Unable to fetch data");
+    }
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          SystemCard(
+            label: "Al Qudra Lake",
+            onLocationButtonPressed: () {},
+            suctionPressure: _sensorData.suctionPressure,
+            dischargePressure: _sensorData.dischargePressure,
+            oxygenAPressure: _sensorData.oxygenAPressure,
+            oxygenBPressure: _sensorData.oxygenBPressure,
+            ambientTemperature: _sensorData.ambientTemperature,
+            totalCurrent: _sensorData.totalCurrent,
+            isRunning: true,
+          ),
+        ],
+      ),
+    );
+  }
+
+  // closeDialog() {
+  //   setState(() {
+  //     getTableData();
+  //   });
+  // }
 
   // void _openUploadDialog(EmployeeDetails? tableRow) {
   //   showDialog(

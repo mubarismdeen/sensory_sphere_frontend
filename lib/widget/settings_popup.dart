@@ -27,7 +27,7 @@ class _SettingsPopupState extends State<SettingsPopup> {
       }
     } catch (e) {
       print('Error: $e');
-      showSaveFailedMessage(context, e.toString());
+      showSaveFailedMessage(context, "Operation Failed !");
     }
   }
 
@@ -51,12 +51,12 @@ class _SettingsPopupState extends State<SettingsPopup> {
                   padding: const EdgeInsets.only(top: 8.0),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: elevatedButtonColor,
+                      backgroundColor: Colors.blue[400],
                     ),
                     onPressed: _createBackup,
                     child: const Padding(
                       padding: EdgeInsets.all(12.0),
-                      child: Text('Create Backup'),
+                      child: Text('Create Backup', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
                     ),
                   ),
                 ),

@@ -19,13 +19,16 @@ import 'models/empMaster.dart';
 import 'models/salaryMaster.dart';
 import 'models/salaryMasterGet.dart';
 import 'models/salaryPay.dart';
+import 'models/sensor_data.dart';
 import 'models/userDetails.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-String ip = "localhost:5001";
-// String ip = "localhost:81";     // IIS
-// String ip = "172.11.7.254:88"; //live
-// String ip = "172.11.7.254:98"; //test
+String ip = "192.168.1.3:8090";   // over network
+// String ip = "localhost:8080";  // local
+// String ip = "172.11.7.254:88"; // live
+// String ip = "172.11.7.254:98"; // test
+
+String baseUrl = "http://$ip/api";
 
 enum HttpMethod {
   GET,
@@ -140,6 +143,13 @@ Future<bool> savePrivilegesForUser(List<UserPrivileges> privilegesList) async {
   String urlWithParams = "http://$ip/Hrms/savePrivilegesForUser";
   var jsonData = jsonEncode(privilegesList);
   return await httpConnect(urlWithParams, HttpMethod.POST, jsonData) as bool;
+}
+
+Future<List<SensorData>> getLastSensorData() async {
+  String urlWithParams = "$baseUrl/data/lastData";
+  List<SensorData> list = (await httpConnect(urlWithParams, HttpMethod.GET) as List)
+      .map((job) => SensorData.fromJson(job)).toList();
+  return list;
 }
 
 Future<List<Map<String, dynamic>>> getDocDetails() async {
@@ -393,5 +403,5 @@ Future<String> createDatabaseBackup() async {
   } catch (e) {
     throw Exception('Failed');
   }
-  return "Failed";
+  throw Exception('Failed');
 }

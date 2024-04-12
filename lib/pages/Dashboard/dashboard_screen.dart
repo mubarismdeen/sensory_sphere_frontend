@@ -1,9 +1,14 @@
-import 'package:admin/pages/Dashboard/dashboard_card.dart';
 import 'package:flutter/material.dart';
+import 'dashboard_card.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   DashboardScreen({Key? key}) : super(key: key);
 
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
   initPageData() async {}
 
   @override
