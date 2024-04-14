@@ -23,7 +23,7 @@ import 'models/sensor_data.dart';
 import 'models/userDetails.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-String ip = "192.168.1.3:8090";   // over network
+String ip = "192.168.1.4:8090";   // over network
 // String ip = "localhost:8080";  // local
 // String ip = "172.11.7.254:88"; // live
 // String ip = "172.11.7.254:98"; // test
