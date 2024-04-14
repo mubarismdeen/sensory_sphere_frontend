@@ -1,9 +1,7 @@
 import 'package:admin/constants/constants.dart';
-import 'package:admin/constants/controllers.dart';
 import 'package:admin/constants/style.dart';
 import 'package:admin/globalState.dart';
 import 'package:admin/models/userScreens.dart';
-import 'package:admin/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -11,6 +9,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../../api.dart';
 import '../../layout.dart';
+import '../../utils/common_utils.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({
@@ -74,7 +73,7 @@ class _MainViewState extends State<_MainView> {
   BoxDecoration? borderDecoration;
   bool showError = false;
   bool showLoading = false;
-  void _login(BuildContext context) {
+  void _login() {
     Get.to(SiteLayout());
   }
 
@@ -83,9 +82,7 @@ class _MainViewState extends State<_MainView> {
     var screenw = MediaQuery.of(context).size.width;
     final isDesktop = screenw > 700 ? true : false;
     List<Widget> listViewChildren;
-    bool logStatus1 = false;
 
-    // if (isDesktop) {
       listViewChildren = [
         const _AppLogo(),
         _UsernameInput(
@@ -104,53 +101,35 @@ class _MainViewState extends State<_MainView> {
             setState(() {
               showLoading = true;
             });
-            List<UserScreens> screensForUser = await authorizeUserLocally(
-              widget.usernameController!.text,
-              widget.passwordController!.text,
-            );
-            if (screensForUser.isNotEmpty) {
-              logStatus1 = true;
-              GlobalState.setScreensForUser(widget.usernameController!.text, screensForUser.first);
-              menuController.activeItem.value = DashboardRoute;
-            }
 
-            if (logStatus1) {
-              showError = false;
-              setState(() {
-                showLoading = false;
-              });
-              _login(context);
-            } else {
-              showError = true;
-              setState(() {
-                showLoading = false;
-              });
+            try {
+              List<UserScreens> screensForUser = await authorizeUser(
+                widget.usernameController!.text,
+                widget.passwordController!.text,
+              );
+              if (screensForUser.isNotEmpty) {
+                GlobalState.setScreensForUser(
+                    widget.usernameController!.text, screensForUser.first);
+                showError = false;
+                _login();
+              } else {
+                showError = true;
+              }
+            } catch (e) {
+              e.printError();
+              showSaveFailedMessage(
+                  context, "Error in establishing connection");
             }
+            setState(() {
+              showLoading = false;
+            });
           },
           status: showError,
         ),
       ];
-    // } else {
-    //   listViewChildren = [
-    //     const _AppLogo(),
-    //     _UsernameInput(
-    //       usernameController: widget.usernameController,
-    //     ),
-    //     const SizedBox(height: 12),
-    //     _PasswordInput(
-    //       passwordController: widget.passwordController,
-    //     ),
-    //     _ThumbButton(
-    //       onTap: () {
-    //         _login(context);
-    //       },
-    //     ),
-    //   ];
-    // }
 
     return Column(
       children: [
-        // if (isDesktop) const _TopBar(),
         Expanded(
           child: Align(
             alignment: isDesktop ? Alignment.center : Alignment.topCenter,
