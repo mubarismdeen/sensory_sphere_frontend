@@ -6,6 +6,7 @@ import 'models/userDetails.dart';
 
 class GlobalState {
 
+  static String ipAddress = "";
   static String username = "User";
   static String userEmpCode = "1";
   static bool dashboardScreenPrivilege = false;
@@ -61,6 +62,10 @@ class GlobalState {
   static Future<void> setEmployeeCodeForSession(String givenUsername) async {
     UserDetails userDetails = (await getUserDetailsWithUsername(givenUsername)).first;
     userEmpCode = userDetails.empCode;
+  }
+
+  static void setIpAddress(String ipAddr) {
+    ipAddress = ipAddr;
   }
 
 }

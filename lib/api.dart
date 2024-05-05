@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:admin/globalState.dart';
 import 'package:admin/models/clientDetails.dart';
 import 'package:admin/models/employeeDetails.dart';
 import 'package:admin/models/jobDetails.dart';
@@ -23,8 +24,9 @@ import 'models/sensor_data.dart';
 import 'models/userDetails.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-String ip = "192.168.1.4:8090";   // over network
-// String ip = "localhost:8080";  // local
+// String ip = "192.168.1.4:8091";   // over network
+String ip = "${GlobalState.ipAddress}:8090";   // over network
+// String ip = "localhost:8091";  // local
 // String ip = "172.11.7.254:88"; // live
 // String ip = "172.11.7.254:98"; // test
 
@@ -33,14 +35,6 @@ String baseUrl = "http://$ip/api";
 enum HttpMethod {
   GET,
   POST,
-}
-
-Future<bool> localUserValidation(String userID, String password) async {
-  if(userID == '1' && password == '123'){
-    return true;
-  }else{
-    return false;
-  }
 }
 
 Future<dynamic> httpConnect(String urlWithParams, HttpMethod method, [dynamic jsonData]) async {
@@ -65,11 +59,18 @@ Future<dynamic> httpConnect(String urlWithParams, HttpMethod method, [dynamic js
   } catch (e) {
     throw Exception('Failed');
   }
+}
 
+Future<bool> localUserValidation(String userID, String password) async {
+  if(userID == '1' && password == '123'){
+    return true;
+  }else{
+    return false;
+  }
 }
 
 Future<List<UserScreens>> authorizeUser(String username, String password) async {
-  String urlWithParams = "http://$ip/Hrms/authorizeUser?userName=$username&password=$password";
+  String urlWithParams = "$baseUrl/user/authorize?username=$username&password=$password";
   List<UserScreens> list = (await httpConnect(urlWithParams, HttpMethod.GET) as List)
       .map((job) => UserScreens.fromJson(job)).toList();
   return list;
@@ -90,6 +91,18 @@ Future<List<UserScreens>> authorizeUserLocally(String username, String password)
     list.add(screens);
   }
   return list;
+}
+
+Future<List<SensorData>> getLastSensorData() async {
+  String urlWithParams = "$baseUrl/data/lastData";
+  List<SensorData> list = (await httpConnect(urlWithParams, HttpMethod.GET) as List)
+      .map((job) => SensorData.fromJson(job)).toList();
+  return list;
+}
+
+Future<bool> triggerMotor(String trigger) async {
+  String urlWithParams = "$baseUrl/mqtt/triggerMotor?trigger=$trigger";
+  return await httpConnect(urlWithParams, HttpMethod.POST, "") as bool;
 }
 
 Future<List<UserDetails>> getUserDetails (String empCode) async {
@@ -143,13 +156,6 @@ Future<bool> savePrivilegesForUser(List<UserPrivileges> privilegesList) async {
   String urlWithParams = "http://$ip/Hrms/savePrivilegesForUser";
   var jsonData = jsonEncode(privilegesList);
   return await httpConnect(urlWithParams, HttpMethod.POST, jsonData) as bool;
-}
-
-Future<List<SensorData>> getLastSensorData() async {
-  String urlWithParams = "$baseUrl/data/lastData";
-  List<SensorData> list = (await httpConnect(urlWithParams, HttpMethod.GET) as List)
-      .map((job) => SensorData.fromJson(job)).toList();
-  return list;
 }
 
 Future<List<Map<String, dynamic>>> getDocDetails() async {

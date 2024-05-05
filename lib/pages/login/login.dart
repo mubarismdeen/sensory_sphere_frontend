@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../api.dart';
 import '../../layout.dart';
@@ -25,6 +26,8 @@ class _LoginPageState extends State<LoginPage> with RestorationMixin {
       RestorableTextEditingController();
   final RestorableTextEditingController _passwordController =
       RestorableTextEditingController();
+  final RestorableTextEditingController _ipController =
+      RestorableTextEditingController();
 
   @override
   String get restorationId => 'login_page';
@@ -33,6 +36,7 @@ class _LoginPageState extends State<LoginPage> with RestorationMixin {
   void restoreState(RestorationBucket? oldBucket, bool initialRestore) {
     registerForRestoration(_usernameController, restorationId);
     registerForRestoration(_passwordController, restorationId);
+    registerForRestoration(_ipController, restorationId);
   }
 
   @override
@@ -43,6 +47,7 @@ class _LoginPageState extends State<LoginPage> with RestorationMixin {
         child: _MainView(
           usernameController: _usernameController.value,
           passwordController: _passwordController.value,
+          ipController: _ipController.value,
         ),
       ),
     );
@@ -52,6 +57,7 @@ class _LoginPageState extends State<LoginPage> with RestorationMixin {
   void dispose() {
     _usernameController.dispose();
     _passwordController.dispose();
+    _ipController.dispose();
     super.dispose();
   }
 }
@@ -60,10 +66,12 @@ class _MainView extends StatefulWidget {
   const _MainView({
     this.usernameController,
     this.passwordController,
+    this.ipController,
   });
 
   final TextEditingController? usernameController;
   final TextEditingController? passwordController;
+  final TextEditingController? ipController;
 
   @override
   _MainViewState createState() => _MainViewState();
@@ -73,8 +81,31 @@ class _MainViewState extends State<_MainView> {
   BoxDecoration? borderDecoration;
   bool showError = false;
   bool showLoading = false;
+  String ipAddress = '';
   void _login() {
     Get.to(SiteLayout());
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getSavedIpAddress();
+  }
+
+  Future<void> _getSavedIpAddress() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? savedIp = prefs.getString('ipAddress');
+    if (savedIp != null) {
+      GlobalState.setIpAddress(savedIp);
+      setState(() {
+        ipAddress = savedIp;
+      });
+    }
+  }
+
+  Future<void> _saveIpAddress(String ip) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('ipAddress', ip);
   }
 
   @override
@@ -85,7 +116,12 @@ class _MainViewState extends State<_MainView> {
 
       listViewChildren = [
         const _AppLogo(),
-        _UsernameInput(
+      ];
+
+    if (ipAddress != '') {
+      listViewChildren = [
+          ...listViewChildren,
+          _UsernameInput(
           maxWidth: 400,
           usernameController: widget.usernameController,
         ),
@@ -103,7 +139,7 @@ class _MainViewState extends State<_MainView> {
             });
 
             try {
-              List<UserScreens> screensForUser = await authorizeUser(
+              List<UserScreens> screensForUser = await authorizeUserLocally(
                 widget.usernameController!.text,
                 widget.passwordController!.text,
               );
@@ -127,6 +163,29 @@ class _MainViewState extends State<_MainView> {
           status: showError,
         ),
       ];
+    } else {
+      listViewChildren = [
+        ...listViewChildren,
+        _IpInput(
+          maxWidth: 400,
+          ipController: widget.ipController,
+        ),
+        const SizedBox(height: 12),
+        _SaveIpButton(
+          maxWidth: 400,
+          onTap: () async {
+            setState(() {
+              showLoading = true;
+            });
+            await _saveIpAddress(widget.ipController!.text.trim());
+            _getSavedIpAddress();
+            setState(() {
+              showLoading = false;
+            });
+          },
+        ),
+      ];
+    }
 
     return Column(
       children: [
@@ -225,6 +284,29 @@ class _UsernameInput extends StatelessWidget {
   }
 }
 
+class _IpInput extends StatelessWidget {
+  const _IpInput({
+    this.maxWidth,
+    this.ipController,
+  });
+
+  final double? maxWidth;
+  final TextEditingController? ipController;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.center,
+      child: InputBox(
+          maxWidth: maxWidth,
+          displayText: "IP Address",
+          obscureText: false,
+          controller: ipController),
+    );
+  }
+}
+
+
 class InputBox extends StatelessWidget {
   OutlineInputBorder inputBoxStyle = const OutlineInputBorder(
     borderSide: BorderSide(color: inputFieldOutlineColor),
@@ -289,73 +371,6 @@ class _PasswordInput extends StatelessWidget {
   }
 }
 
-class _ThumbButton extends StatefulWidget {
-  const _ThumbButton({
-    required this.onTap,
-  });
-
-  final VoidCallback onTap;
-
-  @override
-  _ThumbButtonState createState() => _ThumbButtonState();
-}
-
-class _ThumbButtonState extends State<_ThumbButton> {
-  BoxDecoration? borderDecoration;
-
-  @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      enabled: true,
-      label: "HRMS",
-      child: MouseRegion(
-        cursor: SystemMouseCursors.click,
-        child: GestureDetector(
-          onTap: widget.onTap,
-          child: Focus(
-            onKey: (node, event) {
-              if (event is RawKeyDownEvent) {
-                if (event.logicalKey == LogicalKeyboardKey.enter ||
-                    event.logicalKey == LogicalKeyboardKey.space) {
-                  widget.onTap();
-                  return KeyEventResult.handled;
-                }
-              }
-              return KeyEventResult.ignored;
-            },
-            onFocusChange: (hasFocus) {
-              if (hasFocus) {
-                setState(() {
-                  borderDecoration = BoxDecoration(
-                    border: Border.all(
-                      color: Colors.white.withOpacity(0.5),
-                      width: 2,
-                    ),
-                  );
-                });
-              } else {
-                setState(() {
-                  borderDecoration = null;
-                });
-              }
-            },
-            child: Container(
-              decoration: borderDecoration,
-              height: 120,
-              child: ExcludeSemantics(
-                child: Image.asset(
-                  'thumb.png',
-                  package: 'rally_assets',
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 class _LoginButton extends StatefulWidget {
   _LoginButton({required this.onTap, this.maxWidth, required this.status});
@@ -394,6 +409,47 @@ class _LoginButtonState extends State<_LoginButton> {
             const Expanded(child: SizedBox.shrink()),
             _FilledButton(
               text: "Login",
+              onTap: widget.onTap,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SaveIpButton extends StatefulWidget {
+  _SaveIpButton({required this.onTap, this.maxWidth });
+
+  final double? maxWidth;
+  final VoidCallback onTap;
+
+  @override
+  _SaveIpButtonState createState() => _SaveIpButtonState();
+}
+
+class _SaveIpButtonState extends State<_SaveIpButton> {
+  BoxDecoration? borderDecoration;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.center,
+      child: Container(
+        constraints:
+        BoxConstraints(maxWidth: widget.maxWidth ?? double.infinity),
+        padding: const EdgeInsets.symmetric(vertical: 30),
+        child: Row(
+          children: [
+            const Icon(Icons.error_outline_rounded, color: errorColor),
+            const SizedBox(width: 12),
+            const Text(
+              "IP is not set",
+              style: TextStyle(color: light),
+            ),
+            const Expanded(child: SizedBox.shrink()),
+            _FilledButton(
+              text: "Save IP",
               onTap: widget.onTap,
             ),
           ],

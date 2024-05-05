@@ -1,13 +1,21 @@
-import 'package:admin/contollers/menu_controller.dart';
+import 'package:admin/controllers/menu_controller.dart';
+import 'package:admin/firebase_api.dart';
+import 'package:admin/firebase_options.dart';
 import 'package:admin/pages/login/login.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:admin/contollers/navigation_controller.dart';
+import 'package:admin/controllers/navigation_controller.dart';
 import 'package:admin/constants/style.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await FirebaseApi().initNotifications();
   Get.put(CustomMenuController());
   Get.put(NavigationController());
   runApp(const MyApp());
