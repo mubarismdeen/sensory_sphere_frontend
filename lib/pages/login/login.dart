@@ -3,9 +3,9 @@ import 'package:admin/constants/style.dart';
 import 'package:admin/globalState.dart';
 import 'package:admin/models/userScreens.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/exceptions/exceptions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../api.dart';
@@ -114,14 +114,14 @@ class _MainViewState extends State<_MainView> {
     final isDesktop = screenw > 700 ? true : false;
     List<Widget> listViewChildren;
 
-      listViewChildren = [
-        const _AppLogo(),
-      ];
+    listViewChildren = [
+      const _AppLogo(),
+    ];
 
     if (ipAddress != '') {
       listViewChildren = [
-          ...listViewChildren,
-          _UsernameInput(
+        ...listViewChildren,
+        _UsernameInput(
           maxWidth: 400,
           usernameController: widget.usernameController,
         ),
@@ -139,22 +139,26 @@ class _MainViewState extends State<_MainView> {
             });
 
             try {
-              List<UserScreens> screensForUser = await authorizeUserLocally(
+              UserScreens screensForUser = await authorizeUser(
                 widget.usernameController!.text,
                 widget.passwordController!.text,
               );
-              if (screensForUser.isNotEmpty) {
-                GlobalState.setScreensForUser(
-                    widget.usernameController!.text, screensForUser.first);
-                showError = false;
-                _login();
-              } else {
-                showError = true;
-              }
+              // List<UserPrivileges> userPrivileges =
+              //     await getAllPrivilegesForUser(
+              //         screensForUser.userId.toString());
+              GlobalState.setScreensForUser(
+                  widget.usernameController!.text, screensForUser);
+              showError = false;
+              _login();
             } catch (e) {
-              e.printError();
-              showSaveFailedMessage(
-                  context, "Error in establishing connection");
+              if (e is UnauthorizedException) {
+                showSaveFailedMessage(context, "Login Failed");
+                showError = true;
+              } else {
+                e.printError();
+                showSaveFailedMessage(
+                    context, "Error in establishing connection");
+              }
             }
             setState(() {
               showLoading = false;
@@ -223,9 +227,9 @@ class _AppLogo extends StatelessWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-            color: highlightedColor.withOpacity(0.3),
-            borderRadius: BorderRadius.circular(10),
-          ),
+              color: highlightedColor.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(10),
+            ),
             padding: const EdgeInsets.all(10),
             child: Column(
               children: [
@@ -306,7 +310,6 @@ class _IpInput extends StatelessWidget {
   }
 }
 
-
 class InputBox extends StatelessWidget {
   OutlineInputBorder inputBoxStyle = const OutlineInputBorder(
     borderSide: BorderSide(color: inputFieldOutlineColor),
@@ -338,7 +341,8 @@ class InputBox extends StatelessWidget {
         controller: controller,
         decoration: InputDecoration(
           labelText: displayText,
-          labelStyle: const TextStyle(color: inputFieldOutlineColor, fontWeight: FontWeight.bold),
+          labelStyle: const TextStyle(
+              color: inputFieldOutlineColor, fontWeight: FontWeight.bold),
           focusColor: Colors.white,
           enabledBorder: inputBoxStyle,
           focusedBorder: inputBoxStyle,
@@ -370,7 +374,6 @@ class _PasswordInput extends StatelessWidget {
     );
   }
 }
-
 
 class _LoginButton extends StatefulWidget {
   _LoginButton({required this.onTap, this.maxWidth, required this.status});
@@ -419,7 +422,7 @@ class _LoginButtonState extends State<_LoginButton> {
 }
 
 class _SaveIpButton extends StatefulWidget {
-  _SaveIpButton({required this.onTap, this.maxWidth });
+  _SaveIpButton({required this.onTap, this.maxWidth});
 
   final double? maxWidth;
   final VoidCallback onTap;
@@ -437,7 +440,7 @@ class _SaveIpButtonState extends State<_SaveIpButton> {
       alignment: Alignment.center,
       child: Container(
         constraints:
-        BoxConstraints(maxWidth: widget.maxWidth ?? double.infinity),
+            BoxConstraints(maxWidth: widget.maxWidth ?? double.infinity),
         padding: const EdgeInsets.symmetric(vertical: 30),
         child: Row(
           children: [

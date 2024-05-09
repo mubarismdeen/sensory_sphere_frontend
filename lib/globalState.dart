@@ -9,11 +9,14 @@ class GlobalState {
   static String ipAddress = "";
   static String username = "User";
   static String userEmpCode = "1";
+  static String userId = "0";
+  static String firebaseToken = "";
   static bool dashboardScreenPrivilege = false;
   static bool employeeScreenPrivilege = false;
   static bool attendanceScreenPrivilege = false;
   static bool salaryMasterScreenPrivilege = false;
   static bool salaryPayoutScreenPrivilege = false;
+  static bool alarmsScreenPrivilege = false;
   static bool leaveSalaryScreenPrivilege = false;
   static bool clientsScreenPrivilege = false;
   static bool gratuityScreenPrivilege = false;
@@ -37,6 +40,10 @@ class GlobalState {
     //   salaryPayoutScreenPrivilege = true;
     //   sideMenuItems.add(AlarmsRoute);
     // }
+    if (screensForUser.alarms) {
+      alarmsScreenPrivilege = true;
+      sideMenuItems.add(AlarmsRoute);
+    }
     // if(screensForUser.salaryMaster) {
     //   salaryMasterScreenPrivilege = true;
     //   sideMenuItems.add(MaintenanceRoute);
@@ -69,5 +76,9 @@ class GlobalState {
 
   static void setIpAddress(String ipAddr) {
     ipAddress = ipAddr;
+  }
+
+  static void setToken(String token) {
+    firebaseToken = token;
   }
 }

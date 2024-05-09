@@ -9,6 +9,7 @@ class UserScreens {
   bool leaveSalary = false;
   bool clients = false;
   bool gratuity = false;
+  bool alarms = false;
   String editBy = '';
   DateTime editDt = DateTime.now();
   String creatBy = '';
@@ -17,36 +18,40 @@ class UserScreens {
   UserScreens({required this.creatBy});
 
   UserScreens.fromJson(Map<String, dynamic> json) {
-    id =  json['id']??"0";
-    userId =  json['userId']??"0";
-    dashboard =  json['dashboard']??false;
-    employees =  json['employees']??false;
-    attendance =  json['attendance']??false;
-    salaryMaster =  json['salaryMaster']??false;
-    salaryPayout =  json['salaryPayout']??false;
-    leaveSalary =  json['leaveSalary']??false;
-    clients =  json['clients']??false;
-    gratuity =  json['gratuity']??false;
-    editBy = json['editBy']??'';
-    editDt = DateTime.parse(json['editDt']);
-    creatBy = json['creatBy']??'';
-    creatDt = DateTime.parse(json['creatDt']);
+    id = json['id'] ?? "0";
+    userId = json['userId'] ?? "0";
+    dashboard = json['dashboard'] ?? false;
+    employees = json['employees'] ?? false;
+    attendance = json['attendance'] ?? false;
+    salaryMaster = json['salaryMaster'] ?? false;
+    salaryPayout = json['salaryPayout'] ?? false;
+    leaveSalary = json['leaveSalary'] ?? false;
+    clients = json['clients'] ?? false;
+    gratuity = json['gratuity'] ?? false;
+    alarms = json['alarms'] ?? false;
+    editBy = json['editBy'] ?? '';
+    editDt = json['editDate'] == null
+        ? DateTime.now()
+        : DateTime.fromMillisecondsSinceEpoch(json['editDate']);
+    creatBy = json['createBy'] ?? '';
+    creatDt = DateTime.fromMillisecondsSinceEpoch(json['createDate'] ?? 0);
   }
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'userId': userId,
-    'dashboard': dashboard,
-    'employees': employees,
-    'attendance': attendance,
-    'salaryMaster': salaryMaster,
-    'salaryPayout': salaryPayout,
-    'leaveSalary': leaveSalary,
-    'clients': clients,
-    'gratuity': gratuity,
-    'editBy': editBy,
-    'editDt': editDt.toIso8601String(),
-    'creatBy': creatBy,
-    'creatDt': creatDt.toIso8601String(),
-  };
+        'id': id,
+        'userId': userId,
+        'dashboard': dashboard,
+        'employees': employees,
+        'attendance': attendance,
+        'salaryMaster': salaryMaster,
+        'salaryPayout': salaryPayout,
+        'leaveSalary': leaveSalary,
+        'clients': clients,
+        'gratuity': gratuity,
+        'alarms': alarms,
+        'editBy': editBy,
+        'editDate': editDt.millisecondsSinceEpoch,
+        'createBy': creatBy,
+        'createDate': creatDt.millisecondsSinceEpoch,
+      };
 }

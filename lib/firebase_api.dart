@@ -1,3 +1,4 @@
+import 'package:admin/globalState.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 Future<void> handleBackgroundMessage(RemoteMessage message) async {
@@ -14,11 +15,10 @@ class FirebaseApi {
       await _firebaseMessaging.requestPermission();
       FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
       final fCMToken = await _firebaseMessaging.getToken();
+      GlobalState.setToken(fCMToken ?? "");
       print('Token: $fCMToken');
     } catch (e) {
       print('Error initializing notifications: $e');
-      // Handle error appropriately
     }
   }
-
 }

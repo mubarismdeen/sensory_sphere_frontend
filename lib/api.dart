@@ -12,6 +12,7 @@ import 'package:admin/models/saveEmployeeDetails.dart';
 import 'package:admin/models/userPrivileges.dart';
 import 'package:admin/models/userScreens.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_connect/http/src/exceptions/exceptions.dart';
 import 'package:http/http.dart' as http;
 
 import 'models/attedanceDto.dart';
@@ -28,11 +29,12 @@ import 'models/userDetails.dart';
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 // String ip = "192.168.1.4:8091";   // over network
 String ip = "${GlobalState.ipAddress}:8090"; // over network
-// String ip = "localhost:8091";  // local
+// String ip = "localhost:8090"; // local
 // String ip = "172.11.7.254:88"; // live
 // String ip = "172.11.7.254:98"; // test
 
 String baseUrl = "http://$ip/api";
+String userUrl = "$baseUrl/user";
 
 enum HttpMethod {
   GET,
@@ -58,6 +60,8 @@ Future<dynamic> httpConnect(String urlWithParams, HttpMethod method,
     return jsonResponse;
   } else if (response.statusCode == 400) {
     return json.decode(response.body);
+  } else if (response.statusCode == 401) {
+    throw UnauthorizedException();
   } else {
     throw Exception(json.decode(response.body)['message'] ?? 'Failed');
   }
@@ -71,15 +75,12 @@ Future<bool> localUserValidation(String userID, String password) async {
   }
 }
 
-Future<List<UserScreens>> authorizeUser(
-    String username, String password) async {
+Future<UserScreens> authorizeUser(String username, String password) async {
   String urlWithParams =
-      "$baseUrl/user/authorize?username=$username&password=$password";
-  List<UserScreens> list =
-      (await httpConnect(urlWithParams, HttpMethod.GET) as List)
-          .map((job) => UserScreens.fromJson(job))
-          .toList();
-  return list;
+      "$userUrl/authorizeUser?username=$username&password=$password&firebaseToken=${GlobalState.firebaseToken}";
+  UserScreens response =
+      UserScreens.fromJson(await httpConnect(urlWithParams, HttpMethod.GET));
+  return response;
 }
 
 Future<List<UserScreens>> authorizeUserLocally(
@@ -95,6 +96,7 @@ Future<List<UserScreens>> authorizeUserLocally(
     screens.leaveSalary = true;
     screens.clients = true;
     screens.gratuity = true;
+    screens.alarms = true;
     list.add(screens);
   }
   return list;
