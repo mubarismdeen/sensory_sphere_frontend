@@ -1,20 +1,21 @@
+import 'package:admin/api.dart';
 import 'package:admin/models/alarm_details.dart';
+import 'package:admin/models/response_dto.dart';
 import 'package:admin/utils/common_utils.dart';
 import 'package:admin/widget/custom_dropdown_form_field.dart';
 import 'package:flutter/material.dart';
 
+import '../../globalState.dart';
 import '../../widget/custom_text_form_field.dart';
 
 class AddAlarmForm extends StatefulWidget {
   final Function closeDialog;
-  final Map<String,dynamic>? tableRow;
-  final BuildContext context;
+  final AlarmDetails? tableRow;
 
   const AddAlarmForm({
     Key? key,
     required this.closeDialog,
     this.tableRow,
-    required this.context,
   }) : super(key: key);
 
   @override
@@ -24,11 +25,11 @@ class AddAlarmForm extends StatefulWidget {
 class _AddAlarmFormState extends State<AddAlarmForm> {
   final _formKey = GlobalKey<FormState>();
 
-  final _property = TextEditingController();
+  String _property = "test_property";
   String _parameter = "Suction Pressure";
   String _condition = "Greater than";
   final _value = TextEditingController();
-  String _status = "Active";
+  String _status = "active";
 
   final AlarmDetails _alarmDetails = AlarmDetails();
 
@@ -36,17 +37,16 @@ class _AddAlarmFormState extends State<AddAlarmForm> {
   void initState() {
     super.initState();
     if (widget.tableRow != null) {
-      _property.text = widget.tableRow!["Property"];
-      // _alarmDetails.property = widget.tableRow!["Property"];
-      _parameter = widget.tableRow!["Parameter"];
-      // _alarmDetails.parameter = widget.tableRow!["Parameter"];
-      _condition = widget.tableRow!["Condition"];
-      // _alarmDetails.condition = widget.tableRow!["Condition"];
-      _value.text = widget.tableRow!["Value"].toString();
-      // _alarmDetails.value = widget.tableRow!["Value"];
-      _status = widget.tableRow!["Status"];
-      // _alarmDetails.status = widget.tableRow!["Status"];
-
+      _property = widget.tableRow!.property;
+      _parameter = widget.tableRow!.parameter;
+      _condition = widget.tableRow!.condition;
+      _value.text = widget.tableRow!.value.toString();
+      _status = widget.tableRow!.status;
+      _alarmDetails.id = widget.tableRow!.id;
+      _alarmDetails.editBy = GlobalState.username;
+      _alarmDetails.editDate = DateTime.now();
+    } else {
+      _alarmDetails.createBy = GlobalState.username;
     }
   }
 
@@ -58,20 +58,26 @@ class _AddAlarmFormState extends State<AddAlarmForm> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            CustomTextFormField(
+            CustomDropdownFormField(
               labelText: 'Property',
-              controller: _property,
+              dropdownOptions: const ['test_property'],
+              onChanged: (String? value) => {
+                setState(() {
+                  _property = value!;
+                }),
+              },
+              value: _property,
             ),
             CustomDropdownFormField(
-                labelText: 'Parameter',
-                dropdownOptions: const [
-                  'Suction Pressure',
-                  'Discharge Pressure',
-                  'Oxygen A Pressure',
-                  'Oxygen B Pressure',
-                  'Ambient Temperature',
-                  'Total Current'
-                ],
+              labelText: 'Parameter',
+              dropdownOptions: const [
+                'Suction Pressure',
+                'Discharge Pressure',
+                'Oxygen A Pressure',
+                'Oxygen B Pressure',
+                'Ambient Temperature',
+                'Total Current'
+              ],
               onChanged: (String? value) => {
                 setState(() {
                   _parameter = value!;
@@ -101,7 +107,7 @@ class _AddAlarmFormState extends State<AddAlarmForm> {
             ),
             CustomDropdownFormField(
               labelText: 'Status',
-              dropdownOptions: const ['Active', 'Inactive'],
+              dropdownOptions: const ['active', 'inactive'],
               onChanged: (String? value) => {
                 setState(() {
                   _status = value!;
@@ -131,36 +137,33 @@ class _AddAlarmFormState extends State<AddAlarmForm> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState?.save();
       print('Submitted form data:');
-      print('Property: ${_property.text}');
+      print('Property: ${_property}');
       print('Parameter: $_parameter');
       print('Condition: $_condition');
       print('Value: ${_value.text}');
       print('Status: $_status');
 
-      _alarmDetails.property = _property.text;
-      _alarmDetails.parameter = _parameter;
-      _alarmDetails.condition = _condition;
-      _alarmDetails.value = int.parse(_value.text);
-      _alarmDetails.status = _status;
+      try {
+        _alarmDetails.property = _property;
+        _alarmDetails.parameter = _parameter;
+        _alarmDetails.condition = _condition;
+        _alarmDetails.value = double.parse(_value.text);
+        _alarmDetails.status = _status;
 
-      widget.closeDialog(_alarmDetails);
-
-      Navigator.pop(context);
-
-      // bool status = await saveEmployeeDetails(_employeeDetails);
-      // if (status) {
-      //   showSaveSuccessfulMessage(context);
-      //   _dob.clear();
-      //   Navigator.pop(context);
-      //   widget.closeDialog();
-      //   setState(() {});
-      // } else {
-      //   showSaveFailedMessage(context);
-      // }
-
+        ResponseDto response = await saveAlarmDetails(_alarmDetails);
+        if (response.success) {
+          showSaveSuccessfulMessage(context, response.message);
+          Navigator.pop(context);
+          widget.closeDialog(_alarmDetails);
+          setState(() {});
+        } else {
+          showSaveFailedMessage(context, response.message);
+        }
+      } on Exception catch (_) {
+        showSaveFailedMessage(context, _.toString());
+      }
     } else {
       showSaveFailedMessage(context, "Invalid values");
     }
-
   }
 }

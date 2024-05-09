@@ -1,45 +1,42 @@
-
 class AlarmDetails {
   int id = 0;
   String property = "";
   String parameter = "";
   String condition = "";
-  int value = 0;
+  double value = 0;
   String status = "";
-  String creatBy = "";
-  DateTime creatDt = DateTime.now();
+  String createBy = "";
+  DateTime createDate = DateTime.now();
   String editBy = "";
-  DateTime editDt = DateTime.now();
+  DateTime? editDate;
 
   AlarmDetails();
-  // AlarmDetails({
-  //   required this.id,
-  //   required this.property,
-  //   required this.parameter,
-  //   required this.condition,
-  //   required this.value,
-  //   required this.status,
-  //   required this.creatBy,
-  //   required this.creatDt,
-  //   required this.editBy,
-  //   required this.editDt,
-  // });
 
+  AlarmDetails.fromJson(Map<String, dynamic> json) {
+    id = json['id'] ?? 0;
+    property = json['property'] ?? "";
+    parameter = json['parameter'] ?? "";
+    condition = json['condition'] ?? "";
+    value = json['value'] ?? 0;
+    status = json['status'] ?? "";
+    createBy = json['createBy'] ?? '';
+    createDate = DateTime.fromMillisecondsSinceEpoch(json['createDate'] ?? 0);
+    editBy = json['editBy'] ?? '';
+    editDate = json['editDate'] == null
+        ? DateTime.now()
+        : DateTime.fromMillisecondsSinceEpoch(json['editDate']);
+  }
 
-  AlarmDetails.toJson();
-
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         'id': id,
         'property': property,
         'parameter': parameter,
         'condition': condition,
         'value': value,
         'status': status,
-        'creatBy':creatBy,
-        'creatDt':creatDt.toIso8601String(),
-        'editBy':editBy,
-        'editDt':editDt.toIso8601String(),
+        'createBy': createBy,
+        'createDate': createDate.millisecondsSinceEpoch,
+        'editBy': editBy,
+        'editDate': editDate != null ? editDate!.millisecondsSinceEpoch : null,
       };
-
 }

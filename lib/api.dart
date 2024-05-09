@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:admin/globalState.dart';
+import 'package:admin/models/alarm_details.dart';
 import 'package:admin/models/clientDetails.dart';
 import 'package:admin/models/employeeDetails.dart';
 import 'package:admin/models/jobDetails.dart';
@@ -35,6 +36,7 @@ String ip = "${GlobalState.ipAddress}:8090"; // over network
 
 String baseUrl = "http://$ip/api";
 String userUrl = "$baseUrl/user";
+String alarmsUrl = "$baseUrl/alarms";
 
 enum HttpMethod {
   GET,
@@ -115,6 +117,23 @@ Future<ResponseDto> triggerMotor(String trigger) async {
   String urlWithParams = "$baseUrl/mqtt/triggerMotor?trigger=$trigger";
   ResponseDto response = ResponseDto.fromJson(
       await httpConnect(urlWithParams, HttpMethod.POST, ""));
+  return response;
+}
+
+Future<List<AlarmDetails>> getAlarmDetails() async {
+  String urlWithParams = "$alarmsUrl/getAlarmDetails";
+  List<AlarmDetails> list =
+      (await httpConnect(urlWithParams, HttpMethod.GET) as List)
+          .map((job) => AlarmDetails.fromJson(job))
+          .toList();
+  return list;
+}
+
+Future<ResponseDto> saveAlarmDetails(AlarmDetails alarmDetails) async {
+  String urlWithParams = "$alarmsUrl/saveAlarmDetails";
+  var jsonData = jsonEncode(alarmDetails);
+  ResponseDto response = ResponseDto.fromJson(
+      await httpConnect(urlWithParams, HttpMethod.POST, jsonData));
   return response;
 }
 

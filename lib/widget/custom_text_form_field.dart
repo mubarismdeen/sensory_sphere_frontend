@@ -27,12 +27,22 @@ class CustomTextFormField extends StatelessWidget {
         if (value!.isEmpty) {
           return 'Please enter ${labelText.toLowerCase()}';
         }
-        if (isNumeric && !value.isNumericOnly) {
+        if (isNumeric && !value.isNumericOnly && !value.isDoubleOnly) {
           return 'Please enter a numeric value';
         }
         return null;
       },
       controller: controller,
     );
+  }
+}
+
+extension StringExtension on String {
+  bool get isDoubleOnly {
+    if (isEmpty) {
+      return false;
+    }
+    final RegExp regex = RegExp(r'^\d+(\.\d+)?$');
+    return regex.hasMatch(this);
   }
 }

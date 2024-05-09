@@ -1,11 +1,12 @@
 import 'package:admin/constants/style.dart';
+import 'package:admin/models/alarm_details.dart';
 import 'package:flutter/material.dart';
 
 class CustomDataTable extends StatelessWidget {
   final TextStyle headerTextStyle;
   final TextStyle rowTextStyle;
   final List<String> columnHeaders;
-  final List<Map<String, dynamic>> tableData;
+  final List<AlarmDetails> tableData;
   final BorderRadius borderRadius;
   final Color headingRowColor;
   final Color backGroundColor;
@@ -15,7 +16,8 @@ class CustomDataTable extends StatelessWidget {
 
   CustomDataTable({
     required this.columnHeaders,
-    this.headerTextStyle = const TextStyle(color: lightGrey, fontWeight: FontWeight.bold),
+    this.headerTextStyle =
+        const TextStyle(color: lightGrey, fontWeight: FontWeight.bold),
     this.rowTextStyle = const TextStyle(color: lightGrey),
     this.tableData = const [],
     this.borderRadius = const BorderRadius.all(Radius.circular(10.0)),
@@ -45,8 +47,10 @@ class CustomDataTable extends StatelessWidget {
               ),
               child: DataTable(
                 showCheckboxColumn: false,
-                headingRowColor: MaterialStateColor.resolveWith((states) => headingRowColor),
-                dataRowColor: MaterialStateColor.resolveWith((states) => backGroundColor),
+                headingRowColor:
+                    MaterialStateColor.resolveWith((states) => headingRowColor),
+                dataRowColor:
+                    MaterialStateColor.resolveWith((states) => backGroundColor),
                 columns: columnHeaders.map((header) {
                   return DataColumn(
                     label: Text(header, style: headerTextStyle),
@@ -54,12 +58,23 @@ class CustomDataTable extends StatelessWidget {
                 }).toList(),
                 rows: tableData.map((tableRow) {
                   return DataRow(
-                    cells: tableRow.entries.map((entry) {
-                      return DataCell(
-                        Text(entry.value.toString(), style: rowTextStyle),
-                      );
-                    }).toList(),
-                    // Add onTap function here
+                    cells: [
+                      DataCell(
+                        Text(tableRow.property, style: rowTextStyle),
+                      ),
+                      DataCell(
+                        Text(tableRow.parameter, style: rowTextStyle),
+                      ),
+                      DataCell(
+                        Text(tableRow.condition, style: rowTextStyle),
+                      ),
+                      DataCell(
+                        Text(tableRow.value.toString(), style: rowTextStyle),
+                      ),
+                      DataCell(
+                        Text(tableRow.status, style: rowTextStyle),
+                      ),
+                    ],
                     onSelectChanged: (selected) {
                       if (selected != null) {
                         print('Selected row: $tableRow');
