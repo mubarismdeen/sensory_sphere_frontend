@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "399261569921",
+    "project_id": "sensory-sphere-notification",
+    "storage_bucket": "sensory-sphere-notification.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:399261569921:android:71800bec34864b50028e80",
+        "android_client_info": {
+          "package_name": "com.example.admin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-uKReHWWFXThz5P9-YHMHy8YR2mat4oQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

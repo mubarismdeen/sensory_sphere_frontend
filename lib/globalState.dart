@@ -1,3 +1,4 @@
+import 'package:admin/constants/controllers.dart';
 import 'package:admin/models/userScreens.dart';
 import 'package:admin/routes/routes.dart';
 
@@ -5,7 +6,6 @@ import 'api.dart';
 import 'models/userDetails.dart';
 
 class GlobalState {
-
   static String ipAddress = "";
   static String username = "User";
   static String userEmpCode = "1";
@@ -18,36 +18,37 @@ class GlobalState {
   static bool clientsScreenPrivilege = false;
   static bool gratuityScreenPrivilege = false;
 
-  static List<String> sideMenuItems =[];
+  static List<String> sideMenuItems = [];
 
-  static void setScreensForUser(String givenUsername, UserScreens screensForUser) {
+  static void setScreensForUser(
+      String givenUsername, UserScreens screensForUser) {
     username = givenUsername;
     setEmployeeCodeForSession(givenUsername);
     sideMenuItems = [];
-    if(screensForUser.dashboard) {
-      dashboardScreenPrivilege = true;
-      sideMenuItems.add(DashboardRoute);
-    }
-    if(screensForUser.employees) {
+    // if(screensForUser.dashboard) {
+    //   dashboardScreenPrivilege = true;
+    //   sideMenuItems.add(DashboardRoute);
+    // }
+    if (screensForUser.employees) {
       employeeScreenPrivilege = true;
       sideMenuItems.add(DevicesRoute);
-      }
-    if(screensForUser.salaryPayout) {
-      salaryPayoutScreenPrivilege = true;
-      sideMenuItems.add(AlarmsRoute);
     }
-    if(screensForUser.salaryMaster) {
-      salaryMasterScreenPrivilege = true;
-      sideMenuItems.add(MaintenanceRoute);
-    }
-    if(screensForUser.leaveSalary) {
-      leaveSalaryScreenPrivilege = true;
-      sideMenuItems.add(CompanyRoute);
-    }
-    if(screensForUser.attendance) {
-      attendanceScreenPrivilege = true;
-      sideMenuItems.add(SupportRoute);
-    }
+    // if(screensForUser.salaryPayout) {
+    //   salaryPayoutScreenPrivilege = true;
+    //   sideMenuItems.add(AlarmsRoute);
+    // }
+    // if(screensForUser.salaryMaster) {
+    //   salaryMasterScreenPrivilege = true;
+    //   sideMenuItems.add(MaintenanceRoute);
+    // }
+    // if(screensForUser.leaveSalary) {
+    //   leaveSalaryScreenPrivilege = true;
+    //   sideMenuItems.add(CompanyRoute);
+    // }
+    // if(screensForUser.attendance) {
+    //   attendanceScreenPrivilege = true;
+    //   sideMenuItems.add(SupportRoute);
+    // }
     // if(screensForUser.clients) {
     //   clientsScreenPrivilege = true;
     //   sideMenuItems.add(ClientsRoute);
@@ -57,15 +58,16 @@ class GlobalState {
     //   sideMenuItems.add(GratuityRoute);
     // }
     sideMenuItems.add(AuthenticationPageRoute);
+    menuController.changeActiveItemTo(sideMenuItems[0]);
   }
 
   static Future<void> setEmployeeCodeForSession(String givenUsername) async {
-    UserDetails userDetails = (await getUserDetailsWithUsername(givenUsername)).first;
+    UserDetails userDetails =
+        (await getUserDetailsWithUsername(givenUsername)).first;
     userEmpCode = userDetails.empCode;
   }
 
   static void setIpAddress(String ipAddr) {
     ipAddress = ipAddr;
   }
-
 }

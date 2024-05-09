@@ -50,6 +50,9 @@ dependencies:
   excel: ^2.0.0
   csv: ^4.0.4
   syncfusion_flutter_gauges: ^21.2.4
+  firebase_core: ^2.24.2
+  firebase_messaging: ^14.7.10
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:
