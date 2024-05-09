@@ -4,9 +4,9 @@ import 'package:get/get.dart';
 
 import '../constants/style.dart';
 
-class CustomMenuController extends GetxController{
+class CustomMenuController extends GetxController {
   static CustomMenuController instance = Get.find();
-  var activeItem = DashboardRoute.obs;
+  var activeItem = DevicesRoute.obs;
   // var activeItem = GlobalState.sideMenuItems.isNotEmpty ? GlobalState.sideMenuItems.first.obs : DashboardRoute.obs;
   var hoverItem = "".obs;
 
@@ -14,16 +14,16 @@ class CustomMenuController extends GetxController{
     activeItem.value = itemName;
   }
 
-  onHover(String itemName){
-    if(!isActive(itemName)) hoverItem.value = itemName;
-}
+  onHover(String itemName) {
+    if (!isActive(itemName)) hoverItem.value = itemName;
+  }
 
   isActive(String itemName) => activeItem.value == itemName;
 
   isHovering(String itemName) => hoverItem.value == itemName;
 
-  Widget returnIconFor(String itemName){
-    switch(itemName){
+  Widget returnIconFor(String itemName) {
+    switch (itemName) {
       case SupportRoute:
         return _customIcon(Icons.support_agent_sharp, itemName);
       case DevicesRoute:
@@ -47,10 +47,17 @@ class CustomMenuController extends GetxController{
     }
   }
 
-  Widget _customIcon(IconData icon, String itemName){
-    if(isActive(itemName)) return Icon(icon, size: 22, color: highlightedColor,);
+  Widget _customIcon(IconData icon, String itemName) {
+    if (isActive(itemName))
+      return Icon(
+        icon,
+        size: 22,
+        color: highlightedColor,
+      );
 
-    return Icon(icon, color: isHovering(itemName) ? highlightedColor : lightGrey,);
-
+    return Icon(
+      icon,
+      color: isHovering(itemName) ? highlightedColor : lightGrey,
+    );
   }
 }

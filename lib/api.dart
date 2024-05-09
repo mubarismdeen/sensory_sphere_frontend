@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:admin/globalState.dart';
@@ -12,11 +13,12 @@ import 'package:admin/models/userPrivileges.dart';
 import 'package:admin/models/userScreens.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:async';
+
 import 'models/attedanceDto.dart';
 import 'models/attendanceModel.dart';
 import 'models/docDetails.dart';
 import 'models/empMaster.dart';
+import 'models/response_dto.dart';
 import 'models/salaryMaster.dart';
 import 'models/salaryMasterGet.dart';
 import 'models/salaryPay.dart';
@@ -25,7 +27,7 @@ import 'models/userDetails.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 // String ip = "192.168.1.4:8091";   // over network
-String ip = "${GlobalState.ipAddress}:8090";   // over network
+String ip = "${GlobalState.ipAddress}:8090"; // over network
 // String ip = "localhost:8091";  // local
 // String ip = "172.11.7.254:88"; // live
 // String ip = "172.11.7.254:98"; // test
@@ -37,48 +39,53 @@ enum HttpMethod {
   POST,
 }
 
-Future<dynamic> httpConnect(String urlWithParams, HttpMethod method, [dynamic jsonData]) async {
-  try {
-    dynamic response;
-    switch(method) {
-      case HttpMethod.GET:
-        response = await http.get(Uri.parse(urlWithParams));
-        break;
-      case HttpMethod.POST:
-        response = await http.post(Uri.parse(urlWithParams), headers: {"Content-Type": "application/json"}, body: jsonData);
-        break;
-      default:
-        throw Exception('Invalid Http Method');
-    }
-    if (response.statusCode == 200) {
-      var jsonResponse = json.decode(response.body);
-      return jsonResponse;
-    } else {
-      throw Exception('Failed');
-    }
-  } catch (e) {
-    throw Exception('Failed');
+Future<dynamic> httpConnect(String urlWithParams, HttpMethod method,
+    [dynamic jsonData]) async {
+  dynamic response;
+  switch (method) {
+    case HttpMethod.GET:
+      response = await http.get(Uri.parse(urlWithParams));
+      break;
+    case HttpMethod.POST:
+      response = await http.post(Uri.parse(urlWithParams),
+          headers: {"Content-Type": "application/json"}, body: jsonData);
+      break;
+    default:
+      throw Exception('Invalid Http Method');
+  }
+  if (response.statusCode == 200) {
+    var jsonResponse = json.decode(response.body);
+    return jsonResponse;
+  } else if (response.statusCode == 400) {
+    return json.decode(response.body);
+  } else {
+    throw Exception(json.decode(response.body)['message'] ?? 'Failed');
   }
 }
 
 Future<bool> localUserValidation(String userID, String password) async {
-  if(userID == '1' && password == '123'){
+  if (userID == '1' && password == '123') {
     return true;
-  }else{
+  } else {
     return false;
   }
 }
 
-Future<List<UserScreens>> authorizeUser(String username, String password) async {
-  String urlWithParams = "$baseUrl/user/authorize?username=$username&password=$password";
-  List<UserScreens> list = (await httpConnect(urlWithParams, HttpMethod.GET) as List)
-      .map((job) => UserScreens.fromJson(job)).toList();
+Future<List<UserScreens>> authorizeUser(
+    String username, String password) async {
+  String urlWithParams =
+      "$baseUrl/user/authorize?username=$username&password=$password";
+  List<UserScreens> list =
+      (await httpConnect(urlWithParams, HttpMethod.GET) as List)
+          .map((job) => UserScreens.fromJson(job))
+          .toList();
   return list;
 }
 
-Future<List<UserScreens>> authorizeUserLocally(String username, String password) async {
+Future<List<UserScreens>> authorizeUserLocally(
+    String username, String password) async {
   List<UserScreens> list = [];
-  if (username == "admin" && password=="123") {
+  if (username == "admin" && password == "123") {
     UserScreens screens = UserScreens(creatBy: '');
     screens.dashboard = true;
     screens.employees = true;
@@ -95,27 +102,36 @@ Future<List<UserScreens>> authorizeUserLocally(String username, String password)
 
 Future<List<SensorData>> getLastSensorData() async {
   String urlWithParams = "$baseUrl/data/lastData";
-  List<SensorData> list = (await httpConnect(urlWithParams, HttpMethod.GET) as List)
-      .map((job) => SensorData.fromJson(job)).toList();
+  List<SensorData> list =
+      (await httpConnect(urlWithParams, HttpMethod.GET) as List)
+          .map((job) => SensorData.fromJson(job))
+          .toList();
   return list;
 }
 
-Future<bool> triggerMotor(String trigger) async {
+Future<ResponseDto> triggerMotor(String trigger) async {
   String urlWithParams = "$baseUrl/mqtt/triggerMotor?trigger=$trigger";
-  return await httpConnect(urlWithParams, HttpMethod.POST, "") as bool;
+  ResponseDto response = ResponseDto.fromJson(
+      await httpConnect(urlWithParams, HttpMethod.POST, ""));
+  return response;
 }
 
-Future<List<UserDetails>> getUserDetails (String empCode) async {
+Future<List<UserDetails>> getUserDetails(String empCode) async {
   String urlWithParams = "http://$ip/Hrms/getUserDetails?empCode=$empCode";
-  List<UserDetails> list = (await httpConnect(urlWithParams, HttpMethod.GET) as List)
-      .map((job) => UserDetails.fromJson(job)).toList();
+  List<UserDetails> list =
+      (await httpConnect(urlWithParams, HttpMethod.GET) as List)
+          .map((job) => UserDetails.fromJson(job))
+          .toList();
   return list;
 }
 
-Future<List<UserDetails>> getUserDetailsWithUsername (String username) async {
-  String urlWithParams = "http://$ip/Hrms/getUserDetailsWithUsername?username=$username";
-  List<UserDetails> list = (await httpConnect(urlWithParams, HttpMethod.GET) as List)
-      .map((job) => UserDetails.fromJson(job)).toList();
+Future<List<UserDetails>> getUserDetailsWithUsername(String username) async {
+  String urlWithParams =
+      "http://$ip/Hrms/getUserDetailsWithUsername?username=$username";
+  List<UserDetails> list =
+      (await httpConnect(urlWithParams, HttpMethod.GET) as List)
+          .map((job) => UserDetails.fromJson(job))
+          .toList();
   return list;
 }
 
@@ -125,10 +141,13 @@ Future<bool> saveUserDetails(UserDetails userDetails) async {
   return await httpConnect(urlWithParams, HttpMethod.POST, jsonData) as bool;
 }
 
-Future<List<UserScreens>> getScreensForEmployee (String empCode) async {
-  String urlWithParams = "http://$ip/Hrms/getScreensForEmployee?empCode=$empCode";
-  List<UserScreens> list = (await httpConnect(urlWithParams, HttpMethod.GET) as List)
-      .map((job) => UserScreens.fromJson(job)).toList();
+Future<List<UserScreens>> getScreensForEmployee(String empCode) async {
+  String urlWithParams =
+      "http://$ip/Hrms/getScreensForEmployee?empCode=$empCode";
+  List<UserScreens> list =
+      (await httpConnect(urlWithParams, HttpMethod.GET) as List)
+          .map((job) => UserScreens.fromJson(job))
+          .toList();
   return list;
 }
 
@@ -139,16 +158,23 @@ Future<bool> saveScreensForEmployee(UserScreens userScreens) async {
 }
 
 Future<List<UserPrivileges>> getAllPrivilegesForUser(String empCode) async {
-  String urlWithParams = "http://$ip/Hrms/getAllPrivilegesForUser?empCode=$empCode";
-  List<UserPrivileges> list = (await httpConnect(urlWithParams, HttpMethod.GET) as List)
-      .map((job) => UserPrivileges.fromJson(job)).toList();
+  String urlWithParams =
+      "http://$ip/Hrms/getAllPrivilegesForUser?empCode=$empCode";
+  List<UserPrivileges> list =
+      (await httpConnect(urlWithParams, HttpMethod.GET) as List)
+          .map((job) => UserPrivileges.fromJson(job))
+          .toList();
   return list;
 }
 
-Future<List<UserPrivileges>> getAPrivilegeForUser(String username, String privilegeName) async {
-  String urlWithParams = "http://$ip/Hrms/getAPrivilegeForUser?userName=$username&privilege=$privilegeName";
-  List<UserPrivileges> list = (await httpConnect(urlWithParams, HttpMethod.GET) as List)
-      .map((job) => UserPrivileges.fromJson(job)).toList();
+Future<List<UserPrivileges>> getAPrivilegeForUser(
+    String username, String privilegeName) async {
+  String urlWithParams =
+      "http://$ip/Hrms/getAPrivilegeForUser?userName=$username&privilege=$privilegeName";
+  List<UserPrivileges> list =
+      (await httpConnect(urlWithParams, HttpMethod.GET) as List)
+          .map((job) => UserPrivileges.fromJson(job))
+          .toList();
   return list;
 }
 
@@ -160,55 +186,72 @@ Future<bool> savePrivilegesForUser(List<UserPrivileges> privilegesList) async {
 
 Future<List<Map<String, dynamic>>> getDocDetails() async {
   String urlWithParams = "http://$ip/Hrms/getDocDetails";
-  List<Map<String, dynamic>> list = (await httpConnect(urlWithParams, HttpMethod.GET) as List)
-      .map((dynamic e) => e as Map<String, dynamic>).toList();
+  List<Map<String, dynamic>> list =
+      (await httpConnect(urlWithParams, HttpMethod.GET) as List)
+          .map((dynamic e) => e as Map<String, dynamic>)
+          .toList();
   return list;
 }
 
 Future<List<Map<String, dynamic>>> getDocType() async {
   String urlWithParams = "http://$ip/Hrms/getDocType";
-  List<Map<String, dynamic>> list = (await httpConnect(urlWithParams, HttpMethod.GET) as List)
-      .map((dynamic e) => e as Map<String, dynamic>).toList();
+  List<Map<String, dynamic>> list =
+      (await httpConnect(urlWithParams, HttpMethod.GET) as List)
+          .map((dynamic e) => e as Map<String, dynamic>)
+          .toList();
   return list;
 }
 
 Future<List<Map<String, dynamic>>> getQuotationType() async {
   String urlWithParams = "http://$ip/Hrms/getQuotationType";
-  List<Map<String, dynamic>> list = (await httpConnect(urlWithParams, HttpMethod.GET) as List)
-      .map((dynamic e) => e as Map<String, dynamic>).toList();
+  List<Map<String, dynamic>> list =
+      (await httpConnect(urlWithParams, HttpMethod.GET) as List)
+          .map((dynamic e) => e as Map<String, dynamic>)
+          .toList();
   return list;
 }
 
 Future<List<Map<String, dynamic>>> getPoStatus() async {
   String urlWithParams = "http://$ip/Hrms/getpoStatus";
-  List<Map<String, dynamic>> list = (await httpConnect(urlWithParams, HttpMethod.GET) as List)
-      .map((dynamic e) => e as Map<String, dynamic>).toList();
+  List<Map<String, dynamic>> list =
+      (await httpConnect(urlWithParams, HttpMethod.GET) as List)
+          .map((dynamic e) => e as Map<String, dynamic>)
+          .toList();
   return list;
 }
 
 Future<List<Map<String, dynamic>>> getInvoiceStatus() async {
   String urlWithParams = "http://$ip/Hrms/getinvStatus";
-  List<Map<String, dynamic>> list = (await httpConnect(urlWithParams, HttpMethod.GET) as List)
-      .map((dynamic e) => e as Map<String, dynamic>).toList();
+  List<Map<String, dynamic>> list =
+      (await httpConnect(urlWithParams, HttpMethod.GET) as List)
+          .map((dynamic e) => e as Map<String, dynamic>)
+          .toList();
   return list;
 }
 
-Future<List<Map<String, dynamic>>> getQuotationDetails(String clientName, String name, String poStatus, String invStatus, String type) async {
-  String urlWithParams = "http://$ip/Hrms/getQuotationDetails?clientName=$clientName&name=$name&poStatus=$poStatus&invStatus=$invStatus&type=$type";
-  List<Map<String, dynamic>> list = (await httpConnect(urlWithParams, HttpMethod.GET) as List)
-      .map((dynamic e) => e as Map<String, dynamic>).toList();
+Future<List<Map<String, dynamic>>> getQuotationDetails(String clientName,
+    String name, String poStatus, String invStatus, String type) async {
+  String urlWithParams =
+      "http://$ip/Hrms/getQuotationDetails?clientName=$clientName&name=$name&poStatus=$poStatus&invStatus=$invStatus&type=$type";
+  List<Map<String, dynamic>> list =
+      (await httpConnect(urlWithParams, HttpMethod.GET) as List)
+          .map((dynamic e) => e as Map<String, dynamic>)
+          .toList();
   return list;
 }
 
 Future<bool> deleteQuotationDetails(int quotationId) async {
-  String urlWithParams = "http://$ip/Hrms/DeleteQuotationDetails?id=$quotationId";
+  String urlWithParams =
+      "http://$ip/Hrms/DeleteQuotationDetails?id=$quotationId";
   return await httpConnect(urlWithParams, HttpMethod.GET) as bool;
 }
 
 Future<List<Map<String, dynamic>>> getGratuityDetails() async {
   String urlWithParams = "http://$ip/Hrms/getGratuityDetails";
-  List<Map<String, dynamic>> list = (await httpConnect(urlWithParams, HttpMethod.GET) as List)
-      .map((dynamic e) => e as Map<String, dynamic>).toList();
+  List<Map<String, dynamic>> list =
+      (await httpConnect(urlWithParams, HttpMethod.GET) as List)
+          .map((dynamic e) => e as Map<String, dynamic>)
+          .toList();
   return list;
 }
 
@@ -219,10 +262,10 @@ Future<bool> saveSalaryMaster(SalaryMaster salaryMaster) async {
 }
 
 Future<bool> deleteSalaryMaster(int salaryMasterId) async {
-  String urlWithParams = "http://$ip/Hrms/DeleteSalaryMaster?id=$salaryMasterId";
+  String urlWithParams =
+      "http://$ip/Hrms/DeleteSalaryMaster?id=$salaryMasterId";
   return await httpConnect(urlWithParams, HttpMethod.GET) as bool;
 }
-
 
 Future<bool> saveDocDetails(DocDetails docDetails) async {
   String urlWithParams = "http://$ip/Hrms/saveDocDetails";
@@ -235,15 +278,15 @@ Future<bool> deleteDocDetails(int docId) async {
   return await httpConnect(urlWithParams, HttpMethod.GET) as bool;
 }
 
-
 Future<bool> saveQuotationDetails(QuotationDetails quotationDetails) async {
   String urlWithParams = "http://$ip/Hrms/saveQuotation";
   var jsonData = jsonEncode(quotationDetails);
   return await httpConnect(urlWithParams, HttpMethod.POST, jsonData) as bool;
 }
 
-Future<bool> saveGratuity(String empCode, String type,String editBy) async {
-  String urlWithParams = "http://$ip/Hrms/SaveGratuity?empCode=$empCode&type=$type&editBy=$editBy";
+Future<bool> saveGratuity(String empCode, String type, String editBy) async {
+  String urlWithParams =
+      "http://$ip/Hrms/SaveGratuity?empCode=$empCode&type=$type&editBy=$editBy";
   return await httpConnect(urlWithParams, HttpMethod.GET) as bool;
 }
 
@@ -251,8 +294,9 @@ Future<String> saveAttendance(List<AttendanceModel> attendanceList) async {
   String urlWithParams = "http://$ip/Hrms/saveAttendance";
   var jsonData = jsonEncode(attendanceList);
   try {
-    http.Response response = await http.post(Uri.parse(urlWithParams), headers: {"Content-Type": "application/json"}, body: jsonData);
-    if (response.statusCode == 200){
+    http.Response response = await http.post(Uri.parse(urlWithParams),
+        headers: {"Content-Type": "application/json"}, body: jsonData);
+    if (response.statusCode == 200) {
       return response.body;
     }
   } catch (e) {
@@ -261,52 +305,68 @@ Future<String> saveAttendance(List<AttendanceModel> attendanceList) async {
   return "Failed";
 }
 
-
 Future<List<EmpMaster>> getEmpDetails() async {
   String urlWithParams = "http://$ip/Hrms/getEmpDetails";
-  List<EmpMaster> list = (await httpConnect(urlWithParams, HttpMethod.GET) as List)
-      .map((job) => EmpMaster.fromJson(job)).toList();
+  List<EmpMaster> list =
+      (await httpConnect(urlWithParams, HttpMethod.GET) as List)
+          .map((job) => EmpMaster.fromJson(job))
+          .toList();
   return list;
 }
 
 Future<List<EmpMaster>> getGratuityEmp() async {
   String urlWithParams = "http://$ip/Hrms/getGratuityEmp";
-  List<EmpMaster> list = (await httpConnect(urlWithParams, HttpMethod.GET) as List)
-      .map((job) => EmpMaster.fromJson(job)).toList();
+  List<EmpMaster> list =
+      (await httpConnect(urlWithParams, HttpMethod.GET) as List)
+          .map((job) => EmpMaster.fromJson(job))
+          .toList();
   return list;
 }
+
 Future<List<AttendanceDto>> getAttendanceDetails(String date) async {
   String urlWithParams = "http://$ip/Hrms/getAttendance?date=$date";
   List<AttendanceDto> list = (await httpConnect(urlWithParams, HttpMethod.GET))
-      .map((job) => AttendanceDto.fromJson(job)).cast<AttendanceDto>().toList();
+      .map((job) => AttendanceDto.fromJson(job))
+      .cast<AttendanceDto>()
+      .toList();
   return list;
 }
 
 Future<List<SalaryPay>> getSalaryPay(String date) async {
   String urlWithParams = "http://$ip/Hrms/getSalaryPay?date=$date";
   List<SalaryPay> list = (await httpConnect(urlWithParams, HttpMethod.GET))
-      .map((job) => SalaryPay.fromJson(job)).cast<SalaryPay>().toList();
+      .map((job) => SalaryPay.fromJson(job))
+      .cast<SalaryPay>()
+      .toList();
   return list;
 }
 
 Future<List<SalaryMasterGet>> getSalaryMaster(String date) async {
   String urlWithParams = "http://$ip/Hrms/getSalary?date=$date";
-  List<SalaryMasterGet> list = (await httpConnect(urlWithParams, HttpMethod.GET))
-      .map((job) => SalaryMasterGet.fromJson(job)).cast<SalaryMasterGet>().toList();
+  List<SalaryMasterGet> list =
+      (await httpConnect(urlWithParams, HttpMethod.GET))
+          .map((job) => SalaryMasterGet.fromJson(job))
+          .cast<SalaryMasterGet>()
+          .toList();
   return list;
 }
 
 Future<List<EmployeeDetails>> getEmployeeDetails() async {
   String urlWithParams = "http://$ip/Hrms/getEmployeeDetails";
-  List<EmployeeDetails> list = (await httpConnect(urlWithParams, HttpMethod.GET))
-      .map((job) => EmployeeDetails.fromJson(job)).cast<EmployeeDetails>().toList();
+  List<EmployeeDetails> list =
+      (await httpConnect(urlWithParams, HttpMethod.GET))
+          .map((job) => EmployeeDetails.fromJson(job))
+          .cast<EmployeeDetails>()
+          .toList();
   return list;
 }
 
 Future<List<LeaveSalary>> getLeaveSalary(String year) async {
   String urlWithParams = "http://$ip/Hrms/getLeaveSalary?year=$year";
   List<LeaveSalary> list = (await httpConnect(urlWithParams, HttpMethod.GET))
-      .map((job) => LeaveSalary.fromJson(job)).cast<LeaveSalary>().toList();
+      .map((job) => LeaveSalary.fromJson(job))
+      .cast<LeaveSalary>()
+      .toList();
   return list;
 }
 
@@ -316,10 +376,14 @@ Future<bool> saveSalaryPaid(SalaryPaid salaryPaid) async {
   return await httpConnect(urlWithParams, HttpMethod.POST, jsonData) as bool;
 }
 
-Future<List<Map<String, dynamic>>> getJobDetails(String jobStatus, String assignedTo, String dueDate) async {
-  String urlWithParams = "http://$ip/Hrms/getJobDetails?JobStatus=$jobStatus&AssignedTo=$assignedTo&DueDate=$dueDate";
-  List<Map<String, dynamic>> list = (await httpConnect(urlWithParams, HttpMethod.GET) as List)
-      .map((dynamic e) => e as Map<String, dynamic>).toList();
+Future<List<Map<String, dynamic>>> getJobDetails(
+    String jobStatus, String assignedTo, String dueDate) async {
+  String urlWithParams =
+      "http://$ip/Hrms/getJobDetails?JobStatus=$jobStatus&AssignedTo=$assignedTo&DueDate=$dueDate";
+  List<Map<String, dynamic>> list =
+      (await httpConnect(urlWithParams, HttpMethod.GET) as List)
+          .map((dynamic e) => e as Map<String, dynamic>)
+          .toList();
   return list;
 }
 
@@ -345,46 +409,57 @@ Future<bool> deleteEmployeeDetails(int employeeId) async {
   return await httpConnect(urlWithParams, HttpMethod.GET) as bool;
 }
 
-
 Future<List<Map<String, dynamic>>> getJobStatuses() async {
   String urlWithParams = "http://$ip/Hrms/getjobStatus";
-  List<Map<String, dynamic>> list = (await httpConnect(urlWithParams, HttpMethod.GET) as List)
-      .map((dynamic e) => e as Map<String, dynamic>).toList();
+  List<Map<String, dynamic>> list =
+      (await httpConnect(urlWithParams, HttpMethod.GET) as List)
+          .map((dynamic e) => e as Map<String, dynamic>)
+          .toList();
   return list;
 }
 
 Future<List<Map<String, dynamic>>> getDepartments() async {
   String urlWithParams = "http://$ip/Hrms/getDeparments";
-  List<Map<String, dynamic>> list = (await httpConnect(urlWithParams, HttpMethod.GET) as List)
-      .map((dynamic e) => e as Map<String, dynamic>).toList();
+  List<Map<String, dynamic>> list =
+      (await httpConnect(urlWithParams, HttpMethod.GET) as List)
+          .map((dynamic e) => e as Map<String, dynamic>)
+          .toList();
   return list;
 }
 
 Future<List<Map<String, dynamic>>> getEmployeeStatuses() async {
   String urlWithParams = "http://$ip/Hrms/getEmployeeStatuses";
-  List<Map<String, dynamic>> list = (await httpConnect(urlWithParams, HttpMethod.GET) as List)
-      .map((dynamic e) => e as Map<String, dynamic>).toList();
+  List<Map<String, dynamic>> list =
+      (await httpConnect(urlWithParams, HttpMethod.GET) as List)
+          .map((dynamic e) => e as Map<String, dynamic>)
+          .toList();
   return list;
 }
 
 Future<List<Map<String, dynamic>>> getEmployeeNationalities() async {
   String urlWithParams = "http://$ip/Hrms/getEmployeeNationalities";
-  List<Map<String, dynamic>> list = (await httpConnect(urlWithParams, HttpMethod.GET) as List)
-      .map((dynamic e) => e as Map<String, dynamic>).toList();
+  List<Map<String, dynamic>> list =
+      (await httpConnect(urlWithParams, HttpMethod.GET) as List)
+          .map((dynamic e) => e as Map<String, dynamic>)
+          .toList();
   return list;
 }
 
 Future<List<Map<String, dynamic>>> getGratuityType() async {
   String urlWithParams = "http://$ip/Hrms/getGratuityType";
-  List<Map<String, dynamic>> list = (await httpConnect(urlWithParams, HttpMethod.GET) as List)
-      .map((dynamic e) => e as Map<String, dynamic>).toList();
+  List<Map<String, dynamic>> list =
+      (await httpConnect(urlWithParams, HttpMethod.GET) as List)
+          .map((dynamic e) => e as Map<String, dynamic>)
+          .toList();
   return list;
 }
 
 Future<List<ClientDetails>> getClientDetails() async {
   String urlWithParams = "http://$ip/Hrms/getClientDetails";
   List<ClientDetails> list = (await httpConnect(urlWithParams, HttpMethod.GET))
-      .map((job) => ClientDetails.fromJson(job)).cast<ClientDetails>().toList();
+      .map((job) => ClientDetails.fromJson(job))
+      .cast<ClientDetails>()
+      .toList();
   return list;
 }
 
@@ -403,7 +478,7 @@ Future<String> createDatabaseBackup() async {
   String urlWithParams = "http://$ip/Hrms/createBackup";
   try {
     http.Response response = await http.get(Uri.parse(urlWithParams));
-    if (response.statusCode == 200){
+    if (response.statusCode == 200) {
       return response.body;
     }
   } catch (e) {

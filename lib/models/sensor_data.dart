@@ -8,18 +8,19 @@ class SensorData {
   final double ambientTemperature;
   final double totalCurrent;
   final bool isMotorOn;
+  final bool isMotorLoading;
 
-  SensorData({
-    required this.id,
-    required this.timestamp,
-    required this.suctionPressure,
-    required this.dischargePressure,
-    required this.oxygenAPressure,
-    required this.oxygenBPressure,
-    required this.ambientTemperature,
-    required this.totalCurrent,
-    required this.isMotorOn
-  });
+  SensorData(
+      {required this.id,
+      required this.timestamp,
+      required this.suctionPressure,
+      required this.dischargePressure,
+      required this.oxygenAPressure,
+      required this.oxygenBPressure,
+      required this.ambientTemperature,
+      required this.totalCurrent,
+      required this.isMotorOn,
+      required this.isMotorLoading});
 
   factory SensorData.fromJson(Map<String, dynamic> json) {
     return SensorData(
@@ -31,6 +32,7 @@ class SensorData {
       ambientTemperature: json['ambientTemperature']?.toDouble() ?? 0.0,
       totalCurrent: json['totalCurrent']?.toDouble() ?? 0.0,
       isMotorOn: json['motorOn'] ?? false,
+      isMotorLoading: json['motorLoading'] ?? false,
       timestamp: json['timestamp'] != null
           ? DateTime.fromMillisecondsSinceEpoch(json['timestamp'])
           : DateTime.now(),

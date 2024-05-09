@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:admin/api.dart';
 import 'package:admin/constants/style.dart';
+import 'package:admin/models/response_dto.dart';
 import 'package:admin/utils/common_utils.dart';
 import 'package:admin/widget/Gauges/linear_gauge.dart';
 import 'package:admin/widget/Gauges/radial_gauge.dart';
@@ -42,6 +43,7 @@ class _SystemInlayState extends State<SystemInlay>
       ambientTemperature: 0.0,
       totalCurrent: 0.0,
       isMotorOn: false,
+      isMotorLoading: false,
     );
     getTableData();
     _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
@@ -49,7 +51,8 @@ class _SystemInlayState extends State<SystemInlay>
     });
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 100), // Shorter duration for faster vibration
+      duration: const Duration(
+          milliseconds: 100), // Shorter duration for faster vibration
     );
     _animation = Tween(begin: -3.0, end: 3.0).animate(
       CurvedAnimation(
@@ -80,7 +83,7 @@ class _SystemInlayState extends State<SystemInlay>
           _sensorData = data.first;
           _isRunning = _sensorData.isMotorOn;
           _showLoading = false;
-          _isButtonLoading = false;
+          _isButtonLoading = _sensorData.isMotorLoading;
         });
       } else {
         throw Error();
@@ -188,13 +191,19 @@ class _SystemInlayState extends State<SystemInlay>
   }
 
   Future<void> _triggerMotor() async {
-    if (await triggerMotor(_isRunning ? "OFF" : "ON")) {
-      showSaveSuccessfulMessage(context, "Motor trigger sent");
-      setState(() {
-        _isButtonLoading = true;
-      });
-    } else {
-      showSaveFailedMessage(context, "Motor trigger failed");
+    try {
+      ResponseDto response = await triggerMotor(_isRunning ? "OFF" : "ON");
+      if (response.success) {
+        showSaveSuccessfulMessage(context, response.message);
+        setState(() {
+          _isButtonLoading = true;
+        });
+      } else {
+        showSaveFailedMessage(context, response.message);
+      }
+    } catch (e) {
+      print('Error: $e');
+      showSaveFailedMessage(context, "Operation Failed !");
     }
   }
 
