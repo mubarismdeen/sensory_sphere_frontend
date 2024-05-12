@@ -1,8 +1,9 @@
+import 'dart:io' show Platform;
+
 import 'package:admin/models/userPrivileges.dart';
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter/material.dart';
-import 'dart:io' show Platform;
 
 import '../constants/style.dart';
 
@@ -38,7 +39,7 @@ List<Widget> getActionButtonsWithoutPrivilege(
       ),
       onPressed: onSubmit,
       child: Text(
-        hasData ? 'Save':'Submit',
+        hasData ? 'Save' : 'Submit',
         style: const TextStyle(color: light, fontWeight: FontWeight.bold),
       ),
     ),

@@ -14,7 +14,10 @@ import '../../widget/Gauges/oxygen_pressure_widget.dart';
 import '../../widget/loading_wrapper.dart';
 
 class SystemInlay extends StatefulWidget {
-  SystemInlay();
+  final String propertyName;
+  SystemInlay({
+    required this.propertyName,
+  });
 
   @override
   State<SystemInlay> createState() => _SystemInlayState();
@@ -45,9 +48,9 @@ class _SystemInlayState extends State<SystemInlay>
       isMotorOn: false,
       isMotorLoading: false,
     );
-    getTableData();
+    getTableData(widget.propertyName);
     _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
-      getTableData();
+      getTableData(widget.propertyName);
     });
     _controller = AnimationController(
       vsync: this,
@@ -75,9 +78,9 @@ class _SystemInlayState extends State<SystemInlay>
     super.dispose();
   }
 
-  Future<void> getTableData() async {
+  Future<void> getTableData(String propertyName) async {
     try {
-      List<SensorData> data = await getLastSensorData();
+      List<SensorData> data = await getLastSensorData(propertyName);
       if (data.isNotEmpty) {
         setState(() {
           _sensorData = data.first;
@@ -86,7 +89,7 @@ class _SystemInlayState extends State<SystemInlay>
           _isButtonLoading = _sensorData.isMotorLoading;
         });
       } else {
-        throw Error();
+        showSaveFailedMessage(context, "No data available for this property");
       }
     } catch (error) {
       showSaveFailedMessage(context, "Unable to fetch data");
@@ -98,6 +101,7 @@ class _SystemInlayState extends State<SystemInlay>
     return LoadingWrapper(
       isLoading: _showLoading,
       height: 500,
+      color: highlightedColor,
       child: Container(
         decoration: BoxDecoration(
           color: lightGrey.withOpacity(0.5),

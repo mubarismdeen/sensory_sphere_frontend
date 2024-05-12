@@ -18,7 +18,7 @@ class CustomDataTable extends StatelessWidget {
     required this.columnHeaders,
     this.headerTextStyle =
         const TextStyle(color: lightGrey, fontWeight: FontWeight.bold),
-    this.rowTextStyle = const TextStyle(color: lightGrey),
+    this.rowTextStyle = const TextStyle(color: Colors.black),
     this.tableData = const [],
     this.borderRadius = const BorderRadius.all(Radius.circular(10.0)),
     this.headingRowColor = appBarColor,
@@ -49,8 +49,8 @@ class CustomDataTable extends StatelessWidget {
                 showCheckboxColumn: false,
                 headingRowColor:
                     MaterialStateColor.resolveWith((states) => headingRowColor),
-                dataRowColor:
-                    MaterialStateColor.resolveWith((states) => backGroundColor),
+                dataRowColor: MaterialStateColor.resolveWith(
+                    (states) => lightGrey.withOpacity(0.5)),
                 columns: columnHeaders.map((header) {
                   return DataColumn(
                     label: Text(header, style: headerTextStyle),

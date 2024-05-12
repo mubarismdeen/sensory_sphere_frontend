@@ -1,8 +1,9 @@
 import 'package:admin/api.dart';
-import 'package:admin/constants/constants.dart';
 import 'package:admin/constants/style.dart';
 import 'package:admin/utils/common_utils.dart';
 import 'package:flutter/material.dart';
+
+import '../models/response_dto.dart';
 
 class SettingsPopup extends StatefulWidget {
   const SettingsPopup({Key? key}) : super(key: key);
@@ -16,14 +17,14 @@ class _SettingsPopupState extends State<SettingsPopup> {
 
   void _createBackup() async {
     try {
-      String response = await createDatabaseBackup();
-      if (!response.toLowerCase().startsWith(errorResponse)) {
+      ResponseDto response = await createDatabaseBackup();
+      if (response.success) {
         showSaveSuccessfulMessage(context, "Backup created successfully");
         setState(() {
-          message = response;
+          message = response.message;
         });
       } else {
-        showSaveFailedMessage(context, response);
+        showSaveFailedMessage(context, response.message);
       }
     } catch (e) {
       print('Error: $e');
@@ -56,7 +57,10 @@ class _SettingsPopupState extends State<SettingsPopup> {
                     onPressed: _createBackup,
                     child: const Padding(
                       padding: EdgeInsets.all(12.0),
-                      child: Text('Create Backup', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                      child: Text('Create Backup',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white)),
                     ),
                   ),
                 ),

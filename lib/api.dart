@@ -25,18 +25,19 @@ import 'models/salaryMaster.dart';
 import 'models/salaryMasterGet.dart';
 import 'models/salaryPay.dart';
 import 'models/sensor_data.dart';
+import 'models/status_entity.dart';
 import 'models/userDetails.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 // String ip = "192.168.1.4:8091";   // over network
 String ip = "${GlobalState.ipAddress}:8090"; // over network
-// String ip = "localhost:8090"; // local
-// String ip = "172.11.7.254:88"; // live
-// String ip = "172.11.7.254:98"; // test
+// String ip = "localhost:8091"; // local
 
 String baseUrl = "http://$ip/api";
 String userUrl = "$baseUrl/user";
+String dataUrl = "$baseUrl/data";
 String alarmsUrl = "$baseUrl/alarms";
+String settingsUrl = "$baseUrl/settings";
 
 enum HttpMethod {
   GET,
@@ -104,11 +105,20 @@ Future<List<UserScreens>> authorizeUserLocally(
   return list;
 }
 
-Future<List<SensorData>> getLastSensorData() async {
-  String urlWithParams = "$baseUrl/data/lastData";
+Future<List<SensorData>> getLastSensorData(String propertyName) async {
+  String urlWithParams = "$dataUrl/lastData?propertyName=$propertyName";
   List<SensorData> list =
       (await httpConnect(urlWithParams, HttpMethod.GET) as List)
           .map((job) => SensorData.fromJson(job))
+          .toList();
+  return list;
+}
+
+Future<List<StatusEntity>> getProperties() async {
+  String urlWithParams = "$dataUrl/getProperties";
+  List<StatusEntity> list =
+      (await httpConnect(urlWithParams, HttpMethod.GET) as List)
+          .map((job) => StatusEntity.fromJson(job))
           .toList();
   return list;
 }
@@ -134,6 +144,14 @@ Future<ResponseDto> saveAlarmDetails(AlarmDetails alarmDetails) async {
   var jsonData = jsonEncode(alarmDetails);
   ResponseDto response = ResponseDto.fromJson(
       await httpConnect(urlWithParams, HttpMethod.POST, jsonData));
+  return response;
+}
+
+Future<ResponseDto> createDatabaseBackup() async {
+  String urlWithParams =
+      "$settingsUrl/createBackup?username=${GlobalState.username}";
+  ResponseDto response =
+      ResponseDto.fromJson(await httpConnect(urlWithParams, HttpMethod.GET));
   return response;
 }
 
@@ -493,17 +511,4 @@ Future<bool> saveClientDetails(ClientDetails clientDetails) async {
 Future<bool> deleteClientDetails(int clientId) async {
   String urlWithParams = "http://$ip/Hrms/DeleteClientDetails?id=$clientId";
   return await httpConnect(urlWithParams, HttpMethod.GET) as bool;
-}
-
-Future<String> createDatabaseBackup() async {
-  String urlWithParams = "http://$ip/Hrms/createBackup";
-  try {
-    http.Response response = await http.get(Uri.parse(urlWithParams));
-    if (response.statusCode == 200) {
-      return response.body;
-    }
-  } catch (e) {
-    throw Exception('Failed');
-  }
-  throw Exception('Failed');
 }

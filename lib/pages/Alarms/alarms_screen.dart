@@ -112,7 +112,7 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
       context: context,
       builder: (BuildContext context) {
         return CustomAlertDialog(
-          title: 'Add new alarm',
+          title: tableRow != null ? 'Alarm Details' : 'Add new alarm',
           child: AddAlarmForm(
             closeDialog: closeDialog,
             // context: context,
