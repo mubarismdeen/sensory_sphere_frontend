@@ -20,6 +20,7 @@ import 'models/attedanceDto.dart';
 import 'models/attendanceModel.dart';
 import 'models/docDetails.dart';
 import 'models/empMaster.dart';
+import 'models/property_details.dart';
 import 'models/response_dto.dart';
 import 'models/salaryMaster.dart';
 import 'models/salaryMasterGet.dart';
@@ -38,6 +39,7 @@ String userUrl = "$baseUrl/user";
 String dataUrl = "$baseUrl/data";
 String alarmsUrl = "$baseUrl/alarms";
 String settingsUrl = "$baseUrl/settings";
+String propertyUrl = "$baseUrl/property";
 
 enum HttpMethod {
   GET,
@@ -123,10 +125,54 @@ Future<List<StatusEntity>> getProperties() async {
   return list;
 }
 
+Future<List<StatusEntity>> getParameters() async {
+  String urlWithParams = "$alarmsUrl/getParameters";
+  List<StatusEntity> list =
+      (await httpConnect(urlWithParams, HttpMethod.GET) as List)
+          .map((job) => StatusEntity.fromJson(job))
+          .toList();
+  return list;
+}
+
+Future<List<StatusEntity>> getConditions() async {
+  String urlWithParams = "$alarmsUrl/getConditions";
+  List<StatusEntity> list =
+      (await httpConnect(urlWithParams, HttpMethod.GET) as List)
+          .map((job) => StatusEntity.fromJson(job))
+          .toList();
+  return list;
+}
+
+Future<List<StatusEntity>> getStatuses() async {
+  String urlWithParams = "$alarmsUrl/getStatuses";
+  List<StatusEntity> list =
+      (await httpConnect(urlWithParams, HttpMethod.GET) as List)
+          .map((job) => StatusEntity.fromJson(job))
+          .toList();
+  return list;
+}
+
 Future<ResponseDto> triggerMotor(String trigger) async {
   String urlWithParams = "$baseUrl/mqtt/triggerMotor?trigger=$trigger";
   ResponseDto response = ResponseDto.fromJson(
       await httpConnect(urlWithParams, HttpMethod.POST, ""));
+  return response;
+}
+
+Future<List<PropertyDetails>> getPropertyDetails() async {
+  String urlWithParams = "$propertyUrl/getPropertyDetails";
+  List<PropertyDetails> list =
+      (await httpConnect(urlWithParams, HttpMethod.GET) as List)
+          .map((job) => PropertyDetails.fromJson(job))
+          .toList();
+  return list;
+}
+
+Future<ResponseDto> savePropertyDetails(PropertyDetails alarmDetails) async {
+  String urlWithParams = "$propertyUrl/savePropertyDetails";
+  var jsonData = jsonEncode(alarmDetails);
+  ResponseDto response = ResponseDto.fromJson(
+      await httpConnect(urlWithParams, HttpMethod.POST, jsonData));
   return response;
 }
 

@@ -17,14 +17,11 @@ class _DevicesScreenState extends State<DevicesScreen> {
   List<StatusEntity> dropdownOptions = <StatusEntity>[];
 
   String dropdownValue = '';
-  StatusEntity selectedProperty = StatusEntity();
   bool _showLoading = true;
 
   getDropdownInputs() async {
     dropdownOptions = await getProperties();
     dropdownValue = dropdownOptions.first.description;
-    selectedProperty = dropdownOptions
-        .firstWhere((option) => option.description == dropdownValue);
     setState(() {
       _showLoading = false;
     });
@@ -73,9 +70,6 @@ class _DevicesScreenState extends State<DevicesScreen> {
                           onChanged: (String? value) {
                             setState(() {
                               dropdownValue = value!;
-                              selectedProperty = dropdownOptions.firstWhere(
-                                  (option) =>
-                                      option.description == dropdownValue);
                             });
                           }),
                     ),
@@ -85,7 +79,7 @@ class _DevicesScreenState extends State<DevicesScreen> {
             ),
             const SizedBox(height: 10),
             SystemCard(
-              propertyName: selectedProperty.description,
+              propertyName: dropdownValue,
               onLocationButtonPressed: () {},
             ),
           ],

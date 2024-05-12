@@ -1,34 +1,37 @@
 import 'package:admin/api.dart';
 import 'package:admin/constants/style.dart';
-import 'package:admin/models/alarm_details.dart';
+import 'package:admin/utils/common_utils.dart';
 import 'package:admin/widget/custom_alert_dialog.dart';
 import 'package:admin/widget/custom_data_table.dart';
 import 'package:admin/widget/loading_wrapper.dart';
 import 'package:flutter/material.dart';
 
-import 'add_alarm_form.dart';
+import '../../models/property_details.dart';
+import 'add_property_form.dart';
 
-class AlarmsScreen extends StatefulWidget {
-  const AlarmsScreen({Key? key}) : super(key: key);
+class PropertiesScreen extends StatefulWidget {
+  const PropertiesScreen({Key? key}) : super(key: key);
 
   @override
-  State<AlarmsScreen> createState() => _AlarmsScreenState();
+  State<PropertiesScreen> createState() => _PropertiesScreenState();
 }
 
-class _AlarmsScreenState extends State<AlarmsScreen> {
-  List<AlarmDetails> tableData = [];
+class _PropertiesScreenState extends State<PropertiesScreen> {
+  List<PropertyDetails> tableData = [];
   bool _showLoading = true;
 
   final List<String> columnHeaders = [
-    "Property",
-    "Parameter",
-    "Condition",
-    "Value",
+    "Id",
+    "Name",
     "Status",
+    "Created By",
+    "Created Date",
+    "Edit By",
+    "Edit Date",
   ];
 
   _initialize() async {
-    tableData = await getAlarmDetails();
+    tableData = await getPropertyDetails();
     setState(() {
       _showLoading = false;
     });
@@ -57,16 +60,14 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
                   child: ElevatedButton(
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(
-                          // appBarColor,
                           Colors.blue.shade400.withOpacity(0.85)),
                       elevation: MaterialStateProperty.all<double>(4.0),
-                      // shadowColor: MaterialStateProperty.all<Color>(shadowColor),
                     ),
-                    onPressed: () => _alarmDetailsDialog(null),
+                    onPressed: () => _propertyDetailsDialog(null),
                     child: const Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Text(
-                        'Add Alarm',
+                        'Add Property',
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -86,25 +87,33 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
                 return DataRow(
                   cells: [
                     DataCell(
-                      Text(tableRow.property, style: rowTextStyle),
+                      Text(tableRow.id.toString(), style: rowTextStyle),
                     ),
                     DataCell(
-                      Text(tableRow.parameter, style: rowTextStyle),
-                    ),
-                    DataCell(
-                      Text(tableRow.condition, style: rowTextStyle),
-                    ),
-                    DataCell(
-                      Text(tableRow.value.toString(), style: rowTextStyle),
+                      Text(tableRow.name, style: rowTextStyle),
                     ),
                     DataCell(
                       Text(tableRow.status, style: rowTextStyle),
+                    ),
+                    DataCell(
+                      Text(tableRow.createBy, style: rowTextStyle),
+                    ),
+                    DataCell(
+                      Text(getDateTimeString(tableRow.createDate),
+                          style: rowTextStyle),
+                    ),
+                    DataCell(
+                      Text(tableRow.editBy, style: rowTextStyle),
+                    ),
+                    DataCell(
+                      Text(getDateTimeString(tableRow.editDate),
+                          style: rowTextStyle),
                     ),
                   ],
                   onSelectChanged: (selected) {
                     if (selected != null) {
                       print('Selected row: $tableRow');
-                      _alarmDetailsDialog(tableRow);
+                      _propertyDetailsDialog(tableRow);
                     }
                   },
                 );
@@ -116,13 +125,13 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
     );
   }
 
-  void _alarmDetailsDialog(AlarmDetails? tableRow) {
+  void _propertyDetailsDialog(PropertyDetails? tableRow) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return CustomAlertDialog(
-          title: tableRow != null ? 'Alarm Details' : 'Add new alarm',
-          child: AddAlarmForm(
+          title: tableRow != null ? 'Property Details' : 'Add Property',
+          child: AddPropertyForm(
             closeDialog: closeDialog,
             // context: context,
             tableRow: tableRow,
@@ -133,7 +142,7 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
     );
   }
 
-  void closeDialog(AlarmDetails details) {
+  void closeDialog(PropertyDetails details) {
     setState(() {
       _showLoading = true;
     });

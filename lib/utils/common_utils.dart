@@ -180,3 +180,11 @@ void showSaveFailedMessage(BuildContext context,
     );
   }
 }
+
+String getDateTimeString(DateTime? dateTime) {
+  if (dateTime == null) {
+    return "";
+  }
+  DateFormat outputFormat = DateFormat('MMM d, y h:mm a');
+  return outputFormat.format(dateTime);
+}

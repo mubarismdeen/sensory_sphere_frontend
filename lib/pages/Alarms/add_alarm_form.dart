@@ -1,11 +1,14 @@
 import 'package:admin/api.dart';
+import 'package:admin/constants/style.dart';
 import 'package:admin/models/alarm_details.dart';
 import 'package:admin/models/response_dto.dart';
 import 'package:admin/utils/common_utils.dart';
 import 'package:admin/widget/custom_dropdown_form_field.dart';
+import 'package:admin/widget/loading_wrapper.dart';
 import 'package:flutter/material.dart';
 
 import '../../globalState.dart';
+import '../../models/status_entity.dart';
 import '../../widget/custom_text_form_field.dart';
 
 class AddAlarmForm extends StatefulWidget {
@@ -25,23 +28,47 @@ class AddAlarmForm extends StatefulWidget {
 class _AddAlarmFormState extends State<AddAlarmForm> {
   final _formKey = GlobalKey<FormState>();
 
-  String _property = "test_property";
-  String _parameter = "Suction Pressure";
-  String _condition = "Greater than";
+  String _selectedProperty = "";
+  String _selectedParameter = "";
+  String _selectedCondition = "";
+  String _selectedStatus = "";
   final _value = TextEditingController();
-  String _status = "active";
+
+  List<StatusEntity> properties = <StatusEntity>[];
+  List<StatusEntity> parameters = <StatusEntity>[];
+  List<StatusEntity> conditions = <StatusEntity>[];
+  List<StatusEntity> statuses = <StatusEntity>[];
 
   final AlarmDetails _alarmDetails = AlarmDetails();
+
+  bool _showLoading = true;
+
+  getDropdownInputs() async {
+    properties = await getProperties();
+    parameters = await getParameters();
+    conditions = await getConditions();
+    statuses = await getStatuses();
+    if (widget.tableRow == null) {
+      _selectedProperty = properties.first.description;
+      _selectedParameter = parameters.first.description;
+      _selectedCondition = conditions.first.description;
+      _selectedStatus = statuses.first.description;
+    }
+    setState(() {
+      _showLoading = false;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    getDropdownInputs();
     if (widget.tableRow != null) {
-      _property = widget.tableRow!.property;
-      _parameter = widget.tableRow!.parameter;
-      _condition = widget.tableRow!.condition;
+      _selectedProperty = widget.tableRow!.property;
+      _selectedParameter = widget.tableRow!.parameter;
+      _selectedCondition = widget.tableRow!.condition;
       _value.text = widget.tableRow!.value.toString();
-      _status = widget.tableRow!.status;
+      _selectedStatus = widget.tableRow!.status;
       _alarmDetails.id = widget.tableRow!.id;
       _alarmDetails.editBy = GlobalState.username;
       _alarmDetails.editDate = DateTime.now();
@@ -52,82 +79,79 @@ class _AddAlarmFormState extends State<AddAlarmForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CustomDropdownFormField(
-              labelText: 'Property',
-              dropdownOptions: const ['test_property'],
-              onChanged: (String? value) => {
-                setState(() {
-                  _property = value!;
-                }),
-              },
-              value: _property,
-            ),
-            CustomDropdownFormField(
-              labelText: 'Parameter',
-              dropdownOptions: const [
-                'Suction Pressure',
-                'Discharge Pressure',
-                'Oxygen A Pressure',
-                'Oxygen B Pressure',
-                'Ambient Temperature',
-                'Total Current'
-              ],
-              onChanged: (String? value) => {
-                setState(() {
-                  _parameter = value!;
-                }),
-              },
-              value: _parameter,
-            ),
-            CustomDropdownFormField(
-              labelText: 'Condition',
-              dropdownOptions: const [
-                'Greater than',
-                'Greater than or equal to',
-                'Lesser than',
-                'Lesser than or equal to'
-              ],
-              onChanged: (String? value) => {
-                setState(() {
-                  _condition = value!;
-                }),
-              },
-              value: _condition,
-            ),
-            CustomTextFormField(
-              labelText: 'Value',
-              controller: _value,
-              isNumeric: true,
-            ),
-            CustomDropdownFormField(
-              labelText: 'Status',
-              dropdownOptions: const ['active', 'inactive'],
-              onChanged: (String? value) => {
-                setState(() {
-                  _status = value!;
-                }),
-              },
-              value: _status,
-            ),
-            const SizedBox(height: 26.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                ...getActionButtonsWithoutPrivilege(
-                  context: context,
-                  onSubmit: () => _onSubmit(context),
-                  hasData: widget.tableRow != null,
-                  onDelete: () => () {},
-                ),
-              ],
-            ),
-          ],
+    return LoadingWrapper(
+      isLoading: _showLoading,
+      height: 200,
+      color: highlightedColor,
+      child: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CustomDropdownFormField(
+                labelText: 'Property',
+                dropdownOptions:
+                    properties.map((prop) => prop.description).toList(),
+                onChanged: (String? value) => {
+                  setState(() {
+                    _selectedProperty = value!;
+                  }),
+                },
+                value: _selectedProperty,
+              ),
+              CustomDropdownFormField(
+                labelText: 'Parameter',
+                dropdownOptions:
+                    parameters.map((param) => param.description).toList(),
+                onChanged: (String? value) => {
+                  setState(() {
+                    _selectedParameter = value!;
+                  }),
+                },
+                value: _selectedParameter,
+              ),
+              CustomDropdownFormField(
+                labelText: 'Condition',
+                dropdownOptions:
+                    conditions.map((cond) => cond.description).toList(),
+                onChanged: (String? value) => {
+                  setState(() {
+                    _selectedCondition = value!;
+                  }),
+                },
+                value: _selectedCondition,
+              ),
+              CustomTextFormField(
+                labelText: 'Value',
+                controller: _value,
+                isNumeric: true,
+              ),
+              CustomDropdownFormField(
+                labelText: 'Status',
+                dropdownOptions:
+                    statuses.map((stat) => stat.description).toList(),
+                onChanged: (String? value) => {
+                  setState(() {
+                    _selectedStatus = value!;
+                  }),
+                },
+                value: _selectedStatus,
+              ),
+              const SizedBox(height: 26.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ...getActionButtonsWithoutPrivilege(
+                    context: context,
+                    onSubmit: () => _onSubmit(context),
+                    hasData: widget.tableRow != null,
+                    onDelete: () => () {},
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -137,18 +161,18 @@ class _AddAlarmFormState extends State<AddAlarmForm> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState?.save();
       print('Submitted form data:');
-      print('Property: ${_property}');
-      print('Parameter: $_parameter');
-      print('Condition: $_condition');
+      print('Property: ${_selectedProperty}');
+      print('Parameter: $_selectedParameter');
+      print('Condition: $_selectedCondition');
       print('Value: ${_value.text}');
-      print('Status: $_status');
+      print('Status: $_selectedStatus');
 
       try {
-        _alarmDetails.property = _property;
-        _alarmDetails.parameter = _parameter;
-        _alarmDetails.condition = _condition;
+        _alarmDetails.property = _selectedProperty;
+        _alarmDetails.parameter = _selectedParameter;
+        _alarmDetails.condition = _selectedCondition;
         _alarmDetails.value = double.parse(_value.text);
-        _alarmDetails.status = _status;
+        _alarmDetails.status = _selectedStatus;
 
         ResponseDto response = await saveAlarmDetails(_alarmDetails);
         if (response.success) {

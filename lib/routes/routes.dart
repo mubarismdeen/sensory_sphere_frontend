@@ -1,5 +1,6 @@
 const DashboardRoute = "Dashboard";
 const DevicesRoute = "Devices";
+const PropertiesRoute = "Properties";
 const MaintenanceRoute = "Maintenance";
 const AlarmsRoute = "Alarms";
 const CompanyRoute = "Company";

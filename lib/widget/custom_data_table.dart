@@ -1,31 +1,24 @@
 import 'package:admin/constants/style.dart';
-import 'package:admin/models/alarm_details.dart';
 import 'package:flutter/material.dart';
 
 class CustomDataTable extends StatelessWidget {
   final TextStyle headerTextStyle;
-  final TextStyle rowTextStyle;
   final List<String> columnHeaders;
-  final List<AlarmDetails> tableData;
   final BorderRadius borderRadius;
   final Color headingRowColor;
-  final Color backGroundColor;
   final double elevation;
   final Color shadowColor;
-  final Function? onRowTap;
+  final List<DataRow> tableRows;
 
   CustomDataTable({
     required this.columnHeaders,
+    required this.tableRows,
     this.headerTextStyle =
         const TextStyle(color: lightGrey, fontWeight: FontWeight.bold),
-    this.rowTextStyle = const TextStyle(color: Colors.black),
-    this.tableData = const [],
     this.borderRadius = const BorderRadius.all(Radius.circular(10.0)),
     this.headingRowColor = appBarColor,
-    this.backGroundColor = cardColor,
     this.elevation = 4.0, // Default elevation
     this.shadowColor = highlightedColor,
-    this.onRowTap, // Default shadow color
   });
 
   @override
@@ -56,33 +49,7 @@ class CustomDataTable extends StatelessWidget {
                     label: Text(header, style: headerTextStyle),
                   );
                 }).toList(),
-                rows: tableData.map((tableRow) {
-                  return DataRow(
-                    cells: [
-                      DataCell(
-                        Text(tableRow.property, style: rowTextStyle),
-                      ),
-                      DataCell(
-                        Text(tableRow.parameter, style: rowTextStyle),
-                      ),
-                      DataCell(
-                        Text(tableRow.condition, style: rowTextStyle),
-                      ),
-                      DataCell(
-                        Text(tableRow.value.toString(), style: rowTextStyle),
-                      ),
-                      DataCell(
-                        Text(tableRow.status, style: rowTextStyle),
-                      ),
-                    ],
-                    onSelectChanged: (selected) {
-                      if (selected != null) {
-                        print('Selected row: $tableRow');
-                        onRowTap!(tableRow);
-                      }
-                    },
-                  );
-                }).toList(),
+                rows: tableRows,
               ),
             ),
           ),

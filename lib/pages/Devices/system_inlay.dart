@@ -48,9 +48,9 @@ class _SystemInlayState extends State<SystemInlay>
       isMotorOn: false,
       isMotorLoading: false,
     );
-    getTableData(widget.propertyName);
+    getSensorData();
     _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
-      getTableData(widget.propertyName);
+      getSensorData();
     });
     _controller = AnimationController(
       vsync: this,
@@ -78,9 +78,9 @@ class _SystemInlayState extends State<SystemInlay>
     super.dispose();
   }
 
-  Future<void> getTableData(String propertyName) async {
+  Future<void> getSensorData() async {
     try {
-      List<SensorData> data = await getLastSensorData(propertyName);
+      List<SensorData> data = await getLastSensorData(widget.propertyName);
       if (data.isNotEmpty) {
         setState(() {
           _sensorData = data.first;

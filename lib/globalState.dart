@@ -40,6 +40,10 @@ class GlobalState {
     //   salaryPayoutScreenPrivilege = true;
     //   sideMenuItems.add(AlarmsRoute);
     // }
+    if (screensForUser.attendance) {
+      attendanceScreenPrivilege = true;
+      sideMenuItems.add(PropertiesRoute);
+    }
     if (screensForUser.alarms) {
       alarmsScreenPrivilege = true;
       sideMenuItems.add(AlarmsRoute);

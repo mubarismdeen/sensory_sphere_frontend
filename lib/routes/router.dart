@@ -1,20 +1,18 @@
-
 import 'package:admin/pages/Alarms/alarms_screen.dart';
 import 'package:admin/pages/Clients/clients_screen.dart';
+import 'package:admin/pages/Properties/properties_screen.dart';
 import 'package:admin/pages/Salary/leave_salary.dart';
 import 'package:admin/routes/routes.dart';
 import 'package:flutter/material.dart';
 
 import '../pages/Attendance/attendance.dart';
+import '../pages/Dashboard/dashboard_screen.dart';
 import '../pages/Devices/devices_screen.dart';
 import '../pages/Gratuity/gratuity_screen.dart';
 import '../pages/Salary/salary_master.dart';
-import '../pages/Dashboard/dashboard_screen.dart';
 
-
-
-Route<dynamic> generateRoute(RouteSettings settings){
-  switch(settings.name){
+Route<dynamic> generateRoute(RouteSettings settings) {
+  switch (settings.name) {
     case DevicesRoute:
       return _getPageRoute(const DevicesScreen());
     case SupportRoute:
@@ -23,6 +21,8 @@ Route<dynamic> generateRoute(RouteSettings settings){
       return _getPageRoute(DashboardScreen());
     case AlarmsRoute:
       return _getPageRoute(const AlarmsScreen());
+    case PropertiesRoute:
+      return _getPageRoute(const PropertiesScreen());
     case MaintenanceRoute:
       return _getPageRoute(const SalaryMaster());
     case CompanyRoute:
@@ -36,7 +36,7 @@ Route<dynamic> generateRoute(RouteSettings settings){
   }
 }
 
-PageRoute _getPageRoute(Widget child){
+PageRoute _getPageRoute(Widget child) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => child,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
