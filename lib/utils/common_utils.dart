@@ -60,18 +60,18 @@ List<Widget> getActionButtonsWithoutPrivilege(
     ),
   ];
   if (hasData) {
-    widgetList.add(
-      ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: errorColor,
-        ),
-        onPressed: onDelete,
-        child: const Text(
-          'Delete',
-          style: TextStyle(color: light, fontWeight: FontWeight.bold),
-        ),
-      ),
-    );
+    // widgetList.add(
+    //   ElevatedButton(
+    //     style: ElevatedButton.styleFrom(
+    //       backgroundColor: errorColor,
+    //     ),
+    //     onPressed: onDelete,
+    //     child: const Text(
+    //       'Delete',
+    //       style: TextStyle(color: light, fontWeight: FontWeight.bold),
+    //     ),
+    //   ),
+    // );
   }
   return widgetList;
 }

@@ -19,15 +19,15 @@ class LoadingWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return isLoading
         ? SizedBox(
-      height: height,
-      child: SpinKitWave(
-        color: color,
-        size: 30,
-      ),
-    )
-    : Container(
-      margin: const EdgeInsets.symmetric(vertical: 20),
-      child: child,
-    );
+            height: height,
+            child: SpinKitWave(
+              color: color,
+              size: 30,
+            ),
+          )
+        : Container(
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            child: child,
+          );
   }
 }

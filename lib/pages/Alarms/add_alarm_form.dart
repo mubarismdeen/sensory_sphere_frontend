@@ -45,7 +45,10 @@ class _AddAlarmFormState extends State<AddAlarmForm> {
 
   getDropdownInputs() async {
     properties = await getProperties();
-    parameters = await getParameters();
+    String propertyName = widget.tableRow == null
+        ? properties.first.description
+        : widget.tableRow!.property;
+    parameters = await getParameters(propertyName);
     conditions = await getConditions();
     statuses = await getStatuses();
     if (widget.tableRow == null) {

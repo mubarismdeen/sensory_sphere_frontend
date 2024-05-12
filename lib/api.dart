@@ -125,8 +125,8 @@ Future<List<StatusEntity>> getProperties() async {
   return list;
 }
 
-Future<List<StatusEntity>> getParameters() async {
-  String urlWithParams = "$alarmsUrl/getParameters";
+Future<List<StatusEntity>> getParameters(String property) async {
+  String urlWithParams = "$alarmsUrl/getParameters?propertyName=$property";
   List<StatusEntity> list =
       (await httpConnect(urlWithParams, HttpMethod.GET) as List)
           .map((job) => StatusEntity.fromJson(job))
