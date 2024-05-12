@@ -81,9 +81,6 @@ class _SystemInlayState extends State<SystemInlay>
 
   Future<void> getSensorData() async {
     try {
-      setState(() {
-        _showLoading = true;
-      });
       List<SensorData> data = await getLastSensorData(widget.propertyName);
       if (data.isNotEmpty) {
         setState(() {
@@ -93,6 +90,9 @@ class _SystemInlayState extends State<SystemInlay>
           _isButtonLoading = _sensorData.isMotorLoading;
         });
       } else {
+        setState(() {
+          _showLoading = true;
+        });
         showSaveFailedMessage(context, "No data available for this property");
       }
     } catch (error) {
