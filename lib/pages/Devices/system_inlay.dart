@@ -36,6 +36,7 @@ class _SystemInlayState extends State<SystemInlay>
   @override
   void initState() {
     super.initState();
+    _showLoading = true;
     _sensorData = SensorData(
       id: 0,
       timestamp: DateTime.now(),
@@ -49,7 +50,7 @@ class _SystemInlayState extends State<SystemInlay>
       isMotorLoading: false,
     );
     getSensorData();
-    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
       getSensorData();
     });
     _controller = AnimationController(
@@ -80,6 +81,9 @@ class _SystemInlayState extends State<SystemInlay>
 
   Future<void> getSensorData() async {
     try {
+      setState(() {
+        _showLoading = true;
+      });
       List<SensorData> data = await getLastSensorData(widget.propertyName);
       if (data.isNotEmpty) {
         setState(() {
