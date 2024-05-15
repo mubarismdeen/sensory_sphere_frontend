@@ -41,6 +41,7 @@ class _SystemInlayState extends State<SystemInlay>
     _showLoading = true;
     _sensorData = SensorData(
       id: 0,
+      propertyId: 0,
       timestamp: DateTime.now(),
       suctionPressure: 0.0,
       dischargePressure: 0.0,
@@ -206,7 +207,8 @@ class _SystemInlayState extends State<SystemInlay>
 
   Future<void> _triggerMotor() async {
     try {
-      ResponseDto response = await triggerMotor(_isRunning ? "OFF" : "ON");
+      ResponseDto response =
+          await triggerMotor(_isRunning ? "OFF" : "ON", _sensorData.propertyId);
       if (response.success) {
         showSaveSuccessfulMessage(context, response.message);
         setState(() {

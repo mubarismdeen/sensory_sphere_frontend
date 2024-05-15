@@ -1,5 +1,6 @@
 class SensorData {
   final int id;
+  final int propertyId;
   final DateTime timestamp;
   final double suctionPressure;
   final double dischargePressure;
@@ -12,6 +13,7 @@ class SensorData {
 
   SensorData(
       {required this.id,
+      required this.propertyId,
       required this.timestamp,
       required this.suctionPressure,
       required this.dischargePressure,
@@ -25,6 +27,7 @@ class SensorData {
   factory SensorData.fromJson(Map<String, dynamic> json) {
     return SensorData(
       id: json['id'] ?? 0,
+      propertyId: json['propertyId'] ?? 0,
       suctionPressure: json['suctionPressure']?.toDouble() ?? 0.0,
       dischargePressure: json['dischargePressure']?.toDouble() ?? 0.0,
       oxygenAPressure: json['oxygenAPressure']?.toDouble() ?? 0.0,

@@ -151,8 +151,9 @@ Future<List<StatusEntity>> getStatuses() async {
   return list;
 }
 
-Future<ResponseDto> triggerMotor(String trigger) async {
-  String urlWithParams = "$baseUrl/mqtt/triggerMotor?trigger=$trigger";
+Future<ResponseDto> triggerMotor(String trigger, int propertyId) async {
+  String urlWithParams =
+      "$baseUrl/mqtt/triggerMotor?trigger=$trigger&propertyId=$propertyId";
   ResponseDto response = ResponseDto.fromJson(
       await httpConnect(urlWithParams, HttpMethod.POST, ""));
   return response;
