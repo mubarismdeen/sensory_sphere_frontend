@@ -126,7 +126,13 @@ List<Widget> getActionButtonsWithPrivilege(
 
 void showSaveSuccessfulMessage(BuildContext context,
     [String message = "Save Successful"]) {
-  if (Platform.isWindows) {
+  bool isWindowsOrWeb;
+  try {
+    isWindowsOrWeb = Platform.isWindows;
+  } catch (e) {
+    isWindowsOrWeb = true;
+  }
+  if (isWindowsOrWeb) {
     final snackBar = SnackBar(
       content: Container(
           width: 200,
@@ -155,7 +161,13 @@ void showSaveSuccessfulMessage(BuildContext context,
 
 void showSaveFailedMessage(BuildContext context,
     [String message = "Unable to save"]) {
-  if (Platform.isWindows) {
+  bool isWindowsOrWeb;
+  try {
+    isWindowsOrWeb = Platform.isWindows;
+  } catch (e) {
+    isWindowsOrWeb = true;
+  }
+  if (isWindowsOrWeb) {
     final snackBar = SnackBar(
       content: Text(
         message,

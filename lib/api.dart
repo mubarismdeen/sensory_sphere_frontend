@@ -30,16 +30,15 @@ import 'models/status_entity.dart';
 import 'models/userDetails.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-// String ip = "192.168.1.4:8091";   // over network
-String ip = "${GlobalState.ipAddress}:8090"; // over network
+String get ip => "${GlobalState.ipAddress}:8090"; // over network
 // String ip = "localhost:8091"; // local
 
-String baseUrl = "http://$ip/api";
-String userUrl = "$baseUrl/user";
-String dataUrl = "$baseUrl/data";
-String alarmsUrl = "$baseUrl/alarms";
-String settingsUrl = "$baseUrl/settings";
-String propertyUrl = "$baseUrl/property";
+String get baseUrl => "http://$ip/api";
+String get userUrl => "$baseUrl/user";
+String get dataUrl => "$baseUrl/data";
+String get alarmsUrl => "$baseUrl/alarms";
+String get settingsUrl => "$baseUrl/settings";
+String get propertyUrl => "$baseUrl/property";
 
 enum HttpMethod {
   GET,

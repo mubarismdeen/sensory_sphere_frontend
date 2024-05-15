@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:admin/api.dart';
+import 'package:admin/constants/controllers.dart';
 import 'package:admin/constants/style.dart';
 import 'package:admin/models/response_dto.dart';
 import 'package:admin/utils/common_utils.dart';
@@ -9,6 +10,7 @@ import 'package:admin/widget/Gauges/radial_gauge.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/sensor_data.dart';
+import '../../routes/routes.dart';
 import '../../widget/Gauges/current_gauge.dart';
 import '../../widget/Gauges/oxygen_pressure_widget.dart';
 import '../../widget/loading_wrapper.dart';
@@ -51,7 +53,11 @@ class _SystemInlayState extends State<SystemInlay>
     );
     getSensorData();
     _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
-      getSensorData();
+      if (menuController.activeItem.value == DevicesRoute) {
+        getSensorData();
+      } else {
+        _timer.cancel();
+      }
     });
     _controller = AnimationController(
       vsync: this,

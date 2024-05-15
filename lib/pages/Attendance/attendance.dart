@@ -3,18 +3,10 @@ import 'package:admin/constants/style.dart';
 import 'package:admin/globalState.dart';
 import 'package:admin/models/attendanceModel.dart';
 import 'package:admin/utils/common_utils.dart';
-import 'package:admin/widget/attendance_excel_upload.dart';
-import 'package:admin/widget/custom_alert_dialog.dart';
-import 'package:admin/widget/custom_text.dart';
-import 'package:admin/widget/month_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:intl/intl.dart';
 
 import '../../api.dart';
-import '../../constants/controllers.dart';
-import '../../helpers/responsiveness.dart';
 import '../../models/attedanceDto.dart';
 import '../../models/empMaster.dart';
 import '../../widget/custom_elevated_button.dart';
@@ -31,8 +23,6 @@ class _AttendanceState extends State<Attendance> {
   List<AttendanceDto> attendances = List<AttendanceDto>.empty();
   List<AttendanceModel> _attendanceList = List<AttendanceModel>.empty();
   bool _editable = false;
-  bool _enterAttendance = false;
-  // bool _enableUpload = false;
   void onDateChange(DateTime newDate) {
     setState(() {
       _pickedDate = newDate;
@@ -576,7 +566,6 @@ class _AttendanceState extends State<Attendance> {
       handleOnPress: () => {
         setState(
           () {
-            _enterAttendance = true;
             _editable = true;
           },
         ),
@@ -589,10 +578,11 @@ class _AttendanceState extends State<Attendance> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return CustomAlertDialog(
-          title: 'Upload Attendance Details',
-          child: AttendanceExcelUpload(closeDialog, _pickedDate),
-        );
+        return SizedBox();
+        //   CustomAlertDialog(
+        //   title: 'Upload Attendance Details',
+        //   child: AttendanceExcelUpload(closeDialog, _pickedDate),
+        // );
       },
     );
   }

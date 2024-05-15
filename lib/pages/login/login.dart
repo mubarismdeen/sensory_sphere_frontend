@@ -82,6 +82,8 @@ class _MainViewState extends State<_MainView> {
   bool showError = false;
   bool showLoading = false;
   String ipAddress = '';
+  String ipMessage = 'IP is not set';
+
   void _login() {
     Get.to(SiteLayout());
   }
@@ -99,6 +101,7 @@ class _MainViewState extends State<_MainView> {
       GlobalState.setIpAddress(savedIp);
       setState(() {
         ipAddress = savedIp;
+        widget.ipController!.text = ipAddress;
       });
     }
   }
@@ -106,6 +109,7 @@ class _MainViewState extends State<_MainView> {
   Future<void> _saveIpAddress(String ip) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('ipAddress', ip);
+    GlobalState.setIpAddress(ip);
   }
 
   @override
@@ -156,6 +160,10 @@ class _MainViewState extends State<_MainView> {
                 showError = true;
               } else {
                 e.printError();
+                setState(() {
+                  ipAddress = '';
+                  ipMessage = 'Please verify IP';
+                });
                 showSaveFailedMessage(
                     context, "Error in establishing connection");
               }
@@ -176,6 +184,7 @@ class _MainViewState extends State<_MainView> {
         ),
         const SizedBox(height: 12),
         _SaveIpButton(
+          ipMessage: ipMessage,
           maxWidth: 400,
           onTap: () async {
             setState(() {
@@ -421,17 +430,13 @@ class _LoginButtonState extends State<_LoginButton> {
   }
 }
 
-class _SaveIpButton extends StatefulWidget {
-  _SaveIpButton({required this.onTap, this.maxWidth});
+class _SaveIpButton extends StatelessWidget {
+  _SaveIpButton({required this.onTap, this.maxWidth, required this.ipMessage});
 
   final double? maxWidth;
   final VoidCallback onTap;
+  final String ipMessage;
 
-  @override
-  _SaveIpButtonState createState() => _SaveIpButtonState();
-}
-
-class _SaveIpButtonState extends State<_SaveIpButton> {
   BoxDecoration? borderDecoration;
 
   @override
@@ -439,21 +444,20 @@ class _SaveIpButtonState extends State<_SaveIpButton> {
     return Align(
       alignment: Alignment.center,
       child: Container(
-        constraints:
-            BoxConstraints(maxWidth: widget.maxWidth ?? double.infinity),
+        constraints: BoxConstraints(maxWidth: maxWidth ?? double.infinity),
         padding: const EdgeInsets.symmetric(vertical: 30),
         child: Row(
           children: [
             const Icon(Icons.error_outline_rounded, color: errorColor),
             const SizedBox(width: 12),
-            const Text(
-              "IP is not set",
-              style: TextStyle(color: light),
+            Text(
+              ipMessage,
+              style: const TextStyle(color: light),
             ),
             const Expanded(child: SizedBox.shrink()),
             _FilledButton(
               text: "Save IP",
-              onTap: widget.onTap,
+              onTap: onTap,
             ),
           ],
         ),
