@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
@@ -24,20 +26,19 @@ class RadialGauge extends StatelessWidget {
       child: SfRadialGauge(
         axes: <RadialAxis>[
           RadialAxis(
-            interval: 20,
             minimum: 0,
-            maximum: 110,
+            maximum: math.max(3.5, value + 0.5),
             ranges: <GaugeRange>[
-              GaugeRange(startValue: 0, endValue: 50, color: Colors.green),
-              GaugeRange(startValue: 50, endValue: 100, color: Colors.orange),
-              GaugeRange(startValue: 100, endValue: 150, color: Colors.red)
+              GaugeRange(startValue: 0, endValue: 1.5, color: Colors.green),
+              GaugeRange(startValue: 1.5, endValue: 3, color: Colors.orange),
+              GaugeRange(startValue: 3, endValue: 1000, color: Colors.red)
             ],
             pointers: <GaugePointer>[
               NeedlePointer(
-                  value: value,
-                  enableAnimation: true,
-                  animationType: AnimationType.ease,
-                  animationDuration: 1000,
+                value: value,
+                enableAnimation: true,
+                animationType: AnimationType.ease,
+                animationDuration: 1000,
               ),
             ],
             annotations: <GaugeAnnotation>[

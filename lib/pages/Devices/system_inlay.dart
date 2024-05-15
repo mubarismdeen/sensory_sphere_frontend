@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:admin/api.dart';
 import 'package:admin/constants/controllers.dart';
@@ -142,7 +143,8 @@ class _SystemInlayState extends State<SystemInlay>
                           children: [
                             CurrentGauge(
                               value: _sensorData.totalCurrent,
-                              maximumValue: 90,
+                              maximumValue:
+                                  max(10, _sensorData.totalCurrent + 2),
                             ),
                           ],
                         ),

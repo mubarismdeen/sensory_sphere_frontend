@@ -12,7 +12,11 @@ class OxygenPressureWidget extends StatelessWidget {
   final Color colorB;
 
   const OxygenPressureWidget(
-      {required this.pressureA, required this.pressureB, required this.height, required this.colorA, required this.colorB});
+      {required this.pressureA,
+      required this.pressureB,
+      required this.height,
+      required this.colorA,
+      required this.colorB});
 
   @override
   Widget build(BuildContext context) {
@@ -34,44 +38,65 @@ class OxygenPressureWidget extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("A: $pressureA BAR", style: TextStyle(color: colorA, fontWeight: FontWeight.bold),),
+                      Text(
+                        "A: $pressureA BAR",
+                        style: TextStyle(
+                            color: colorA, fontWeight: FontWeight.bold),
+                      ),
                       const SizedBox(height: 5),
-                      Text("B: $pressureB BAR", style: TextStyle(color: colorB, fontWeight: FontWeight.bold),),
+                      Text(
+                        "B: $pressureB BAR",
+                        style: TextStyle(
+                            color: colorB, fontWeight: FontWeight.bold),
+                      ),
                     ],
                   ),
                 ),
                 SizedBox(
                   height: height,
                   child: SfLinearGauge(
-                    axisTrackStyle: const LinearAxisTrackStyle(color: Colors.black, thickness: 2),
+                    axisTrackStyle: const LinearAxisTrackStyle(
+                        color: Colors.black, thickness: 2),
                     orientation: LinearGaugeOrientation.vertical,
                     minimum: 0,
-                    maximum: max(pressureB, pressureA) + 10,
+                    maximum: max(pressureB, pressureA) + 0.5,
                     markerPointers: [
                       LinearWidgetPointer(
                         offset: 8,
                         position: LinearElementPosition.outside,
-                          value: pressureB,
-                          child: Container(
-                            height: 14,
-                            width: 14,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(14),
-                                color: colorB),
-                            child: const Center(child: Text("B", style: TextStyle(fontSize: 10, color: Colors.black, fontWeight: FontWeight.bold))),
-                          ),),
+                        value: pressureB,
+                        child: Container(
+                          height: 14,
+                          width: 14,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(14),
+                              color: colorB),
+                          child: const Center(
+                              child: Text("B",
+                                  style: TextStyle(
+                                      fontSize: 10,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold))),
+                        ),
+                      ),
                       LinearWidgetPointer(
-                          offset: -2,
-                          position: LinearElementPosition.outside,
-                          value: pressureA,
-                          child: Container(
-                            height: 13,
-                            width: 13,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(13),
-                                color: colorA),
-                            child: const Center(child: Text("A", style: TextStyle(fontSize: 10, color: Colors.black, fontWeight: FontWeight.bold))),
-                          ),),
+                        offset: -2,
+                        position: LinearElementPosition.outside,
+                        value: pressureA,
+                        child: Container(
+                          height: 13,
+                          width: 13,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(13),
+                              color: colorA),
+                          child: const Center(
+                              child: Text("A",
+                                  style: TextStyle(
+                                      fontSize: 10,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold))),
+                        ),
+                      ),
                       // LinearShapePointer(value: pointerValue, position: LinearElementPosition.cross, color: light,),
                     ],
                     // ranges: [LinearGaugeRange(startValue: -100, endValue: 0, color: colorA,)],

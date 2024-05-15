@@ -23,10 +23,11 @@ class LinearGauge extends StatelessWidget {
             children: [
               Container(
                 height: height,
-                padding: const EdgeInsets.fromLTRB(20,5,25,5),
+                padding: const EdgeInsets.fromLTRB(20, 5, 25, 5),
                 child: SfLinearGauge(
                   isMirrored: true,
-                  axisTrackStyle: const LinearAxisTrackStyle(color: Colors.black, thickness: 2),
+                  axisTrackStyle: const LinearAxisTrackStyle(
+                      color: Colors.black, thickness: 2),
                   orientation: LinearGaugeOrientation.vertical,
                   minimum: pointerValue - 20,
                   maximum: pointerValue + 20,
@@ -40,9 +41,7 @@ class LinearGauge extends StatelessWidget {
                               borderRadius: BorderRadius.circular(12),
                               color: Colors.red),
                         )),
-                    // LinearShapePointer(value: pointerValue, position: LinearElementPosition.cross, color: light,),
                   ],
-                  // ranges: [LinearGaugeRange(startValue: -100, endValue: 0, color: Colors.blue,)],
                   barPointers: [
                     LinearBarPointer(
                       value: pointerValue,

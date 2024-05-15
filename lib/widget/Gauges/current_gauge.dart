@@ -14,9 +14,6 @@ class CurrentGauge extends StatelessWidget {
       width: 180,
       height: 180,
       child: SfRadialGauge(
-
-        // enableLoadingAnimation: true,
-        // animationDuration: 2000,
         axes: <RadialAxis>[
           RadialAxis(
             canScaleToFit: true,
@@ -54,7 +51,10 @@ class CurrentGauge extends StatelessWidget {
                       padding: const EdgeInsets.all(3.0),
                       child: Text(
                         '$value A',
-                        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.orange),
+                        style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.orange),
                       ),
                     ),
                     const Text(
