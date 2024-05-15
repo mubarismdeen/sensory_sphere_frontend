@@ -50,7 +50,7 @@ class _DevicesScreenState extends State<DevicesScreen> {
                   padding: const EdgeInsets.all(2),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: highlightedColor),
+                      color: Colors.lightBlueAccent),
                   child: Container(
                     padding: EdgeInsets.only(left: 5),
                     decoration: BoxDecoration(
