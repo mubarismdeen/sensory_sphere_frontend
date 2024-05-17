@@ -12,7 +12,7 @@ class LoadingWrapper extends StatelessWidget {
     required this.child,
     required this.isLoading,
     required this.height,
-    this.color = themeColor,
+    this.color = highlightedColor,
   });
 
   @override

@@ -1,6 +1,6 @@
 import 'package:admin/api.dart';
 import 'package:admin/constants/style.dart';
-import 'package:admin/pages/Devices/system_card.dart';
+import 'package:admin/pages/Devices/system_inlay.dart';
 import 'package:admin/widget/loading_wrapper.dart';
 import 'package:flutter/material.dart';
 
@@ -78,9 +78,8 @@ class _DevicesScreenState extends State<DevicesScreen> {
               ],
             ),
             const SizedBox(height: 10),
-            SystemCard(
+            SystemInlay(
               propertyName: dropdownValue,
-              onLocationButtonPressed: () {},
             ),
           ],
         ),

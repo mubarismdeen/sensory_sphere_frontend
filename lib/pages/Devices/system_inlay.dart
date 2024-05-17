@@ -114,69 +114,72 @@ class _SystemInlayState extends State<SystemInlay>
       isLoading: _showLoading,
       height: 500,
       color: highlightedColor,
-      child: Container(
-        decoration: BoxDecoration(
-          color: lightGrey.withOpacity(0.5),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        padding: const EdgeInsets.all(15),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: SizedBox(
-            height: 600,
-            child: Column(
-              children: [
-                Flexible(
-                  flex: 1,
-                  fit: FlexFit.tight,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      _getAmbientTemperatureWidget(),
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: themeColor.withOpacity(0.3)),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            CurrentGauge(
-                              value: _sensorData.totalCurrent,
-                              maximumValue:
-                                  max(10, _sensorData.totalCurrent + 2),
-                            ),
-                          ],
-                        ),
-                      ),
-                      OxygenPressureWidget(
-                        pressureA: _sensorData.oxygenAPressure,
-                        pressureB: _sensorData.oxygenBPressure,
-                        colorA: Colors.green.shade300,
-                        colorB: Colors.green.shade600,
-                        height: 150,
-                      ),
-                    ],
-                  ),
-                ),
-                Flexible(
-                  flex: 2,
-                  fit: FlexFit.tight,
-                  child: Container(
-                    width: 530,
-                    margin: const EdgeInsets.only(top: 10),
-                    decoration: BoxDecoration(
-                        color: appBarColor.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Column(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+        child: Container(
+          decoration: BoxDecoration(
+            color: lightGrey.withOpacity(0.5),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          padding: const EdgeInsets.all(15),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: SizedBox(
+              height: 600,
+              child: Column(
+                children: [
+                  Flexible(
+                    flex: 1,
+                    fit: FlexFit.tight,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        _getMotorWidget(),
-                        _getMotorPressures(),
+                        _getAmbientTemperatureWidget(),
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: themeColor.withOpacity(0.3)),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              CurrentGauge(
+                                value: _sensorData.totalCurrent,
+                                maximumValue:
+                                    max(10, _sensorData.totalCurrent + 2),
+                              ),
+                            ],
+                          ),
+                        ),
+                        OxygenPressureWidget(
+                          pressureA: _sensorData.oxygenAPressure,
+                          pressureB: _sensorData.oxygenBPressure,
+                          colorA: Colors.green.shade300,
+                          colorB: Colors.green.shade600,
+                          height: 150,
+                        ),
                       ],
                     ),
                   ),
-                ),
-              ],
+                  Flexible(
+                    flex: 2,
+                    fit: FlexFit.tight,
+                    child: Container(
+                      width: 530,
+                      margin: const EdgeInsets.only(top: 10),
+                      decoration: BoxDecoration(
+                          color: appBarColor.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Column(
+                        children: [
+                          _getMotorWidget(),
+                          _getMotorPressures(),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

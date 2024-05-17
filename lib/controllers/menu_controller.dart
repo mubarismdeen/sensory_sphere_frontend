@@ -36,6 +36,8 @@ class CustomMenuController extends GetxController {
         return _customIcon(Icons.alarm, itemName);
       case PropertiesRoute:
         return _customIcon(Icons.broadcast_on_home, itemName);
+      case AnalyticsRoute:
+        return _customIcon(Icons.area_chart_outlined, itemName);
       case CompanyRoute:
         return _customIcon(Icons.home_work_outlined, itemName);
       case ClientsRoute:

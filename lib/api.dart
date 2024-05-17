@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:admin/globalState.dart';
 import 'package:admin/models/alarm_details.dart';
+import 'package:admin/models/chart_data.dart';
 import 'package:admin/models/clientDetails.dart';
 import 'package:admin/models/employeeDetails.dart';
 import 'package:admin/models/jobDetails.dart';
@@ -46,11 +47,13 @@ enum HttpMethod {
 }
 
 Future<dynamic> httpConnect(String urlWithParams, HttpMethod method,
-    [dynamic jsonData]) async {
+    [dynamic jsonData, Duration? timeoutDuration]) async {
   dynamic response;
   switch (method) {
     case HttpMethod.GET:
-      response = await http.get(Uri.parse(urlWithParams));
+      response = timeoutDuration != null
+          ? await http.get(Uri.parse(urlWithParams)).timeout(timeoutDuration)
+          : await http.get(Uri.parse(urlWithParams));
       break;
     case HttpMethod.POST:
       response = await http.post(Uri.parse(urlWithParams),
@@ -82,8 +85,12 @@ Future<bool> localUserValidation(String userID, String password) async {
 Future<UserScreens> authorizeUser(String username, String password) async {
   String urlWithParams =
       "$userUrl/authorizeUser?username=$username&password=$password&firebaseToken=${GlobalState.firebaseToken}";
-  UserScreens response =
-      UserScreens.fromJson(await httpConnect(urlWithParams, HttpMethod.GET));
+  UserScreens response = UserScreens.fromJson(await httpConnect(
+    urlWithParams,
+    HttpMethod.GET,
+    "",
+    const Duration(seconds: 3),
+  ));
   return response;
 }
 
@@ -115,8 +122,28 @@ Future<List<SensorData>> getLastSensorData(String propertyName) async {
   return list;
 }
 
+Future<List<ChartData>> getChartData(
+    String propertyName, String interval) async {
+  String urlWithParams =
+      "$dataUrl/getChartData?propertyName=$propertyName&intervalDescription=$interval";
+  List<ChartData> list =
+      (await httpConnect(urlWithParams, HttpMethod.GET) as List)
+          .map((job) => ChartData.fromJson(job))
+          .toList();
+  return list;
+}
+
 Future<List<StatusEntity>> getProperties() async {
   String urlWithParams = "$dataUrl/getProperties";
+  List<StatusEntity> list =
+      (await httpConnect(urlWithParams, HttpMethod.GET) as List)
+          .map((job) => StatusEntity.fromJson(job))
+          .toList();
+  return list;
+}
+
+Future<List<StatusEntity>> getTimeIntervals() async {
+  String urlWithParams = "$dataUrl/getTimeIntervals";
   List<StatusEntity> list =
       (await httpConnect(urlWithParams, HttpMethod.GET) as List)
           .map((job) => StatusEntity.fromJson(job))

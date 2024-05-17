@@ -1,4 +1,5 @@
 import 'package:admin/pages/Alarms/alarms_screen.dart';
+import 'package:admin/pages/Analytics/analytics_screen.dart';
 import 'package:admin/pages/Clients/clients_screen.dart';
 import 'package:admin/pages/Properties/properties_screen.dart';
 import 'package:admin/pages/Salary/leave_salary.dart';
@@ -23,6 +24,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return _getPageRoute(const AlarmsScreen());
     case PropertiesRoute:
       return _getPageRoute(const PropertiesScreen());
+    case AnalyticsRoute:
+      return _getPageRoute(const AnalyticsScreen());
     case MaintenanceRoute:
       return _getPageRoute(const SalaryMaster());
     case CompanyRoute:

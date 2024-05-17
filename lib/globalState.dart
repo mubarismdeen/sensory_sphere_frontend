@@ -41,6 +41,9 @@ class GlobalState {
     //   sideMenuItems.add(AlarmsRoute);
     // }
     if (screensForUser.attendance) {
+      sideMenuItems.add(AnalyticsRoute);
+    }
+    if (screensForUser.attendance) {
       attendanceScreenPrivilege = true;
       sideMenuItems.add(PropertiesRoute);
     }

@@ -207,7 +207,7 @@ class _MainViewState extends State<_MainView> {
             alignment: isDesktop ? Alignment.center : Alignment.topCenter,
             child: showLoading
                 ? const SpinKitWave(
-                    color: lightGrey,
+                    color: highlightedColor,
                     size: 30,
                   )
                 : ListView(
