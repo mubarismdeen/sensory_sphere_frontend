@@ -228,6 +228,13 @@ Future<ResponseDto> createDatabaseBackup() async {
   return response;
 }
 
+Future<ResponseDto> getBackupHistoryMessage() async {
+  String urlWithParams = "$settingsUrl/getLastBackup";
+  ResponseDto response =
+      ResponseDto.fromJson(await httpConnect(urlWithParams, HttpMethod.GET));
+  return response;
+}
+
 Future<List<UserDetails>> getUserDetails(String empCode) async {
   String urlWithParams = "http://$ip/Hrms/getUserDetails?empCode=$empCode";
   List<UserDetails> list =
