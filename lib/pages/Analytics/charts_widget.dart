@@ -39,6 +39,10 @@ class ChartsWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
       child: SfCartesianChart(
+        crosshairBehavior: CrosshairBehavior(
+            enable: true,
+            lineColor: lightGrey,
+            activationMode: ActivationMode.singleTap),
         primaryXAxis: CategoryAxis(),
         title: chartTitle("Motor Pressure"),
         legend: Legend(
@@ -73,6 +77,10 @@ class ChartsWidget extends StatelessWidget {
       child: SfCartesianChart(
         primaryXAxis: CategoryAxis(),
         title: chartTitle('Oxygen Pressure'),
+        crosshairBehavior: CrosshairBehavior(
+            enable: true,
+            lineColor: lightGrey,
+            activationMode: ActivationMode.singleTap),
         legend: Legend(
           isVisible: true,
           position: LegendPosition.bottom,
@@ -106,6 +114,10 @@ class ChartsWidget extends StatelessWidget {
       child: SfCartesianChart(
         primaryXAxis: CategoryAxis(),
         title: chartTitle('Total Current'),
+        crosshairBehavior: CrosshairBehavior(
+            enable: true,
+            lineColor: lightGrey,
+            activationMode: ActivationMode.singleTap),
         legend: Legend(isVisible: false),
         tooltipBehavior: TooltipBehavior(enable: true),
         series: <ChartSeries>[
@@ -127,6 +139,10 @@ class ChartsWidget extends StatelessWidget {
       child: SfCartesianChart(
         primaryXAxis: CategoryAxis(),
         title: chartTitle('Ambient Temperature'),
+        crosshairBehavior: CrosshairBehavior(
+            enable: true,
+            lineColor: lightGrey,
+            activationMode: ActivationMode.singleTap),
         legend: Legend(isVisible: false),
         tooltipBehavior: TooltipBehavior(enable: true),
         series: <ChartSeries>[
