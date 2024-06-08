@@ -2,6 +2,8 @@ class PropertyDetails {
   int id = 0;
   String name = "";
   String status = "";
+  bool floatPumpControl = false;
+  bool smokePumpControl = false;
   String createBy = "";
   DateTime createDate = DateTime.now();
   String editBy = "";
@@ -13,6 +15,8 @@ class PropertyDetails {
     id = json['id'] ?? 0;
     name = json['name'] ?? "";
     status = json['status'] ?? "";
+    floatPumpControl = json['floatPumpControl'] ?? false;
+    smokePumpControl = json['smokePumpControl'] ?? false;
     createBy = json['createBy'] ?? '';
     createDate = DateTime.fromMillisecondsSinceEpoch(json['createDate'] ?? 0);
     editBy = json['editBy'] ?? '';
@@ -25,6 +29,8 @@ class PropertyDetails {
         'id': id,
         'name': name,
         'status': status,
+        'floatPumpControl': floatPumpControl,
+        'smokePumpControl': smokePumpControl,
         'createBy': createBy,
         'createDate': createDate.millisecondsSinceEpoch,
         'editBy': editBy,

@@ -200,3 +200,17 @@ String getDateTimeString(DateTime? dateTime) {
   DateFormat outputFormat = DateFormat('MMM d, y h:mm a');
   return outputFormat.format(dateTime);
 }
+
+String getControlString(bool value) {
+  if (value == true) {
+    return "YES";
+  }
+  return "NO";
+}
+
+bool getControlValue(String value) {
+  if (value == "YES") {
+    return true;
+  }
+  return false;
+}

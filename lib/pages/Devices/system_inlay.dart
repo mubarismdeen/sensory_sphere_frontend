@@ -52,6 +52,11 @@ class _SystemInlayState extends State<SystemInlay>
       totalCurrent: 0.0,
       isMotorOn: false,
       isMotorLoading: false,
+      isAutoMode: false,
+      floatState: false,
+      smokeState: false,
+      longitude: '',
+      latitude: '',
     );
     getSensorData();
     _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
@@ -172,7 +177,12 @@ class _SystemInlayState extends State<SystemInlay>
                           borderRadius: BorderRadius.circular(10)),
                       child: Column(
                         children: [
-                          _getMotorWidget(),
+                          Stack(
+                            children: [
+                              _getModeIndicator(),
+                              _getMotorWidget(),
+                            ],
+                          ),
                           _getMotorPressures(),
                         ],
                       ),
@@ -228,40 +238,81 @@ class _SystemInlayState extends State<SystemInlay>
     }
   }
 
-  Widget _getMotorWidget() {
-    return SizedBox(
-      height: 200,
-      width: 200,
-      child: Stack(
-        alignment: AlignmentDirectional.center,
-        children: [
-          Positioned(
-            top: 1,
-            child: ColorFiltered(
-              colorFilter: ColorFilter.mode(
-                _isRunning
-                    ? Colors.green
-                    : Colors.red.withOpacity(0.7), // Desired color
-                BlendMode.srcIn,
-              ),
-              child: Transform.translate(
-                offset: _isRunning
-                    ? Offset(_animation.value, 0.0)
-                    : const Offset(0.0, 0.0),
-                child: Image.asset('images/motor_icon.png', width: 200),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 0,
-            child: SizedBox(
-                height: 200,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Center(child: _getMotorButton()),
-                )),
+  Widget _getModeIndicator() {
+    return Container(
+      margin: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.all(5.0),
+      decoration: BoxDecoration(
+        color: _sensorData.isAutoMode
+            ? Colors.greenAccent.withOpacity(0.6)
+            : Colors.orangeAccent.withOpacity(0.6),
+        borderRadius: BorderRadius.circular(8.0),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 4.0,
+            offset: Offset(2, 2),
           ),
         ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            _sensorData.isAutoMode ? Icons.autorenew : Icons.handyman,
+            color: Colors.white,
+          ),
+          const SizedBox(width: 5.0),
+          Text(
+            _sensorData.isAutoMode ? 'AUTO' : 'MANUAL',
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 12.0,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _getMotorWidget() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 50.0),
+      child: SizedBox(
+        height: 200,
+        width: 200,
+        child: Stack(
+          alignment: AlignmentDirectional.center,
+          children: [
+            Positioned(
+              top: 1,
+              child: ColorFiltered(
+                colorFilter: ColorFilter.mode(
+                  _isRunning
+                      ? Colors.green
+                      : Colors.red.withOpacity(0.7), // Desired color
+                  BlendMode.srcIn,
+                ),
+                child: Transform.translate(
+                  offset: _isRunning
+                      ? Offset(_animation.value, 0.0)
+                      : const Offset(0.0, 0.0),
+                  child: Image.asset('images/motor_icon.png', width: 200),
+                ),
+              ),
+            ),
+            Positioned(
+              top: 0,
+              child: SizedBox(
+                  height: 200,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Center(child: _getMotorButton()),
+                  )),
+            ),
+          ],
+        ),
       ),
     );
   }

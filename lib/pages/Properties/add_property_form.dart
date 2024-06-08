@@ -29,6 +29,8 @@ class _AddPropertyFormState extends State<AddPropertyForm> {
   final _formKey = GlobalKey<FormState>();
 
   String _selectedStatus = "";
+  String _selectedFloatMotorTrigger = "YES";
+  String _selectedSmokeMotorTrigger = "YES";
   final _name = TextEditingController();
 
   List<StatusEntity> statuses = <StatusEntity>[];
@@ -41,6 +43,11 @@ class _AddPropertyFormState extends State<AddPropertyForm> {
     statuses = await getStatuses();
     if (widget.tableRow == null) {
       _selectedStatus = statuses.first.description;
+    } else {
+      _selectedFloatMotorTrigger =
+          getControlString(widget.tableRow!.floatPumpControl);
+      _selectedSmokeMotorTrigger =
+          getControlString(widget.tableRow!.smokePumpControl);
     }
     setState(() {
       _showLoading = false;
@@ -89,6 +96,26 @@ class _AddPropertyFormState extends State<AddPropertyForm> {
                 },
                 value: _selectedStatus,
               ),
+              CustomDropdownFormField(
+                labelText: 'Control Motor From Float Switch',
+                dropdownOptions: const ["YES", "NO"],
+                onChanged: (String? value) => {
+                  setState(() {
+                    _selectedFloatMotorTrigger = value!;
+                  }),
+                },
+                value: _selectedFloatMotorTrigger,
+              ),
+              CustomDropdownFormField(
+                labelText: 'Control Motor From Smoke Detector',
+                dropdownOptions: const ["YES", "NO"],
+                onChanged: (String? value) => {
+                  setState(() {
+                    _selectedSmokeMotorTrigger = value!;
+                  }),
+                },
+                value: _selectedSmokeMotorTrigger,
+              ),
               const SizedBox(height: 26.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -114,10 +141,16 @@ class _AddPropertyFormState extends State<AddPropertyForm> {
       print('Submitted form data:');
       print('Name: ${_name.text}');
       print('Status: $_selectedStatus');
+      print('Control Motor From Float Switch: $_selectedFloatMotorTrigger');
+      print('Control Motor From Smoke Detector: $_selectedSmokeMotorTrigger');
 
       try {
         _propertyDetails.name = _name.text;
         _propertyDetails.status = _selectedStatus;
+        _propertyDetails.floatPumpControl =
+            getControlValue(_selectedFloatMotorTrigger);
+        _propertyDetails.smokePumpControl =
+            getControlValue(_selectedSmokeMotorTrigger);
 
         ResponseDto response = await savePropertyDetails(_propertyDetails);
         if (response.success) {

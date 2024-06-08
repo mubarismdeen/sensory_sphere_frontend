@@ -10,6 +10,11 @@ class SensorData {
   final double totalCurrent;
   final bool isMotorOn;
   final bool isMotorLoading;
+  final bool isAutoMode;
+  final bool floatState;
+  final bool smokeState;
+  final String latitude;
+  final String longitude;
 
   SensorData(
       {required this.id,
@@ -22,7 +27,12 @@ class SensorData {
       required this.ambientTemperature,
       required this.totalCurrent,
       required this.isMotorOn,
-      required this.isMotorLoading});
+      required this.isMotorLoading,
+      required this.isAutoMode,
+      required this.floatState,
+      required this.smokeState,
+      required this.latitude,
+      required this.longitude});
 
   factory SensorData.fromJson(Map<String, dynamic> json) {
     return SensorData(
@@ -36,6 +46,11 @@ class SensorData {
       totalCurrent: json['totalCurrent']?.toDouble() ?? 0.0,
       isMotorOn: json['motorOn'] ?? false,
       isMotorLoading: json['motorLoading'] ?? false,
+      isAutoMode: json['autoMode'] ?? false,
+      floatState: json['floatState'] ?? false,
+      smokeState: json['smokeState'] ?? false,
+      latitude: json['latitude'] ?? "",
+      longitude: json['longitude'] ?? "",
       timestamp: json['timestamp'] != null
           ? DateTime.fromMillisecondsSinceEpoch(json['timestamp'])
           : DateTime.now(),
