@@ -8,6 +8,7 @@ import 'package:admin/models/response_dto.dart';
 import 'package:admin/utils/common_utils.dart';
 import 'package:admin/widget/Gauges/linear_gauge.dart';
 import 'package:admin/widget/Gauges/radial_gauge.dart';
+import 'package:admin/widget/device_location_opener.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/sensor_data.dart';
@@ -137,9 +138,19 @@ class _SystemInlayState extends State<SystemInlay>
                     flex: 1,
                     fit: FlexFit.tight,
                     child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        _getAmbientTemperatureWidget(),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            DeviceLocation(
+                              latitude: _sensorData.latitude,
+                              longitude: _sensorData.longitude,
+                            ),
+                            _getAmbientTemperatureWidget(),
+                          ],
+                        ),
                         Container(
                           margin: const EdgeInsets.symmetric(horizontal: 10.0),
                           decoration: BoxDecoration(
@@ -211,11 +222,13 @@ class _SystemInlayState extends State<SystemInlay>
             ? ElevatedButton.styleFrom(
                 backgroundColor: Colors.red[400]?.withOpacity(0.85),
                 foregroundColor: light,
-              )
+                elevation: 5,
+                shadowColor: Colors.black)
             : ElevatedButton.styleFrom(
                 backgroundColor: Colors.green[500]?.withOpacity(0.85),
                 foregroundColor: light,
-              ),
+                elevation: 5,
+                shadowColor: Colors.black),
       ),
     );
   }
@@ -240,20 +253,13 @@ class _SystemInlayState extends State<SystemInlay>
 
   Widget _getModeIndicator() {
     return Container(
-      margin: const EdgeInsets.only(top: 10),
+      margin: const EdgeInsets.only(top: 20, left: 15),
       padding: const EdgeInsets.all(5.0),
       decoration: BoxDecoration(
         color: _sensorData.isAutoMode
-            ? Colors.greenAccent.withOpacity(0.6)
-            : Colors.orangeAccent.withOpacity(0.6),
+            ? Colors.greenAccent.withOpacity(0.5)
+            : Colors.orangeAccent.withOpacity(0.5),
         borderRadius: BorderRadius.circular(8.0),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 4.0,
-            offset: Offset(2, 2),
-          ),
-        ],
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -261,6 +267,7 @@ class _SystemInlayState extends State<SystemInlay>
           Icon(
             _sensorData.isAutoMode ? Icons.autorenew : Icons.handyman,
             color: Colors.white,
+            size: 14,
           ),
           const SizedBox(width: 5.0),
           Text(
@@ -268,7 +275,7 @@ class _SystemInlayState extends State<SystemInlay>
             style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontSize: 12.0,
+              fontSize: 11.0,
             ),
           ),
         ],
@@ -346,7 +353,7 @@ class _SystemInlayState extends State<SystemInlay>
           borderRadius: BorderRadius.circular(10)),
       child: LinearGauge(
         pointerValue: _sensorData.ambientTemperature,
-        height: 150,
+        height: 110,
         title: "Ambient Temperature",
         titleColor: Colors.black,
       ),
