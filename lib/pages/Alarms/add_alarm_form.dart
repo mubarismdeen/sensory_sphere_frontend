@@ -32,6 +32,7 @@ class _AddAlarmFormState extends State<AddAlarmForm> {
   String _selectedParameter = "";
   String _selectedCondition = "";
   String _selectedStatus = "";
+  String _selectedMotorTrigger = "YES";
   final _value = TextEditingController();
 
   List<StatusEntity> properties = <StatusEntity>[];
@@ -72,6 +73,7 @@ class _AddAlarmFormState extends State<AddAlarmForm> {
       _selectedCondition = widget.tableRow!.condition;
       _value.text = widget.tableRow!.value.toString();
       _selectedStatus = widget.tableRow!.status;
+      _selectedMotorTrigger = widget.tableRow!.motorTrigger;
       _alarmDetails.id = widget.tableRow!.id;
       _alarmDetails.editBy = GlobalState.username;
       _alarmDetails.editDate = DateTime.now();
@@ -141,6 +143,16 @@ class _AddAlarmFormState extends State<AddAlarmForm> {
                 },
                 value: _selectedStatus,
               ),
+              CustomDropdownFormField(
+                labelText: 'Control Motor',
+                dropdownOptions: const ["YES", "NO"],
+                onChanged: (String? value) => {
+                  setState(() {
+                    _selectedMotorTrigger = value!;
+                  }),
+                },
+                value: _selectedMotorTrigger,
+              ),
               const SizedBox(height: 26.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -169,6 +181,7 @@ class _AddAlarmFormState extends State<AddAlarmForm> {
       print('Condition: $_selectedCondition');
       print('Value: ${_value.text}');
       print('Status: $_selectedStatus');
+      print('Motor Control: $_selectedMotorTrigger');
 
       try {
         _alarmDetails.property = _selectedProperty;
@@ -176,6 +189,7 @@ class _AddAlarmFormState extends State<AddAlarmForm> {
         _alarmDetails.condition = _selectedCondition;
         _alarmDetails.value = double.parse(_value.text);
         _alarmDetails.status = _selectedStatus;
+        _alarmDetails.motorTrigger = _selectedMotorTrigger;
 
         ResponseDto response = await saveAlarmDetails(_alarmDetails);
         if (response.success) {
