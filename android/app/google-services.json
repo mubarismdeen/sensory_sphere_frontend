@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "399261569921",
-    "project_id": "sensory-sphere-notification",
-    "storage_bucket": "sensory-sphere-notification.appspot.com"
+    "project_number": "1016611418149",
+    "project_id": "sensory-sphere-8971f",
+    "storage_bucket": "sensory-sphere-8971f.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:399261569921:android:71800bec34864b50028e80",
+        "mobilesdk_app_id": "1:1016611418149:android:5908d6d4196657d36d8fcc",
         "android_client_info": {
-          "package_name": "com.example.admin"
+          "package_name": "com.codewavetechnologies.sensorysphere"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyA-uKReHWWFXThz5P9-YHMHy8YR2mat4oQ"
+          "current_key": "AIzaSyBx74QKmX6FLMu7SzkqBdl1MlJp_fzVlQ8"
         }
       ],
       "services": {

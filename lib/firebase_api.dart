@@ -54,7 +54,7 @@ class FirebaseApi {
     try {
       await _firebaseMessaging.requestPermission();
       FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
-      FirebaseMessaging.onMessage
+      FirebaseMessaging.onMessageOpenedApp
           .listen(handleForegroundMessage); // Listen to foreground messages
       final fCMToken = await _firebaseMessaging.getToken();
       GlobalState.setToken(fCMToken ?? "");

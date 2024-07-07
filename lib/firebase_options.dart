@@ -47,30 +47,29 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAYU62FYmHEZbaXpKg00XiJVU_SMSnCmM0',
-    appId: '1:399261569921:web:f1bcb0335d0d68f0028e80',
-    messagingSenderId: '399261569921',
-    projectId: 'sensory-sphere-notification',
-    authDomain: 'sensory-sphere-notification.firebaseapp.com',
-    storageBucket: 'sensory-sphere-notification.appspot.com',
-    measurementId: 'G-Q3DYCYHMQ1',
+    apiKey: 'AIzaSyBcAEI2fGVaXs5ScZ18mTv5zpfYVUaH1pU',
+    appId: '1:1016611418149:web:9788c914e5c38a8b6d8fcc',
+    messagingSenderId: '1016611418149',
+    projectId: 'sensory-sphere-8971f',
+    authDomain: 'sensory-sphere-8971f.firebaseapp.com',
+    storageBucket: 'sensory-sphere-8971f.appspot.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyA-uKReHWWFXThz5P9-YHMHy8YR2mat4oQ',
-    appId: '1:399261569921:android:71800bec34864b50028e80',
-    messagingSenderId: '399261569921',
-    projectId: 'sensory-sphere-notification',
-    storageBucket: 'sensory-sphere-notification.appspot.com',
+    apiKey: 'AIzaSyBx74QKmX6FLMu7SzkqBdl1MlJp_fzVlQ8',
+    appId: '1:1016611418149:android:5908d6d4196657d36d8fcc',
+    messagingSenderId: '1016611418149',
+    projectId: 'sensory-sphere-8971f',
+    storageBucket: 'sensory-sphere-8971f.appspot.com',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyAYU62FYmHEZbaXpKg00XiJVU_SMSnCmM0',
-    appId: '1:399261569921:web:3a34b44a6b639712028e80',
-    messagingSenderId: '399261569921',
-    projectId: 'sensory-sphere-notification',
-    authDomain: 'sensory-sphere-notification.firebaseapp.com',
-    storageBucket: 'sensory-sphere-notification.appspot.com',
-    measurementId: 'G-C6ZG1R9GEH',
+    apiKey: 'AIzaSyBcAEI2fGVaXs5ScZ18mTv5zpfYVUaH1pU',
+    appId: '1:1016611418149:web:f2d940f1b62b5d6b6d8fcc',
+    messagingSenderId: '1016611418149',
+    projectId: 'sensory-sphere-8971f',
+    authDomain: 'sensory-sphere-8971f.firebaseapp.com',
+    storageBucket: 'sensory-sphere-8971f.appspot.com',
   );
+
 }
