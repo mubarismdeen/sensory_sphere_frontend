@@ -1,32 +1,41 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:admin/globalState.dart';
+import 'package:admin/pages/Alert/alert_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+import 'main.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
-Future<void> handleForegroundMessage(RemoteMessage message) async {
+Future<void> handleForegroundMessage(RemoteMessage? message) async {
+  if (message == null) return;
+
   print('Title: ${message.notification?.title}');
   print('Body: ${message.notification?.body}');
   print('Payload: ${message.data}');
 
-  // Display the notification
-  await displayNotification(message);
+  navigatorKey.currentState?.pushNamed(AlertScreen.route, arguments: message);
 }
 
 Future<void> displayNotification(RemoteMessage message) async {
-  const sound = 'default_sound'; // Default sound if not provided
-  const AndroidNotificationDetails androidPlatformChannelSpecifics =
+  final vibrationPattern =
+      Int64List.fromList([0, 1000, 500, 1000]); // Vibration pattern
+
+  final AndroidNotificationDetails androidPlatformChannelSpecifics =
       AndroidNotificationDetails(
-    'your channel id',
-    'your channel name',
-    // 'your channel description',
+    'high_importance_channel', // Ensure this matches the channel ID
+    'High Importance Notifications',
+    channelDescription: 'This channel is used for important notifications',
     importance: Importance.max,
     priority: Priority.high,
-    sound: RawResourceAndroidNotificationSound(
-        sound), // Use sound specified in payload
+    enableVibration: true,
+    vibrationPattern: vibrationPattern,
   );
-  const NotificationDetails platformChannelSpecifics =
+  final NotificationDetails platformChannelSpecifics =
       NotificationDetails(android: androidPlatformChannelSpecifics);
 
   await flutterLocalNotificationsPlugin.show(
@@ -43,22 +52,86 @@ Future<void> handleBackgroundMessage(RemoteMessage message) async {
   print('Body: ${message.notification?.body}');
   print('Payload: ${message.data}');
 
-  // Display the notification with sound
   await displayNotification(message);
 }
 
 class FirebaseApi {
   final _firebaseMessaging = FirebaseMessaging.instance;
 
+  final _androidChannel = AndroidNotificationChannel(
+    'high_importance_channel',
+    'High Importance Notifications',
+    description: 'This channel is used for important notifications',
+    importance: Importance.max, // Ensure this is set to max for high priority
+    playSound: true,
+    enableVibration: true,
+    vibrationPattern:
+        Int64List.fromList([0, 1000, 500, 1000]), // Vibration pattern
+  );
+
+  final _localNotifications = FlutterLocalNotificationsPlugin();
+
+  Future initPushNotifications() async {
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+    FirebaseMessaging.instance
+        .getInitialMessage()
+        .then(handleForegroundMessage);
+    FirebaseMessaging.onMessageOpenedApp.listen(handleForegroundMessage);
+    FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
+    FirebaseMessaging.onMessage.listen((event) {
+      final notification = event.notification;
+      if (notification == null) return;
+
+      _localNotifications.show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+                _androidChannel.id, _androidChannel.name,
+                channelDescription: _androidChannel.description,
+                icon: '@drawable/ic_launcher',
+                enableVibration: true,
+                vibrationPattern: Int64List.fromList([
+                  0,
+                  1000,
+                  500,
+                  1000
+                ]) // Ensure this matches the vibration pattern
+                ),
+          ),
+          payload: jsonEncode(event.toMap()));
+    });
+  }
+
+  Future initLocalNotifications() async {
+    const android = AndroidInitializationSettings('@drawable/ic_launcher');
+    const settings = InitializationSettings(android: android);
+
+    _localNotifications.initialize(settings,
+        onDidReceiveNotificationResponse: (payload) {
+      final message = RemoteMessage.fromMap(jsonDecode(payload.payload!));
+      handleForegroundMessage(message);
+    });
+
+    final platform = _localNotifications.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>();
+    await platform?.createNotificationChannel(_androidChannel);
+  }
+
   Future<void> initNotifications() async {
     try {
       await _firebaseMessaging.requestPermission();
-      FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
-      FirebaseMessaging.onMessageOpenedApp
-          .listen(handleForegroundMessage); // Listen to foreground messages
       final fCMToken = await _firebaseMessaging.getToken();
       GlobalState.setToken(fCMToken ?? "");
       print('Token: $fCMToken');
+      await initPushNotifications();
+      await initLocalNotifications();
     } catch (e) {
       print('Error initializing notifications: $e');
     }

@@ -50,6 +50,7 @@ dependencies:
   flutter_local_notifications: ^17.1.2
   syncfusion_flutter_charts: ^21.2.4
   url_launcher: ^6.1.11
+  audioplayers: ^4.1.0
 
 dev_dependencies:
   flutter_test:
@@ -77,6 +78,7 @@ flutter:
   assets:
     - images/app_icon.png
     - images/motor_icon.png
+    - assets/alert.mp3
 #     - images/a_dot_ham.jpeg
   fonts:
     - family: 'LobsterFont'

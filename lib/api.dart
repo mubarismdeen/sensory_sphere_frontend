@@ -13,7 +13,6 @@ import 'package:admin/models/salaryPaid.dart';
 import 'package:admin/models/saveEmployeeDetails.dart';
 import 'package:admin/models/userPrivileges.dart';
 import 'package:admin/models/userScreens.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get_connect/http/src/exceptions/exceptions.dart';
 import 'package:http/http.dart' as http;
 
@@ -30,7 +29,7 @@ import 'models/sensor_data.dart';
 import 'models/status_entity.dart';
 import 'models/userDetails.dart';
 
-final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+// final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 String get ip => "${GlobalState.ipAddress}:8090"; // over network
 // String ip = "localhost:8091"; // local
 

@@ -147,13 +147,12 @@ class _MainViewState extends State<_MainView> {
                 widget.usernameController!.text,
                 widget.passwordController!.text,
               );
-              // List<UserPrivileges> userPrivileges =
-              //     await getAllPrivilegesForUser(
-              //         screensForUser.userId.toString());
               GlobalState.setScreensForUser(
                   widget.usernameController!.text, screensForUser);
               showError = false;
               _login();
+              widget.usernameController?.clear();
+              widget.passwordController?.clear();
             } catch (e) {
               if (e is UnauthorizedException) {
                 showSaveFailedMessage(context, "Login Failed");

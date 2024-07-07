@@ -1,14 +1,17 @@
+import 'package:admin/constants/style.dart';
 import 'package:admin/controllers/menu_controller.dart';
+import 'package:admin/controllers/navigation_controller.dart';
 import 'package:admin/firebase_api.dart';
 import 'package:admin/firebase_options.dart';
+import 'package:admin/pages/Alert/alert_screen.dart';
 import 'package:admin/pages/login/login.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:admin/controllers/navigation_controller.dart';
-import 'package:admin/constants/style.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,7 +43,9 @@ class MyApp extends StatelessWidget {
           surface: highlightedColor,
         ),
       ),
+      navigatorKey: navigatorKey,
       home: kIsWeb ? const LoginPage() : const SafeArea(child: LoginPage()),
+      routes: {AlertScreen.route: (context) => const AlertScreen()},
     );
   }
 }
