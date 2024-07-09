@@ -42,7 +42,7 @@ extension StringExtension on String {
     if (isEmpty) {
       return false;
     }
-    final RegExp regex = RegExp(r'^\d+(\.\d+)?$');
+    final RegExp regex = RegExp(r'^-?\d+(\.\d+)?$');
     return regex.hasMatch(this);
   }
 }
