@@ -68,7 +68,6 @@ class _SettingsPopupState extends State<SettingsPopup> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 15),
               const Text("Database Backup : ",
                   style:
                       TextStyle(fontWeight: FontWeight.w600, color: lightGrey)),
