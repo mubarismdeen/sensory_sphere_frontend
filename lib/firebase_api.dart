@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:admin/globalState.dart';
+import 'package:admin/models/AlertDto.dart';
 import 'package:admin/pages/Alert/alert_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -18,7 +19,8 @@ Future<void> handleForegroundMessage(RemoteMessage? message) async {
   print('Body: ${message.notification?.body}');
   print('Payload: ${message.data}');
 
-  navigatorKey.currentState?.pushNamed(AlertScreen.route, arguments: message);
+  AlertDto alertDto = AlertDto(message: message, playSound: false);
+  navigatorKey.currentState?.pushNamed(AlertScreen.route, arguments: alertDto);
 }
 
 Future<void> displayNotification(RemoteMessage message) async {
@@ -86,6 +88,10 @@ class FirebaseApi {
     FirebaseMessaging.onMessage.listen((event) {
       final notification = event.notification;
       if (notification == null) return;
+
+      AlertDto alertDto = AlertDto(message: event, playSound: true);
+      navigatorKey.currentState
+          ?.pushNamed(AlertScreen.route, arguments: alertDto);
 
       _localNotifications.show(
           notification.hashCode,

@@ -1,3 +1,4 @@
+import 'package:admin/models/AlertDto.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -18,12 +19,13 @@ class _AlertScreenState extends State<AlertScreen> {
   void initState() {
     super.initState();
     _audioPlayer = AudioPlayer();
-    _playSound();
   }
 
-  void _playSound() async {
-    await _audioPlayer.play(AssetSource(
-        "alert.mp3")); // Specify the correct path to your sound file
+  void _playSound(bool shouldPlaySound) async {
+    if (shouldPlaySound) {
+      await _audioPlayer.setReleaseMode(ReleaseMode.loop);
+      await _audioPlayer.play(AssetSource("alert.mp3"));
+    }
   }
 
   @override
@@ -34,35 +36,58 @@ class _AlertScreenState extends State<AlertScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final RemoteMessage message =
-        ModalRoute.of(context)!.settings.arguments as RemoteMessage;
+    final AlertDto args =
+        ModalRoute.of(context)!.settings.arguments as AlertDto;
+    final RemoteMessage message = args.message;
+
+    _playSound(args.playSound);
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.red.withOpacity(0.5),
         title: const Text(
           'Alert !',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                const Padding(
-                  padding: EdgeInsets.only(top: 120, bottom: 20),
-                  child: Icon(Icons.report_gmailerrorred,
-                      color: Colors.red, size: 100),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 50.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.report_gmailerrorred,
+                  color: Colors.red, size: 100),
+              Text(
+                '${message.notification?.body}',
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 25.0),
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        Colors.blueGrey.shade400.withOpacity(0.85)),
+                    elevation: MaterialStateProperty.all<double>(4.0),
+                  ),
+                  onPressed: () => Navigator.pop(context),
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      ' OK ',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                 ),
-                Text(
-                  '${message.notification?.body}',
-                  style: const TextStyle(color: Colors.white),
-                ),
-                // Text('${message.notification?.body}'),
-              ],
-            ),
+              )
+            ],
           ),
         ),
       ),
