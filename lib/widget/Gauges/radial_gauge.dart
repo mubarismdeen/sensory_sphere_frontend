@@ -28,7 +28,7 @@ class RadialGauge extends StatelessWidget {
         axes: <RadialAxis>[
           RadialAxis(
             minimum: math.min(roundDownToNearestInteger(value - 1), 0),
-            maximum: math.max(3.5, value + 0.5),
+            maximum: math.max(3.5, roundUpToNearestInteger(value) + 0.5),
             ranges: <GaugeRange>[
               GaugeRange(startValue: -100, endValue: 1.5, color: Colors.green),
               GaugeRange(startValue: 1.5, endValue: 3, color: Colors.orange),

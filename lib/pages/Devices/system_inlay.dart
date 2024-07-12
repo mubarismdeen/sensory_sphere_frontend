@@ -162,7 +162,7 @@ class _SystemInlayState extends State<SystemInlay>
                               CurrentGauge(
                                 value: _sensorData.totalCurrent,
                                 maximumValue: roundUpToNearestInteger(
-                                    max(10, _sensorData.totalCurrent + 2)),
+                                    max(9, _sensorData.totalCurrent + 2)),
                               ),
                             ],
                           ),
