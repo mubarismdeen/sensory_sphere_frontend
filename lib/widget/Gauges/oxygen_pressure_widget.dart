@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:admin/constants/style.dart';
+import 'package:admin/utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
@@ -58,8 +59,10 @@ class OxygenPressureWidget extends StatelessWidget {
                     axisTrackStyle: const LinearAxisTrackStyle(
                         color: Colors.black, thickness: 2),
                     orientation: LinearGaugeOrientation.vertical,
-                    minimum: 0,
-                    maximum: max(pressureB, pressureA) + 0.5,
+                    minimum: min(0,
+                        roundDownToNearestInteger(min(pressureA, pressureB))),
+                    maximum: roundUpToNearestInteger(
+                        max(pressureB, pressureA) + 0.5),
                     markerPointers: [
                       LinearWidgetPointer(
                         offset: 8,

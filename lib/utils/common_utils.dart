@@ -214,3 +214,11 @@ bool getControlValue(String value) {
   }
   return false;
 }
+
+double roundUpToNearestInteger(double value) {
+  return value.ceilToDouble();
+}
+
+double roundDownToNearestInteger(double value) {
+  return value.floorToDouble();
+}

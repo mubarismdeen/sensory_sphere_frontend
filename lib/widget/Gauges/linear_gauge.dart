@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
+import '../../utils/common_utils.dart';
+
 class LinearGauge extends StatelessWidget {
   final double pointerValue;
   final double height;
@@ -29,8 +31,8 @@ class LinearGauge extends StatelessWidget {
                   axisTrackStyle: const LinearAxisTrackStyle(
                       color: Colors.black, thickness: 2),
                   orientation: LinearGaugeOrientation.vertical,
-                  minimum: pointerValue - 20,
-                  maximum: pointerValue + 20,
+                  minimum: roundDownToNearestInteger(pointerValue - 20),
+                  maximum: roundUpToNearestInteger(pointerValue + 20),
                   markerPointers: [
                     LinearWidgetPointer(
                         value: pointerValue,

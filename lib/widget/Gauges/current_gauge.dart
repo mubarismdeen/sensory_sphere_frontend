@@ -1,5 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
+
+import '../../utils/common_utils.dart';
 
 class CurrentGauge extends StatelessWidget {
   final double value; // Current value of the ammeter
@@ -17,7 +21,7 @@ class CurrentGauge extends StatelessWidget {
         axes: <RadialAxis>[
           RadialAxis(
             canScaleToFit: true,
-            minimum: 0,
+            minimum: min(0, roundDownToNearestInteger(value)),
             maximum: maximumValue,
             radiusFactor: 0.8,
             axisLineStyle: const AxisLineStyle(
