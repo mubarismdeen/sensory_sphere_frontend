@@ -95,49 +95,53 @@ class SideMenu extends StatelessWidget {
                       itemName: itemName == AuthenticationPageRoute
                           ? "Log out"
                           : itemName,
-                      onTap: () => _onLogout(context, itemName),
+                      onTap: () => _onTapItem(context, itemName),
                     ))
                 .toList(),
           ),
         ]));
   }
 
-  Future<void> _onLogout(BuildContext context, String itemName) async {
-    bool confirmed = await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text(
-            "Confirm Logout",
-            style: TextStyle(color: lightGrey, fontWeight: FontWeight.bold),
-          ),
-          content: const Text(
-            "Are you sure you want to logout?",
-            style: TextStyle(color: lightGrey),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(false); // User did not confirm
-              },
-              child: const Text(
-                "Cancel",
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(true); // User confirmed
-              },
-              child: const Text("Confirm",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.blueAccent)),
-            ),
-          ],
-        );
-      },
-    );
+  Future<void> _onTapItem(BuildContext context, String itemName) async {
+    bool confirmed = itemName != AuthenticationPageRoute
+        ? true
+        : await showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text(
+                  "Confirm Logout",
+                  style:
+                      TextStyle(color: lightGrey, fontWeight: FontWeight.bold),
+                ),
+                content: const Text(
+                  "Are you sure you want to logout?",
+                  style: TextStyle(color: lightGrey),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(false); // User did not confirm
+                    },
+                    child: const Text(
+                      "Cancel",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.black),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(true); // User confirmed
+                    },
+                    child: const Text("Confirm",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blueAccent)),
+                  ),
+                ],
+              );
+            },
+          );
     if (confirmed != null && confirmed) {
       if (itemName == AuthenticationPageRoute) {
         Get.off(const LoginPage());
