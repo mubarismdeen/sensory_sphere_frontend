@@ -36,3 +36,6 @@ const String successfulResponse = "true";
 const String errorResponse = "error";
 
 const String appTitle = "Sensory Sphere";
+
+const String SMOKE_DETECTOR = "Smoke Detector";
+const String FLOAT_SWITCH = "Float Switch";

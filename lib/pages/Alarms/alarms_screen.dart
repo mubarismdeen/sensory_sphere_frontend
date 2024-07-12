@@ -1,4 +1,5 @@
 import 'package:admin/api.dart';
+import 'package:admin/constants/constants.dart';
 import 'package:admin/constants/style.dart';
 import 'package:admin/models/alarm_details.dart';
 import 'package:admin/widget/custom_alert_dialog.dart';
@@ -94,10 +95,20 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
                       Text(tableRow.parameter, style: rowTextStyle),
                     ),
                     DataCell(
-                      Text(tableRow.condition, style: rowTextStyle),
+                      Text(
+                          (tableRow.parameter == FLOAT_SWITCH ||
+                                  tableRow.parameter == SMOKE_DETECTOR)
+                              ? ""
+                              : tableRow.condition,
+                          style: rowTextStyle),
                     ),
                     DataCell(
-                      Text(tableRow.value.toString(), style: rowTextStyle),
+                      Text(
+                          (tableRow.parameter == FLOAT_SWITCH ||
+                                  tableRow.parameter == SMOKE_DETECTOR)
+                              ? ""
+                              : tableRow.value.toString(),
+                          style: rowTextStyle),
                     ),
                     DataCell(
                       Text(tableRow.timeInMinutes.toString(),

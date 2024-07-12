@@ -24,8 +24,6 @@ class _PropertiesScreenState extends State<PropertiesScreen> {
     "Id",
     "Name",
     "Status",
-    "Control Motor From\nFloat Switch",
-    "Control Motor From\nSmoke Detector",
     "Created By",
     "Created Date",
     "Edit By",
@@ -96,14 +94,6 @@ class _PropertiesScreenState extends State<PropertiesScreen> {
                     ),
                     DataCell(
                       Text(tableRow.status, style: rowTextStyle),
-                    ),
-                    DataCell(
-                      Text(getControlString(tableRow.floatPumpControl),
-                          style: rowTextStyle),
-                    ),
-                    DataCell(
-                      Text(getControlString(tableRow.smokePumpControl),
-                          style: rowTextStyle),
                     ),
                     DataCell(
                       Text(tableRow.createBy, style: rowTextStyle),

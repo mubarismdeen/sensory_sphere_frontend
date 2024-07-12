@@ -7,6 +7,7 @@ import 'package:admin/widget/custom_dropdown_form_field.dart';
 import 'package:admin/widget/loading_wrapper.dart';
 import 'package:flutter/material.dart';
 
+import '../../constants/constants.dart';
 import '../../globalState.dart';
 import '../../models/status_entity.dart';
 import '../../widget/custom_text_form_field.dart';
@@ -118,22 +119,26 @@ class _AddAlarmFormState extends State<AddAlarmForm> {
                 },
                 value: _selectedParameter,
               ),
-              CustomDropdownFormField(
-                labelText: 'Condition',
-                dropdownOptions:
-                    conditions.map((cond) => cond.description).toList(),
-                onChanged: (String? value) => {
-                  setState(() {
-                    _selectedCondition = value!;
-                  }),
-                },
-                value: _selectedCondition,
-              ),
-              CustomTextFormField(
-                labelText: 'Value',
-                controller: _value,
-                isNumeric: true,
-              ),
+              if (_selectedParameter != SMOKE_DETECTOR &&
+                  _selectedParameter != FLOAT_SWITCH)
+                CustomDropdownFormField(
+                  labelText: 'Condition',
+                  dropdownOptions:
+                      conditions.map((cond) => cond.description).toList(),
+                  onChanged: (String? value) => {
+                    setState(() {
+                      _selectedCondition = value!;
+                    }),
+                  },
+                  value: _selectedCondition,
+                ),
+              if (_selectedParameter != SMOKE_DETECTOR &&
+                  _selectedParameter != FLOAT_SWITCH)
+                CustomTextFormField(
+                  labelText: 'Value',
+                  controller: _value,
+                  isNumeric: true,
+                ),
               CustomTextFormField(
                 labelText: 'Time (minutes)',
                 controller: _timeInMinutes,
@@ -193,22 +198,61 @@ class _AddAlarmFormState extends State<AddAlarmForm> {
       print('Motor Control: $_selectedMotorTrigger');
 
       try {
-        _alarmDetails.property = _selectedProperty;
-        _alarmDetails.parameter = _selectedParameter;
-        _alarmDetails.condition = _selectedCondition;
-        _alarmDetails.value = double.parse(_value.text);
-        _alarmDetails.timeInMinutes = double.parse(_timeInMinutes.text);
-        _alarmDetails.status = _selectedStatus;
-        _alarmDetails.motorTrigger = _selectedMotorTrigger;
+        bool confirmed = await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text(
+                "Confirm Action",
+                style: TextStyle(color: lightGrey, fontWeight: FontWeight.bold),
+              ),
+              content: const Text(
+                "Are you sure?",
+                style: TextStyle(color: lightGrey),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(false); // User did not confirm
+                  },
+                  child: const Text(
+                    "Cancel",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.black),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(true); // User confirmed
+                  },
+                  child: const Text("Confirm",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blueAccent)),
+                ),
+              ],
+            );
+          },
+        );
 
-        ResponseDto response = await saveAlarmDetails(_alarmDetails);
-        if (response.success) {
-          showSaveSuccessfulMessage(context, response.message);
-          Navigator.pop(context);
-          widget.closeDialog(_alarmDetails);
-          setState(() {});
-        } else {
-          showSaveFailedMessage(context, response.message);
+        if (confirmed != null && confirmed) {
+          _alarmDetails.property = _selectedProperty;
+          _alarmDetails.parameter = _selectedParameter;
+          _alarmDetails.condition = _selectedCondition;
+          _alarmDetails.value = double.parse(_value.text);
+          _alarmDetails.timeInMinutes = double.parse(_timeInMinutes.text);
+          _alarmDetails.status = _selectedStatus;
+          _alarmDetails.motorTrigger = _selectedMotorTrigger;
+
+          ResponseDto response = await saveAlarmDetails(_alarmDetails);
+          if (response.success) {
+            showSaveSuccessfulMessage(context, response.message);
+            Navigator.pop(context);
+            widget.closeDialog(_alarmDetails);
+            setState(() {});
+          } else {
+            showSaveFailedMessage(context, response.message);
+          }
         }
       } on Exception catch (_) {
         showSaveFailedMessage(context, _.toString());
