@@ -6,12 +6,14 @@ class CustomTextFormField extends StatelessWidget {
   final String labelText;
   final TextEditingController controller;
   final bool isNumeric;
+  final bool allowNegative;
 
   const CustomTextFormField({
     Key? key,
     required this.labelText,
     required this.controller,
     this.isNumeric = false,
+    this.allowNegative = true,
   }) : super(key: key);
 
   @override
@@ -30,6 +32,12 @@ class CustomTextFormField extends StatelessWidget {
         if (isNumeric && !value.isNumericOnly && !value.isDoubleOnly) {
           return 'Please enter a numeric value';
         }
+        if (isNumeric &&
+            !value.isNumericOnly &&
+            !allowNegative &&
+            !value.isPositiveDouble) {
+          return 'Please enter a positive value';
+        }
         return null;
       },
       controller: controller,
@@ -43,6 +51,14 @@ extension StringExtension on String {
       return false;
     }
     final RegExp regex = RegExp(r'^-?\d+(\.\d+)?$');
+    return regex.hasMatch(this);
+  }
+
+  bool get isPositiveDouble {
+    if (isEmpty) {
+      return false;
+    }
+    final RegExp regex = RegExp(r'^\d+(\.\d+)?$');
     return regex.hasMatch(this);
   }
 }

@@ -24,8 +24,9 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
     "Parameter",
     "Condition",
     "Value",
+    "Time (minutes)",
+    "Control Motor",
     "Status",
-    "Control Motor"
   ];
 
   _initialize() async {
@@ -99,10 +100,14 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
                       Text(tableRow.value.toString(), style: rowTextStyle),
                     ),
                     DataCell(
-                      Text(tableRow.status, style: rowTextStyle),
+                      Text(tableRow.timeInMinutes.toString(),
+                          style: rowTextStyle),
                     ),
                     DataCell(
                       Text(tableRow.motorTrigger, style: rowTextStyle),
+                    ),
+                    DataCell(
+                      Text(tableRow.status, style: rowTextStyle),
                     ),
                   ],
                   onSelectChanged: (selected) {

@@ -34,6 +34,7 @@ class _AddAlarmFormState extends State<AddAlarmForm> {
   String _selectedStatus = "";
   String _selectedMotorTrigger = "YES";
   final _value = TextEditingController();
+  final _timeInMinutes = TextEditingController();
 
   List<StatusEntity> properties = <StatusEntity>[];
   List<StatusEntity> parameters = <StatusEntity>[];
@@ -72,6 +73,7 @@ class _AddAlarmFormState extends State<AddAlarmForm> {
       _selectedParameter = widget.tableRow!.parameter;
       _selectedCondition = widget.tableRow!.condition;
       _value.text = widget.tableRow!.value.toString();
+      _timeInMinutes.text = widget.tableRow!.timeInMinutes.toString();
       _selectedStatus = widget.tableRow!.status;
       _selectedMotorTrigger = widget.tableRow!.motorTrigger;
       _alarmDetails.id = widget.tableRow!.id;
@@ -132,6 +134,12 @@ class _AddAlarmFormState extends State<AddAlarmForm> {
                 controller: _value,
                 isNumeric: true,
               ),
+              CustomTextFormField(
+                labelText: 'Time (minutes)',
+                controller: _timeInMinutes,
+                isNumeric: true,
+                allowNegative: false,
+              ),
               CustomDropdownFormField(
                 labelText: 'Status',
                 dropdownOptions:
@@ -180,6 +188,7 @@ class _AddAlarmFormState extends State<AddAlarmForm> {
       print('Parameter: $_selectedParameter');
       print('Condition: $_selectedCondition');
       print('Value: ${_value.text}');
+      print('Time (minutes): ${_timeInMinutes.text}');
       print('Status: $_selectedStatus');
       print('Motor Control: $_selectedMotorTrigger');
 
@@ -188,6 +197,7 @@ class _AddAlarmFormState extends State<AddAlarmForm> {
         _alarmDetails.parameter = _selectedParameter;
         _alarmDetails.condition = _selectedCondition;
         _alarmDetails.value = double.parse(_value.text);
+        _alarmDetails.timeInMinutes = double.parse(_timeInMinutes.text);
         _alarmDetails.status = _selectedStatus;
         _alarmDetails.motorTrigger = _selectedMotorTrigger;
 

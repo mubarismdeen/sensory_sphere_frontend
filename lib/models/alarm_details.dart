@@ -4,6 +4,7 @@ class AlarmDetails {
   String parameter = "";
   String condition = "";
   double value = 0;
+  double timeInMinutes = 0;
   String status = "";
   String motorTrigger = "NO";
   String createBy = "";
@@ -19,6 +20,7 @@ class AlarmDetails {
     parameter = json['parameter'] ?? "";
     condition = json['condition'] ?? "";
     value = json['value'] ?? 0;
+    timeInMinutes = json['timeInMinutes'] ?? 0;
     status = json['status'] ?? "";
     motorTrigger = json['motorTrigger'] ?? "NO";
     createBy = json['createBy'] ?? '';
@@ -35,6 +37,7 @@ class AlarmDetails {
         'parameter': parameter,
         'condition': condition,
         'value': value,
+        'timeInMinutes': timeInMinutes,
         'status': status,
         'motorTrigger': motorTrigger,
         'createBy': createBy,
