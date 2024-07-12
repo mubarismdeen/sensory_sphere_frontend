@@ -235,15 +235,54 @@ class _SystemInlayState extends State<SystemInlay>
 
   Future<void> _triggerMotor() async {
     try {
-      ResponseDto response =
-          await triggerMotor(_isRunning ? "OFF" : "ON", _sensorData.propertyId);
-      if (response.success) {
-        showSaveSuccessfulMessage(context, response.message);
-        setState(() {
-          _isButtonLoading = true;
-        });
-      } else {
-        showSaveFailedMessage(context, response.message);
+      // Show confirmation dialog
+      bool confirmed = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text(
+              "Confirm Action",
+              style: TextStyle(color: lightGrey, fontWeight: FontWeight.bold),
+            ),
+            content: Text(
+              "Are you sure you want to turn ${_isRunning ? 'OFF' : 'ON'} the motor?",
+              style: const TextStyle(color: lightGrey),
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false); // User did not confirm
+                },
+                child: const Text(
+                  "Cancel",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.black),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(true); // User confirmed
+                },
+                child: const Text("Confirm",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.blueAccent)),
+              ),
+            ],
+          );
+        },
+      );
+
+      if (confirmed != null && confirmed) {
+        ResponseDto response = await triggerMotor(
+            _isRunning ? "OFF" : "ON", _sensorData.propertyId);
+        if (response.success) {
+          showSaveSuccessfulMessage(context, response.message);
+          setState(() {
+            _isButtonLoading = true;
+          });
+        } else {
+          showSaveFailedMessage(context, response.message);
+        }
       }
     } catch (e) {
       print('Error: $e');
