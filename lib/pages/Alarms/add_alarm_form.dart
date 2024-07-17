@@ -239,7 +239,9 @@ class _AddAlarmFormState extends State<AddAlarmForm> {
           _alarmDetails.property = _selectedProperty;
           _alarmDetails.parameter = _selectedParameter;
           _alarmDetails.condition = _selectedCondition;
-          _alarmDetails.value = double.parse(_value.text);
+          if (_value.text.isNotEmpty) {
+            _alarmDetails.value = double.parse(_value.text);
+          }
           _alarmDetails.timeInMinutes = double.parse(_timeInMinutes.text);
           _alarmDetails.status = _selectedStatus;
           _alarmDetails.motorTrigger = _selectedMotorTrigger;

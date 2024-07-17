@@ -59,12 +59,16 @@ class _AlertScreenState extends State<AlertScreen> {
             children: [
               const Icon(Icons.report_gmailerrorred,
                   color: Colors.red, size: 100),
-              Text(
-                '${message.notification?.body}',
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  '${message.notification?.body}',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 25.0),
