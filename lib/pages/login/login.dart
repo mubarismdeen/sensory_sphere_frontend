@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:admin/constants/constants.dart';
 import 'package:admin/constants/style.dart';
 import 'package:admin/globalState.dart';
@@ -10,7 +12,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../api.dart';
 import '../../layout.dart';
+import '../../models/Address.dart';
 import '../../utils/common_utils.dart';
+import '../../widget/custom_alert_dialog.dart';
+import '../../widget/custom_text_form_field.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({
@@ -28,6 +33,8 @@ class _LoginPageState extends State<LoginPage> with RestorationMixin {
       RestorableTextEditingController();
   final RestorableTextEditingController _ipController =
       RestorableTextEditingController();
+  final RestorableTextEditingController _clientController =
+      RestorableTextEditingController();
 
   @override
   String get restorationId => 'login_page';
@@ -37,6 +44,7 @@ class _LoginPageState extends State<LoginPage> with RestorationMixin {
     registerForRestoration(_usernameController, restorationId);
     registerForRestoration(_passwordController, restorationId);
     registerForRestoration(_ipController, restorationId);
+    registerForRestoration(_clientController, restorationId);
   }
 
   @override
@@ -48,6 +56,7 @@ class _LoginPageState extends State<LoginPage> with RestorationMixin {
           usernameController: _usernameController.value,
           passwordController: _passwordController.value,
           ipController: _ipController.value,
+          clientController: _clientController.value,
         ),
       ),
     );
@@ -67,11 +76,13 @@ class _MainView extends StatefulWidget {
     this.usernameController,
     this.passwordController,
     this.ipController,
+    this.clientController,
   });
 
   final TextEditingController? usernameController;
   final TextEditingController? passwordController;
   final TextEditingController? ipController;
+  final TextEditingController? clientController;
 
   @override
   _MainViewState createState() => _MainViewState();
@@ -83,6 +94,12 @@ class _MainViewState extends State<_MainView> {
   bool showLoading = false;
   String ipAddress = '';
   String ipMessage = 'IP is not set';
+  List<Address> addressList = [];
+  String _selectedClient = '';
+  final _formKey = GlobalKey<FormState>();
+
+  final _addClientName = TextEditingController();
+  final _addClientAddress = TextEditingController();
 
   void _login() {
     Get.to(SiteLayout());
@@ -96,20 +113,61 @@ class _MainViewState extends State<_MainView> {
 
   Future<void> _getSavedIpAddress() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? savedIp = prefs.getString('ipAddress');
-    if (savedIp != null) {
-      GlobalState.setIpAddress(savedIp);
+    List<String>? savedAddressList = prefs.getStringList(IP_ADDRESSES);
+    if (savedAddressList != null) {
       setState(() {
-        ipAddress = savedIp;
-        widget.ipController!.text = ipAddress;
+        addressList = savedAddressList.map((jsonString) {
+          Map<String, dynamic> jsonMap = jsonDecode(jsonString);
+          return Address.fromJson(jsonMap);
+        }).toList();
       });
     }
   }
 
-  Future<void> _saveIpAddress(String ip) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('ipAddress', ip);
+  Future<void> _saveIpAddress() async {
+    String ip = widget.ipController!.text.trim();
+    ipAddress = ip;
     GlobalState.setIpAddress(ip);
+    Address clientAddress =
+        addressList.firstWhere((element) => element.name == _selectedClient);
+    addressList.remove(clientAddress);
+    clientAddress.ip = ip;
+    addressList.add(clientAddress);
+    saveIPs();
+  }
+
+  void saveIPs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (addressList.isNotEmpty) {
+      List<String> jsonList =
+          addressList.map((obj) => jsonEncode(obj.toJson())).toList();
+      await prefs.setStringList(IP_ADDRESSES, jsonList);
+    }
+  }
+
+  Future<void> _onSubmitClient(BuildContext context) async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState?.save();
+      print('Submitted form data:');
+      print('Client Name: ${_addClientName.text}');
+      print('Client Address: ${_addClientAddress.text}');
+
+      try {
+        Address newClientAddress =
+            Address(name: _addClientName.text, ip: _addClientAddress.text);
+        setState(() {
+          addressList.add(newClientAddress);
+        });
+        saveIPs();
+        _addClientName.clear();
+        _addClientAddress.clear();
+        Navigator.pop(context);
+      } on Exception catch (_) {
+        showSaveFailedMessage(context, _.toString());
+      }
+    } else {
+      showSaveFailedMessage(context, "Invalid values");
+    }
   }
 
   @override
@@ -118,87 +176,238 @@ class _MainViewState extends State<_MainView> {
     final isDesktop = screenw > 700 ? true : false;
     List<Widget> listViewChildren;
 
-    listViewChildren = [
-      const _AppLogo(),
-    ];
+    listViewChildren = [];
 
-    if (ipAddress != '') {
+    if (_selectedClient == '') {
       listViewChildren = [
-        ...listViewChildren,
-        _UsernameInput(
-          maxWidth: 400,
-          usernameController: widget.usernameController,
-        ),
-        const SizedBox(height: 12),
-        _PasswordInput(
-          maxWidth: 400,
-          passwordController: widget.passwordController,
-        ),
-        const SizedBox(height: 12),
-        _LoginButton(
-          maxWidth: 400,
-          onTap: () async {
-            setState(() {
-              showLoading = true;
-            });
-
-            try {
-              UserScreens screensForUser = await authorizeUser(
-                widget.usernameController!.text,
-                widget.passwordController!.text,
-              );
-              GlobalState.setScreensForUser(
-                  widget.usernameController!.text, screensForUser);
-              showError = false;
-              _login();
-              widget.usernameController?.clear();
-              widget.passwordController?.clear();
-            } catch (e) {
-              if (e is UnauthorizedException) {
-                showSaveFailedMessage(context, "Login Failed");
-                showError = true;
-              } else {
-                e.printError();
+        const _AppLogo(),
+        Container(
+          constraints: const BoxConstraints(maxWidth: 400),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(8, 25, 8, 0),
+            child: DropdownButtonFormField<String>(
+              key: Key(addressList.length.toString()),
+              iconEnabledColor: Colors.blue,
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold, color: Colors.blueAccent),
+              decoration: const InputDecoration(
+                labelText: "Client",
+                labelStyle: TextStyle(fontWeight: FontWeight.bold),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(15),
+                  ),
+                ),
+              ),
+              value: _selectedClient,
+              items: [Address(name: '', ip: ''), ...addressList]
+                  .map((Address address) {
+                return DropdownMenuItem<String>(
+                  value: address.name,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(address.name),
+                      if (address.name != '')
+                        IconButton(
+                          icon: Icon(Icons.cancel,
+                              color: Colors.red.withOpacity(0.5)),
+                          onPressed: () {
+                            setState(() {
+                              addressList.remove(address);
+                            });
+                          },
+                        ),
+                    ],
+                  ),
+                );
+              }).toList(),
+              onChanged: (newValue) {
                 setState(() {
-                  ipAddress = '';
-                  ipMessage = 'Please verify IP';
+                  _selectedClient = newValue!;
+                  widget.clientController?.text = newValue!;
+                  String selectedIP = addressList
+                      .firstWhere((ad) => ad.name == _selectedClient)
+                      .ip;
+                  widget.ipController?.text = selectedIP;
+                  ipAddress = selectedIP;
+                  GlobalState.setIpAddress(selectedIP);
                 });
-                showSaveFailedMessage(
-                    context, "Error in establishing connection");
-              }
-            }
-            setState(() {
-              showLoading = false;
-            });
-          },
-          status: showError,
+              },
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.centerRight,
+          child: Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: TextButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return CustomAlertDialog(
+                      title: 'Add Client',
+                      child: Form(
+                        key: _formKey,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              CustomTextFormField(
+                                labelText: 'Client Name',
+                                controller: _addClientName,
+                              ),
+                              CustomTextFormField(
+                                labelText: 'Client Address',
+                                controller: _addClientAddress,
+                              ),
+                              const SizedBox(height: 26.0),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  ...getActionButtonsWithoutPrivilege(
+                                    context: context,
+                                    onSubmit: () => _onSubmitClient(context),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      // child: EmployeeDetailsForm(closeDialog, tableRow, context),
+                    );
+                  },
+                );
+              },
+              child: const Text(
+                "+ Add Client",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.underline,
+                    color: Colors.blue),
+              ),
+            ),
+          ),
         ),
       ];
     } else {
-      listViewChildren = [
-        ...listViewChildren,
-        _IpInput(
-          maxWidth: 400,
-          ipController: widget.ipController,
-        ),
-        const SizedBox(height: 12),
-        _SaveIpButton(
-          ipMessage: ipMessage,
-          maxWidth: 400,
-          onTap: () async {
-            setState(() {
-              showLoading = true;
-            });
-            await _saveIpAddress(widget.ipController!.text.trim());
-            _getSavedIpAddress();
-            setState(() {
-              showLoading = false;
-            });
-          },
-        ),
-      ];
-    }
+      if (ipAddress != '') {
+        listViewChildren = [
+          const _AppLogo(),
+          _UsernameInput(
+            maxWidth: 400,
+            usernameController: widget.usernameController,
+          ),
+          const SizedBox(height: 12),
+          _PasswordInput(
+            maxWidth: 400,
+            passwordController: widget.passwordController,
+          ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: TextButton(
+                onPressed: () {
+                  setState(() {
+                    ipAddress = '';
+                    _selectedClient = '';
+                    widget.passwordController!.clear();
+                    widget.usernameController!.clear();
+                  });
+                },
+                child: Row(
+                  children: const [
+                    Icon(Icons.arrow_circle_left_outlined, color: Colors.blue),
+                    Text(
+                      "Switch Client",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.underline,
+                          color: Colors.blue),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          // const SizedBox(height: 12),
+          _LoginButton(
+            maxWidth: 400,
+            onTap: () async {
+              setState(() {
+                showLoading = true;
+              });
 
+              try {
+                UserScreens screensForUser = await authorizeUser(
+                  widget.usernameController!.text,
+                  widget.passwordController!.text,
+                );
+                GlobalState.setScreensForUser(
+                    widget.usernameController!.text, screensForUser);
+                showError = false;
+                _login();
+                widget.usernameController?.clear();
+                widget.passwordController?.clear();
+                widget.ipController?.clear();
+                widget.clientController?.clear();
+                ipAddress = '';
+                _selectedClient = '';
+              } catch (e) {
+                if (e is UnauthorizedException) {
+                  showSaveFailedMessage(context, "Login Failed");
+                  showError = true;
+                } else {
+                  e.printError();
+                  setState(() {
+                    ipAddress = '';
+                    ipMessage = 'Please verify IP';
+                  });
+                  showSaveFailedMessage(
+                      context, "Error in establishing connection");
+                }
+              }
+              setState(() {
+                showLoading = false;
+              });
+            },
+            status: showError,
+          ),
+        ];
+      } else {
+        listViewChildren = [
+          const _AppLogo(),
+          _IpNameInput(
+            maxWidth: 400,
+            clientController: widget.clientController,
+          ),
+          const SizedBox(height: 15),
+          _IpAddressInput(
+            maxWidth: 400,
+            ipController: widget.ipController,
+          ),
+          const SizedBox(height: 12),
+          _SaveIpButton(
+            ipMessage: ipMessage,
+            maxWidth: 400,
+            onTap: () async {
+              setState(() {
+                showLoading = true;
+              });
+              await _saveIpAddress();
+              _getSavedIpAddress();
+              setState(() {
+                showLoading = false;
+              });
+            },
+          ),
+        ];
+      }
+    }
     return Column(
       children: [
         Expanded(
@@ -296,8 +505,31 @@ class _UsernameInput extends StatelessWidget {
   }
 }
 
-class _IpInput extends StatelessWidget {
-  const _IpInput({
+class _IpNameInput extends StatelessWidget {
+  const _IpNameInput({
+    this.maxWidth,
+    this.clientController,
+  });
+
+  final double? maxWidth;
+  final TextEditingController? clientController;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.center,
+      child: InputBox(
+          enabled: false,
+          maxWidth: maxWidth,
+          displayText: "Client Name",
+          obscureText: false,
+          controller: clientController),
+    );
+  }
+}
+
+class _IpAddressInput extends StatelessWidget {
+  const _IpAddressInput({
     this.maxWidth,
     this.ipController,
   });
@@ -328,12 +560,14 @@ class InputBox extends StatelessWidget {
   String? displayText;
   final TextEditingController? controller;
   bool obscureText;
+  bool enabled;
 
   InputBox(
       {Key? key,
       this.maxWidth,
       required this.displayText,
       required this.obscureText,
+      this.enabled = true,
       this.controller})
       : super(key: key);
 
@@ -342,6 +576,7 @@ class InputBox extends StatelessWidget {
     return Container(
       constraints: BoxConstraints(maxWidth: maxWidth ?? double.infinity),
       child: TextField(
+        enabled: enabled,
         style: const TextStyle(color: light),
         autofillHints: const [AutofillHints.username],
         textInputAction: TextInputAction.next,
@@ -353,6 +588,7 @@ class InputBox extends StatelessWidget {
               color: inputFieldOutlineColor, fontWeight: FontWeight.bold),
           focusColor: Colors.white,
           enabledBorder: inputBoxStyle,
+          disabledBorder: inputBoxStyle,
           focusedBorder: inputBoxStyle,
         ),
         cursorColor: inputFieldOutlineColor,
